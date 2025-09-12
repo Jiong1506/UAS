@@ -250,16 +250,16 @@
 
     <section id="manage-section" class="hidden">
       <div class="card p-4 shadow-lg rounded-xl">
-        <div class="flex items-center justify-between flex-wrap gap-2">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between flex-wrap gap-2 mb-4">
           <div>
             <h2 class="text-xl font-semibold">Kelola Soal</h2>
             <p class="text-sm muted">Pilih mata kuliah lalu tambah/edit/hapus soal.</p>
           </div>
-          <div class="flex items-center gap-2 w-full sm:w-auto">
+          <div class="flex flex-col sm:flex-row items-stretch gap-2 w-full sm:w-auto">
             <select id="select-manage" class="p-2 border rounded bg-transparent dark-select flex-1">
               <option value="">— Pilih Mata Kuliah —</option>
             </select>
-            <button id="btn-add-q" class="btn text-sm px-3 py-2" disabled>Tambah Soal</button>
+            <button id="btn-add-q" class="btn text-sm px-3 py-2 sm:self-auto" disabled>Tambah Soal</button>
           </div>
         </div>
         
@@ -322,18 +322,18 @@
 
     <section id="exam-section" class="hidden mt-4">
       <div class="card p-4 shadow-lg rounded-xl">
-        <div class="flex items-center justify-between flex-wrap gap-2">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between flex-wrap gap-2 mb-4">
           <div>
             <h2 class="text-xl font-semibold">Mode Ujian — Tampilkan Semua Soal</h2>
             <p class="text-sm muted">Semua soal akan ditampilkan sekaligus (maks 50).
             Klik nomor di sidebar untuk lompat cepat.</p>
           </div>
-          <div class="flex items-center gap-2 w-full sm:w-auto">
+          <div class="flex flex-col sm:flex-row items-stretch gap-2 w-full sm:w-auto">
             <select id="select-exam" class="p-2 border rounded bg-transparent dark-select flex-1">
               <option value="">— Pilih Mata Kuliah —</option>
             </select>
-            <button id="start-exam" class="btn text-sm px-3 py-2">Mulai Ujian</button>
-            <button id="end-exam" class="btn-danger text-sm px-3 py-2 hidden">Selesai Ujian</button>
+            <button id="start-exam" class="btn text-sm px-3 py-2 sm:self-auto">Mulai Ujian</button>
+            <button id="end-exam" class="btn-danger text-sm px-3 py-2 sm:self-auto hidden">Selesai Ujian</button>
           </div>
         </div>
         <div id="exam-score-display" class="card p-4 my-4 hidden"></div>
@@ -369,7 +369,10 @@
 </div>
 
 <script>
-(async function(){
+  const SUPABASE_URL = 'https://znosqyapmdfujtqwdsdm.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpub3NxeWFwbWRmdWp0cXdkc2RtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2NDE1MTIsImV4cCI6MjA3MzIxNzUxMn0.R-WmeGOY0LX0oJv-UhWloXfAFVyGrbTgBYF3X1cHeUk';
+  const STORAGE_BUCKET = 'question-images';
+
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession: false } });
 
   // DOM refs
@@ -1047,8 +1050,6 @@
   }
 
   loadCourses();
-
-})();
 </script>
 </body>
 </html>
