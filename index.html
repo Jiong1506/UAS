@@ -33,22 +33,12 @@
     .card {
       background: var(--card);
       border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.25);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
       transition: background-color .25s, box-shadow .25s;
-    }
-    
-    .course-card {
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .course-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
     }
 
     .btn {
-      background: linear-gradient(90deg, #6366f1, #a855f7);
+      background: linear-gradient(90deg, var(--accent), #5b21b6);
       color: white;
       padding: 10px 14px;
       border-radius: 10px;
@@ -59,19 +49,6 @@
     }
     .btn:hover { transform: translateY(-1px); }
     .btn:active { transform: translateY(0); opacity: 0.9; }
-
-    .btn-danger {
-      background: var(--danger-clr);
-      color: white;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      transition: transform .1s, opacity .1s;
-    }
-    .btn-danger:hover { transform: translateY(-1px); }
-    .btn-danger:active { transform: translateY(0); opacity: 0.9; }
 
     .btn-ghost {
       background: transparent;
@@ -91,24 +68,16 @@
     .sidebar-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
     .sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 999px; }
 
-    [data-cloak] { display: none; }
-
     /* --- Responsiveness: Tampilan Berbeda untuk Setiap Mode --- */
 
     /* Default (Mobile Portrait) */
     .layout { flex-direction: column; }
     .main-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-    aside.sidebar { width: 100%; flex-direction: column; gap: 6px; padding: 8px; overflow-x: hidden; overflow-y: hidden; }
+    aside.sidebar { width: 100%; flex-direction: row; gap: 6px; padding: 8px; overflow-x: auto; overflow-y: hidden; }
     aside.sidebar .logo-area, aside.sidebar .theme-toggle-area { display: none; }
-    aside.sidebar nav { flex-direction: column; }
+    aside.sidebar nav { flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; }
     aside.sidebar button { flex: 0 0 auto; }
-    .mobile-floating { display: block; } /* Diubah ke block untuk menampung card di bawah */
-    #mobile-numbers > div {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr); /* 5 kolom */
-        gap: 8px;
-        justify-content: center;
-    }
+    .mobile-floating { display: block; }
     .exam-grid { grid-template-columns: 1fr; }
 
     /* Media Query: Mobile Landscape (lebar minimal 576px) */
@@ -118,7 +87,7 @@
       aside.sidebar { width: 12rem; min-width: 12rem; max-width: 12rem; flex-direction: column; padding: 1rem; }
       aside.sidebar .logo-area { display: flex; }
       aside.sidebar nav { flex-direction: column; }
-      .mobile-floating { display: none; }
+      .mobile-floating { display: block; }
       .exam-grid { grid-template-columns: 1fr 1fr; }
     }
 
@@ -155,8 +124,7 @@
     .image-dropzone {
       background-color: var(--card);
       color: var(--text);
-      border: 1px dashed var(--muted);
-      border-radius: 12px;
+      border: 1px solid var(--muted);
     }
   </style>
 </head>
@@ -168,7 +136,7 @@
   const STORAGE_BUCKET = 'question-images';
 </script>
 
-<div id="app" class="min-h-screen layout flex" data-cloak>
+<div id="app" class="min-h-screen layout flex">
 
   <aside class="sidebar card flex-shrink-0 flex flex-col gap-4">
     <div class="logo-area flex items-center gap-3">
@@ -193,7 +161,7 @@
   <main class="flex-1 p-6 overflow-y-auto">
     <div class="main-header flex items-center justify-between mb-6">
       <div>
-        <h1 id="page-title" class="text-3xl font-bold">Dashboard</h1>
+        <h1 id="page-title" class="text-2xl font-bold">Dashboard</h1>
         <p id="page-sub" class="text-sm muted">Ringkasan mata kuliah & soal</p>
       </div>
 
@@ -207,8 +175,8 @@
     </section>
 
     <section id="create-section" class="hidden">
-      <div class="card p-4 shadow-lg rounded-xl">
-        <h2 class="text-xl font-semibold">Buat Mata Kuliah</h2>
+      <div class="card p-4">
+        <h2 class="text-lg font-semibold">Buat Mata Kuliah</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
           <div>
             <label class="text-sm muted">Nama Mata Kuliah</label>
@@ -218,8 +186,8 @@
             <div class="grid grid-cols-2 gap-2 mt-2">
               <input class="opt init p-2 border rounded dark-input" placeholder="Opsi A" />
               <input class="opt init p-2 border rounded dark-input" placeholder="Opsi B" />
-              <input class="opt init p-2 border rounded dark-input" placeholder="Opsi C" />
-              <input class="opt init p-2 border rounded dark-input" placeholder="Opsi D" />
+              <input class="opt init p-2 border rounded dark-input" placeholder="Opsi C (opsional)" />
+              <input class="opt init p-2 border rounded dark-input" placeholder="Opsi D (opsional)" />
             </div>
             <div class="flex items-center gap-2 mt-3">
               <select id="initial-key" class="p-2 border rounded bg-transparent muted dark-select">
@@ -234,36 +202,36 @@
               <div class="text-sm muted">Tarik & lepas atau pilih file</div>
               <input id="file-new" type="file" accept="image/*" class="hidden" />
               <div class="mt-3 flex gap-2">
-                <button id="pick-new" class="btn py-2 px-4 text-sm">Pilih Gambar</button>
-                <button id="clear-new" class="btn-ghost py-2 px-4 text-sm">Hapus</button>
+                <button id="pick-new" class="px-3 py-2 rounded bg-indigo-600 text-white">Pilih Gambar</button>
+                <button id="clear-new" class="px-3 py-2 rounded bg-white/10">Hapus</button>
               </div>
               <img id="preview-new" class="mt-3 max-h-28 rounded hidden" alt="preview" />
             </div>
           </div>
         </div>
         <div class="mt-4 flex justify-end gap-2">
-          <button id="create-course" class="btn py-2 px-4">Buat</button>
-          <button id="cancel-create" class="btn-ghost py-2 px-4">Batal</button>
+          <button id="create-course" class="btn">Buat</button>
+          <button id="cancel-create" class="btn-ghost">Batal</button>
         </div>
       </div>
     </section>
 
     <section id="manage-section" class="hidden">
-      <div class="card p-4 shadow-lg rounded-xl">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between flex-wrap gap-2 mb-4">
+      <div class="card p-4">
+        <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-xl font-semibold">Kelola Soal</h2>
+            <h2 class="text-lg font-semibold">Kelola Soal</h2>
             <p class="text-sm muted">Pilih mata kuliah lalu tambah/edit/hapus soal.</p>
           </div>
-          <div class="flex flex-col sm:flex-row items-stretch gap-2 w-full sm:w-auto">
-            <select id="select-manage" class="p-2 border rounded bg-transparent dark-select flex-1">
+          <div class="flex items-center gap-2">
+            <select id="select-manage" class="p-2 border rounded bg-transparent dark-select">
               <option value="">— Pilih Mata Kuliah —</option>
             </select>
-            <button id="btn-add-q" class="btn text-sm px-3 py-2 sm:self-auto" disabled>Tambah Soal</button>
+            <button id="btn-add-q" class="px-3 py-2 bg-indigo-600 text-white rounded" disabled>Tambah Soal</button>
           </div>
         </div>
         
-        <div class="card p-4 mt-4 flex flex-col items-start gap-2 shadow-md rounded-xl">
+        <div class="card p-4 mt-4 flex flex-col items-start gap-2">
             <h3 class="text-md font-semibold">Unggah Soal dari File Teks</h3>
             <p class="text-sm muted">Pilih mata kuliah lalu unggah file .txt.
             Lihat <a href="#" class="underline" onclick="alert('Format file:\n\nQ: Teks soal\nA: Opsi A\nB: Opsi B\nK: A\n\nSetiap soal dipisahkan oleh baris baru. Gambar tidak didukung.')">format file</a>.</p>
@@ -278,11 +246,11 @@
     </section>
 
     <section id="editor-section" class="hidden mt-4">
-      <div class="card p-4 shadow-lg rounded-xl">
-        <div class="flex items-center justify-between flex-wrap gap-2">
-          <h3 id="editor-title" class="text-xl font-semibold">Tambah Soal</h3>
+      <div class="card p-4">
+        <div class="flex items-center justify-between">
+          <h3 id="editor-title" class="text-lg font-semibold">Tambah Soal</h3>
           <div>
-            <button id="editor-cancel" class="btn-ghost py-2 px-4">Batal</button>
+            <button id="editor-cancel" class="btn-ghost">Batal</button>
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
@@ -307,33 +275,33 @@
               <div class="text-sm muted">Tarik & lepas atau pilih file</div>
               <input id="file-q" type="file" accept="image/*" class="hidden" />
               <div class="mt-3 flex gap-2">
-                <button id="pick-q" class="btn py-2 px-4 text-sm">Pilih</button>
-                <button id="clear-q" class="btn-ghost py-2 px-4 text-sm">Hapus</button>
+                <button id="pick-q" class="px-3 py-2 rounded bg-indigo-600 text-white">Pilih</button>
+                <button id="clear-q" class="px-3 py-2 rounded bg-white/10">Hapus</button>
               </div>
               <img id="preview-q" class="mt-3 max-h-28 rounded hidden" alt="preview" />
             </div>
           </div>
         </div>
         <div class="mt-4 flex justify-end gap-2">
-          <button id="save-q" class="btn py-2 px-4">Simpan Soal</button>
+          <button id="save-q" class="btn">Simpan Soal</button>
         </div>
       </div>
     </section>
 
     <section id="exam-section" class="hidden mt-4">
-      <div class="card p-4 shadow-lg rounded-xl">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between flex-wrap gap-2 mb-4">
+      <div class="card p-4">
+        <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-xl font-semibold">Mode Ujian — Tampilkan Semua Soal</h2>
+            <h2 class="text-lg font-semibold">Mode Ujian — Tampilkan Semua Soal</h2>
             <p class="text-sm muted">Semua soal akan ditampilkan sekaligus (maks 50).
             Klik nomor di sidebar untuk lompat cepat.</p>
           </div>
-          <div class="flex flex-col sm:flex-row items-stretch gap-2 w-full sm:w-auto">
-            <select id="select-exam" class="p-2 border rounded bg-transparent dark-select flex-1">
+          <div class="flex items-center gap-2">
+            <select id="select-exam" class="p-2 border rounded bg-transparent dark-select">
               <option value="">— Pilih Mata Kuliah —</option>
             </select>
-            <button id="start-exam" class="btn text-sm px-3 py-2 sm:self-auto">Mulai Ujian</button>
-            <button id="end-exam" class="btn-danger text-sm px-3 py-2 sm:self-auto hidden">Selesai Ujian</button>
+            <button id="start-exam" class="btn">Mulai Ujian</button>
+            <button id="end-exam" class="btn hidden">Selesai Ujian</button>
           </div>
         </div>
         <div id="exam-score-display" class="card p-4 my-4 hidden"></div>
@@ -356,10 +324,7 @@
         </div>
 
         <div id="mobile-numbers" class="mobile-floating fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
-          <div class="card p-4 flex flex-col gap-2 shadow-lg w-[95vw] sm:w-[50vw]">
-            <h3 class="font-semibold text-lg">Lompati Soal</h3>
-            <div class="grid grid-cols-5 gap-2">
-            </div>
+          <div class="bg-white/5 px-3 py-2 rounded-full flex gap-1 overflow-x-auto max-w-[90vw]">
           </div>
         </div>
 
@@ -369,14 +334,11 @@
 </div>
 
 <script>
-  const SUPABASE_URL = 'https://znosqyapmdfujtqwdsdm.supabase.co';
-  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpub3NxeWFwbWRmdWp0cXdkc2RtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2NDE1MTIsImV4cCI6MjA3MzIxNzUxMn0.R-WmeGOY0LX0oJv-UhWloXfAFVyGrbTgBYF3X1cHeUk';
-  const STORAGE_BUCKET = 'question-images';
-
+(async function(){
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession: false } });
 
   // DOM refs
-  const app = document.getElementById('app'); app.removeAttribute('data-cloak');
+  const app = document.getElementById('app'); 
   const pageTitle = document.getElementById('page-title');
   const pageSub = document.getElementById('page-sub');
 
@@ -444,8 +406,7 @@
     
     courses.forEach(c=>{
       const el = document.createElement('div'); 
-      el.className = 'p-4 card flex flex-col justify-between h-48 shadow-lg rounded-xl course-card';
-      el.dataset.id = c.id;
+      el.className = 'p-4 card flex flex-col justify-between h-48';
       el.innerHTML = `
         <div>
           <div class="text-xs muted">Mata Kuliah</div>
@@ -453,7 +414,7 @@
           <div class="text-sm muted mt-1" id="preview-${c.id}">Memuat preview...</div>
         </div>
         <div class="flex justify-end items-center gap-2 mt-4">
-          <button data-id="${c.id}" class="open-manage-btn px-3 py-1 rounded bg-indigo-600 text-white text-sm">Kelola</button>
+          <button data-id="${c.id}" class="open-manage px-3 py-1 rounded bg-indigo-600 text-white text-sm">Kelola</button>
           <button data-id="${c.id}" class="delete-course px-3 py-1 rounded bg-rose-500 text-white text-sm">Hapus</button>
         </div>
       `;
@@ -470,38 +431,17 @@
       })();
     });
 
-    document.querySelectorAll('.course-card').forEach(card=>{
-      card.addEventListener('click', async (e)=>{
-        // Hanya jalankan jika target klik BUKAN tombol
-        if (!e.target.closest('button')) {
-          e.preventDefault(); // Mencegah perilaku default
-          const id = card.dataset.id;
-          const c = courses.find(x => x.id === id);
-          if (!c) return;
-          selectManage.value = c.name;
-          await openManageForCourse(c.name);
-          showSection('manage');
-          btnAddQ.disabled = false;
-        }
-      });
-    });
-
-    document.querySelectorAll('.open-manage-btn').forEach(b=>{
-      b.addEventListener('click', async (e)=>{
-        e.stopPropagation();
+    document.querySelectorAll('.open-manage').forEach(b=>{
+      b.addEventListener('click', async ()=>{
         const id = b.dataset.id; 
         const c = courses.find(x=>x.id===id);
         if(!c) return; 
-        selectManage.value = c.name;
         await openManageForCourse(c.name); 
         showSection('manage');
-        btnAddQ.disabled = false;
       });
     });
-    
     document.querySelectorAll('.delete-course').forEach(b=>{
-      b.addEventListener('click', async (e)=>{
-        e.stopPropagation();
+      b.addEventListener('click', async ()=>{
         const id = b.dataset.id;
         const c = courses.find(x=>x.id===id);
         if(!c) return;
@@ -648,19 +588,19 @@
     }
     questions.forEach(q=>{
       const div = document.createElement('div'); 
-      div.className = 'p-3 card flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-md rounded-xl';
+      div.className = 'p-3 border rounded flex justify-between items-start gap-3 bg-white/5';
       div.innerHTML = `
         <div class="flex-1">
           <div class="font-medium">${escapeHtml(q.teks)}</div>
           <div class="text-xs muted mt-1">${new Date(q.created_at || q.createdAt || Date.now()).toLocaleString()}</div>
           <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
-            ${(q.opsi||[]).map((o,idx)=>`<div class="${idx===q.kunci?'bg-emerald-700 text-white':'bg-white/5'} p-2 border rounded text-sm">${String.fromCharCode(65+idx)}. ${escapeHtml(o)}</div>`).join('')}
+            ${(q.opsi||[]).map((o,idx)=>`<div class="${idx===q.kunci?'bg-emerald-50 text-white dark:bg-emerald-700':''} p-2 border rounded text-sm">${String.fromCharCode(65+idx)}. ${escapeHtml(o)}</div>`).join('')}
           </div>
           ${q.gambar? `<img src="${q.gambar}" class="mt-2 max-h-36 rounded" />` : ''}
         </div>
-        <div class="flex flex-row sm:flex-col gap-2 w-full sm:w-auto mt-2 sm:mt-0">
-          <button data-id="${q.id}" class="edit-q btn-ghost text-sm py-2 px-4">Edit</button>
-          <button data-id="${q.id}" class="del-q btn-danger text-sm py-2 px-4">Hapus</button>
+        <div class="flex flex-col gap-2">
+          <button data-id="${q.id}" class="edit-q px-3 py-1 bg-white/10 rounded">Edit</button>
+          <button data-id="${q.id}" class="del-q px-3 py-1 bg-rose-500 text-white rounded">Hapus</button>
         </div>
       `;
       wrap.appendChild(div);
@@ -689,11 +629,10 @@
       } else { 
         document.getElementById('preview-q').classList.add('hidden'); 
       }
-      sections.editor.classList.remove('hidden'); 
+      sections.editor.classList.remove('hidden');
       window.scrollTo({top: document.getElementById('editor-section').offsetTop - 20, behavior:'smooth'});
     }));
   }
-
   // Add question button
   btnAddQ.addEventListener('click', ()=> {
     if(!currentCourse) return alert('Pilih mata kuliah dulu');
@@ -704,7 +643,7 @@
     document.getElementById('qe-key').value='';
     document.getElementById('preview-q').classList.add('hidden');
     document.getElementById('preview-q').src='';
-    sections.editor.classList.remove('hidden'); 
+    sections.editor.classList.remove('hidden');
     window.scrollTo({top: document.getElementById('editor-section').offsetTop - 20, behavior:'smooth'});
   });
 
@@ -712,7 +651,13 @@
   const fileQ = document.getElementById('file-q'), pickQ = document.getElementById('pick-q'), clearQ = document.getElementById('clear-q'), previewQ = document.getElementById('preview-q');
   pickQ.addEventListener('click', ()=> fileQ.click());
   fileQ.addEventListener('change', (e)=> handleFileInput(e,'q'));
-  clearQ.addEventListener('click', ()=> { editing._localImage = null; editing.gambar = null; previewQ.src=''; previewQ.classList.add('hidden'); fileQ.value=''; });
+  clearQ.addEventListener('click', ()=> {
+    editing._localImage = null;
+    editing.gambar = null;
+    previewQ.src='';
+    previewQ.classList.add('hidden');
+    fileQ.value='';
+  });
   document.getElementById('drop-q').addEventListener('drop', e=>{ e.preventDefault(); handleDrop(e,'q'); });
   document.getElementById('drop-q').addEventListener('dragover', e=> e.preventDefault());
 
@@ -722,8 +667,10 @@
     const opsi = [0,1,2,3].map(i=>document.getElementById('qe-opt-'+i).value.trim()).filter(Boolean);
     const key = document.getElementById('qe-key').value;
     if(!teks || opsi.length < 2 || key === '') return alert('Lengkapi teks, minimal 2 opsi, dan kunci.');
+
     let gambarToSave = editing._localImage || editing.gambar || null;
     if(editing._localImage) gambarToSave = await uploadImage(editing._localImage);
+
     if(editing.id){
       const { error } = await sb.from('questions').update({ teks, opsi, kunci: parseInt(key,10), gambar: gambarToSave }).eq('id', editing.id);
       if(error) return alert('Gagal update: '+error.message);
@@ -749,10 +696,12 @@
     }
     const file = e.target.files[0];
     if(!file) return;
+
     uploadStatusEl.textContent = 'Mengunggah dan memproses file...';
     try {
       const text = await file.text();
       const questionsToInsert = parseQuestionsFromFile(text);
+
       if (questionsToInsert.length > 0) {
         const { error } = await sb.from('questions').insert(questionsToInsert);
         if (error) {
@@ -778,6 +727,7 @@
     const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
     const questions = [];
     let currentQ = null;
+
     lines.forEach(line => {
       if (line.startsWith('Q:')) {
         if (currentQ) {
@@ -800,25 +750,24 @@
         }
       }
     });
+
     if (currentQ && currentQ.teks && currentQ.opsi.length >= 2 && currentQ.kunci !== null) {
       questions.push(currentQ);
     }
+
     return questions.filter(q => q.teks && q.opsi.length >= 2 && q.kunci !== null);
   }
 
   // EXAM: show all and scroll-spy + mobile numbers
   const sidebarEl = document.getElementById('exam-sidebar');
   const gridEl = document.getElementById('exam-grid');
-  const mobileNumbersWrap = document.querySelector('#mobile-numbers .grid');
+  const mobileNumbersWrap = document.querySelector('#mobile-numbers > div');
   const progressBar = document.getElementById('exam-progress');
   const progressText = document.getElementById('progress-text');
   const startExamBtn = document.getElementById('start-exam');
   const endExamBtn = document.getElementById('end-exam');
   const examScoreDisplay = document.getElementById('exam-score-display');
   let examState = { active: false, finished: false, items: [], answers: {}, refs: {}, answeredCount: 0 };
-  
-  // New event listener for endExam button
-  endExamBtn.addEventListener('click', endExam);
 
   async function startExam(){
     const cname = document.getElementById('select-exam').value;
@@ -835,15 +784,17 @@
       showSection('manage');
       return;
     }
+
     // Shuffle and limit to 50
     const arr = data.sort(() => Math.random() - 0.5).slice(0, Math.min(count, data.length));
+    
     examState.active = true;
     examState.finished = false;
     examState.items = arr;
     examState.answers = {};
     examState.refs = {};
     examState.answeredCount = 0;
-    
+
     // UI states
     startExamBtn.classList.add('hidden');
     endExamBtn.classList.remove('hidden');
@@ -852,11 +803,10 @@
     renderExamAll();
     setTimeout(()=> { document.getElementById('exam-grid').scrollTo({ top:0, behavior:'smooth' }); }, 80);
   }
-  
+
   async function endExam(){
     examState.finished = true;
     let correctAnswers = 0;
-    
     // Iterate and check answers
     examState.items.forEach(q => {
       const userAnswer = examState.answers[q.id];
@@ -865,161 +815,132 @@
       }
       updateQuestionVisual(q.id, true); // Show correct answer and user's answer
     });
-    
+
     const totalQuestions = examState.items.length;
-    const score = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
-    // Display score summary
-    examScoreDisplay.classList.remove('hidden');
+    const score = Math.round((correctAnswers / totalQuestions) * 100);
+    
     examScoreDisplay.innerHTML = `
-      <h3 class="text-xl font-bold">Hasil Ujian</h3>
-      <p class="text-sm mt-2">Anda menjawab **${correctAnswers}** dari **${totalQuestions}** pertanyaan dengan benar.</p>
-      <p class="text-3xl font-extrabold mt-2">Skor: ${score}%</p>
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="font-semibold text-lg">Ujian Selesai!</div>
+          <div class="small-muted">Jawaban benar: ${correctAnswers} dari ${totalQuestions}</div>
+        </div>
+        <div class="text-3xl font-bold">${score}</div>
+      </div>
     `;
-    
-    startExamBtn.classList.remove('hidden');
+    examScoreDisplay.classList.remove('hidden');
     endExamBtn.classList.add('hidden');
+    startExamBtn.classList.remove('hidden');
     document.getElementById('select-exam').disabled = false;
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('select-exam').value = '';
+    // Show correct answers
   }
 
-  // Quiz rendering and state management
-  function renderExamAll() {
+  function renderExamAll(){
     gridEl.innerHTML = '';
     sidebarEl.innerHTML = '';
     mobileNumbersWrap.innerHTML = '';
-    
     examState.items.forEach((q, i) => {
-      // Main card
+      // Create sidebar/mobile button
+      const btn = document.createElement('button');
+      btn.textContent = i + 1;
+      btn.className = 'w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors duration-200';
+      btn.dataset.id = q.id;
+      btn.dataset.index = i;
+      btn.addEventListener('click', () => scrollToQuestion(q.id));
+      sidebarEl.appendChild(btn.cloneNode(true));
+      mobileNumbersWrap.appendChild(btn);
+
+      // Create question card
       const card = document.createElement('div');
-      card.id = 'q-' + q.id;
-      card.className = 'card p-4 shadow-lg rounded-xl';
+      card.id = `q-${q.id}`;
+      card.className = 'p-4 card flex flex-col gap-3';
       card.innerHTML = `
-        <div class="font-medium text-lg">Soal #${i + 1}</div>
-        <div class="mt-2 text-base leading-relaxed">${escapeHtml(q.teks)}</div>
-        ${q.gambar ? `<img src="${q.gambar}" class="mt-4 max-h-48 rounded-lg shadow-md" />` : ''}
-        <div class="flex flex-col gap-2 mt-4" id="options-${q.id}">
-          ${(q.opsi || []).map((o, idx) => `
-            <button
-              data-q-id="${q.id}"
-              data-idx="${idx}"
-              class="option-btn text-left p-3 border rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-            >
-              <span class="font-semibold">${String.fromCharCode(65 + idx)}.</span> ${escapeHtml(o)}
+        <div class="font-medium flex items-start gap-2">
+          <div class="flex-shrink-0 text-white/40">${i+1}.</div>
+          <div>${escapeHtml(q.teks)}</div>
+        </div>
+        ${q.gambar ? `<img src="${q.gambar}" class="rounded max-h-40" />` : ''}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          ${q.opsi.map((o, idx) => `
+            <button class="exam-opt w-full text-left p-3 border rounded border-white/10 hover:bg-white/5 transition-colors duration-200" data-qid="${q.id}" data-idx="${idx}">
+              <span class="text-white/40">${String.fromCharCode(65+idx)}.</span> ${escapeHtml(o)}
             </button>
           `).join('')}
         </div>
       `;
       gridEl.appendChild(card);
-      examState.refs[q.id] = card;
-      
-      // Sidebar button
-      const navBtn = document.createElement('button');
-      navBtn.className = 'px-2 py-1 rounded w-full text-center transition-colors';
-      navBtn.textContent = i + 1;
-      navBtn.addEventListener('click', () => {
-        document.getElementById('q-' + q.id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-      sidebarEl.appendChild(navBtn);
-      
-      // Mobile number button
-      const mobileBtn = document.createElement('button');
-      mobileBtn.className = 'px-3 py-2 rounded-md font-semibold text-center transition-colors bg-white/5 hover:bg-white/10';
-      mobileBtn.textContent = i + 1;
-      mobileBtn.addEventListener('click', () => {
-          document.getElementById('q-' + q.id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-      mobileNumbersWrap.appendChild(mobileBtn);
+      examState.refs[q.id] = { element: card, sidebarBtn: btn };
     });
-    
-    bindExamActions();
+
+    // Option click listener
+    gridEl.querySelectorAll('.exam-opt').forEach(b => {
+      b.addEventListener('click', () => {
+        const qid = b.dataset.qid;
+        const idx = parseInt(b.dataset.idx, 10);
+        const card = document.getElementById(`q-${qid}`);
+        
+        // Remove active state from other options
+        card.querySelectorAll('.exam-opt').forEach(opt => opt.classList.remove('bg-indigo-600', 'text-white'));
+        
+        // Add active state to clicked option
+        b.classList.add('bg-indigo-600', 'text-white');
+        
+        const isNewAnswer = examState.answers[qid] === undefined;
+        examState.answers[qid] = idx;
+        if(isNewAnswer) {
+          examState.answeredCount++;
+        }
+        updateProgress();
+        updateQuestionVisual(qid);
+      });
+    });
     updateProgress();
   }
 
-  function bindExamActions(){
-    document.querySelectorAll('.option-btn').forEach(b => {
-      b.addEventListener('click', (e) => {
-        const qid = e.target.dataset.qId || e.target.closest('button').dataset.qId;
-        const optIdx = parseInt(e.target.dataset.idx || e.target.closest('button').dataset.idx, 10);
-        
-        if (examState.answers[qid] === undefined) {
-          examState.answeredCount++;
-        }
-        
-        examState.answers[qid] = optIdx;
-        updateQuestionVisual(qid);
-        updateProgress();
-      });
-    });
-    
-    // Add event listeners for mobile numbers, to prevent scroll on click
-    document.querySelectorAll('#mobile-numbers button').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const index = parseInt(e.target.textContent) - 1;
-        const qid = examState.items[index].id;
-        document.getElementById('q-' + qid).scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    });
+  function scrollToQuestion(qid){
+    const qEl = document.getElementById(`q-${qid}`);
+    if(qEl) qEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function updateQuestionVisual(qid, showAnswer = false){
-    const card = examState.refs[qid];
-    const question = examState.items.find(q=>q.id===qid);
-    if (!card || !question) return;
+  function updateQuestionVisual(qid, isFinished = false){
+    const ref = examState.refs[qid];
+    if(!ref) return;
 
-    const navBtn = document.querySelector(`#exam-sidebar button:nth-child(${examState.items.findIndex(q => q.id === qid) + 1})`);
-    const mobileBtn = document.querySelector(`#mobile-numbers .grid button:nth-child(${examState.items.findIndex(q => q.id === qid) + 1})`);
-    
-    // Reset background colors
-    card.querySelectorAll('.option-btn').forEach(btn => {
-      btn.classList.remove('bg-emerald-700', 'bg-rose-700', 'bg-indigo-700');
-      btn.classList.add('bg-white/5', 'hover:bg-white/10');
-    });
-
-    if (showAnswer) {
-      const userAnswer = examState.answers[qid];
-      const correctKey = question.kunci;
-      
-      card.querySelectorAll('.option-btn').forEach((btn, idx) => {
-        btn.disabled = true;
-        if (idx === correctKey) {
-          btn.classList.remove('bg-white/5', 'hover:bg-white/10');
-          btn.classList.add('bg-emerald-700');
-        } else if (idx === userAnswer && userAnswer !== correctKey) {
-          btn.classList.remove('bg-white/5', 'hover:bg-white/10');
-          btn.classList.add('bg-rose-700');
-        }
-      });
-      
-      if (userAnswer === correctKey) {
-        navBtn.classList.remove('bg-white/10', 'bg-rose-500', 'bg-indigo-500');
-        navBtn.classList.add('bg-emerald-500');
-        if(mobileBtn){ mobileBtn.classList.remove('bg-white/10', 'bg-rose-500', 'bg-indigo-500'); mobileBtn.classList.add('bg-emerald-500'); }
-      } else {
-        navBtn.classList.remove('bg-white/10', 'bg-emerald-500', 'bg-indigo-500');
-        navBtn.classList.add('bg-rose-500');
-        if(mobileBtn){ mobileBtn.classList.remove('bg-white/10', 'bg-emerald-500', 'bg-indigo-500'); mobileBtn.classList.add('bg-rose-500'); }
-      }
-      
+    // Sidebar button color
+    const btn = ref.sidebarBtn;
+    if(examState.answers[qid] !== undefined) {
+        btn.classList.add('bg-indigo-600', 'text-white');
+        btn.classList.remove('bg-white/5');
     } else {
-      const selectedIndex = examState.answers[qid];
-      if (selectedIndex !== undefined) {
-        const selectedBtn = card.querySelector(`.option-btn[data-idx="${selectedIndex}"]`);
-        if (selectedBtn) {
-          selectedBtn.classList.remove('bg-white/5', 'hover:bg-white/10');
-          selectedBtn.classList.add('bg-indigo-700');
-        }
-        
-        navBtn.classList.remove('bg-white/5', 'bg-rose-500');
-        navBtn.classList.add('bg-indigo-500');
-        if(mobileBtn){ mobileBtn.classList.remove('bg-white/5', 'bg-rose-500'); mobileBtn.classList.add('bg-indigo-500'); }
+        btn.classList.remove('bg-indigo-600', 'text-white');
+        btn.classList.add('bg-white/5');
+    }
 
-      } else {
-          navBtn.classList.remove('bg-indigo-500', 'bg-rose-500');
-          navBtn.classList.add('bg-white/5');
-          if(mobileBtn){ mobileBtn.classList.remove('bg-indigo-500', 'bg-rose-500'); mobileBtn.classList.add('bg-white/5'); }
-      }
+    if(isFinished){
+        const q = examState.items.find(x=>x.id===qid);
+        const userAnswer = examState.answers[qid];
+        const card = document.getElementById(`q-${qid}`);
+        card.querySelectorAll('.exam-opt').forEach(opt => {
+            const idx = parseInt(opt.dataset.idx, 10);
+            opt.classList.remove('bg-indigo-600');
+            opt.style.pointerEvents = 'none';
+
+            if(idx === q.kunci){
+                opt.classList.add('bg-emerald-600');
+            } else if(idx === userAnswer && idx !== q.kunci){
+                opt.classList.add('bg-rose-600');
+            }
+        });
+
+        // Sidebar color for finished state
+        if (userAnswer === q.kunci) {
+            btn.style.background = '#10B981'; // success-clr
+            btn.style.color = '#fff';
+        } else {
+            btn.style.background = '#EF4444'; // danger-clr
+            btn.style.color = '#fff'; 
+        }
     }
   }
 
@@ -1049,7 +970,9 @@
     document.getElementById('select-exam').value = cur2 || '';
   }
 
+  // Initial load
   loadCourses();
+})();
 </script>
 </body>
 </html>
