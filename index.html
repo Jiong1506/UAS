@@ -33,12 +33,12 @@
     .card {
       background: var(--card);
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      box-shadow: 0 0 20px rgba(0,0,0,0.25);
       transition: background-color .25s, box-shadow .25s;
     }
 
     .btn {
-      background: linear-gradient(90deg, var(--accent), #5b21b6);
+      background: linear-gradient(90deg, #6366f1, #a855f7); /* Updated gradient */
       color: white;
       padding: 10px 14px;
       border-radius: 10px;
@@ -49,6 +49,19 @@
     }
     .btn:hover { transform: translateY(-1px); }
     .btn:active { transform: translateY(0); opacity: 0.9; }
+
+    .btn-danger {
+      background: var(--danger-clr);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: transform .1s, opacity .1s;
+    }
+    .btn-danger:hover { transform: translateY(-1px); }
+    .btn-danger:active { transform: translateY(0); opacity: 0.9; }
 
     .btn-ghost {
       background: transparent;
@@ -79,7 +92,7 @@
     aside.sidebar .logo-area, aside.sidebar .theme-toggle-area { display: none; }
     aside.sidebar nav { flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; }
     aside.sidebar button { flex: 0 0 auto; }
-    .mobile-floating { display: block; }
+    .mobile-floating { display: flex; }
     .exam-grid { grid-template-columns: 1fr; }
 
     /* Media Query: Mobile Landscape (lebar minimal 576px) */
@@ -89,7 +102,7 @@
       aside.sidebar { width: 12rem; min-width: 12rem; max-width: 12rem; flex-direction: column; padding: 1rem; }
       aside.sidebar .logo-area { display: flex; }
       aside.sidebar nav { flex-direction: column; }
-      .mobile-floating { display: block; }
+      .mobile-floating { display: none; }
       .exam-grid { grid-template-columns: 1fr 1fr; }
     }
 
@@ -126,7 +139,8 @@
     .image-dropzone {
       background-color: var(--card);
       color: var(--text);
-      border: 1px solid var(--muted);
+      border: 1px dashed var(--muted);
+      border-radius: 12px;
     }
   </style>
 </head>
@@ -163,7 +177,7 @@
   <main class="flex-1 p-6 overflow-y-auto">
     <div class="main-header flex items-center justify-between mb-6">
       <div>
-        <h1 id="page-title" class="text-2xl font-bold">Dashboard</h1>
+        <h1 id="page-title" class="text-3xl font-bold">Dashboard</h1>
         <p id="page-sub" class="text-sm muted">Ringkasan mata kuliah & soal</p>
       </div>
 
@@ -178,7 +192,7 @@
 
     <section id="create-section" class="hidden">
       <div class="card p-4 shadow-lg rounded-xl">
-        <h2 class="text-lg font-semibold">Buat Mata Kuliah</h2>
+        <h2 class="text-xl font-semibold">Buat Mata Kuliah</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
           <div>
             <label class="text-sm muted">Nama Mata Kuliah</label>
@@ -204,16 +218,16 @@
               <div class="text-sm muted">Tarik & lepas atau pilih file</div>
               <input id="file-new" type="file" accept="image/*" class="hidden" />
               <div class="mt-3 flex gap-2">
-                <button id="pick-new" class="px-3 py-2 rounded bg-indigo-600 text-white">Pilih Gambar</button>
-                <button id="clear-new" class="px-3 py-2 rounded bg-white/10">Hapus</button>
+                <button id="pick-new" class="btn py-2 px-4 text-sm">Pilih Gambar</button>
+                <button id="clear-new" class="btn-ghost py-2 px-4 text-sm">Hapus</button>
               </div>
               <img id="preview-new" class="mt-3 max-h-28 rounded hidden" alt="preview" />
             </div>
           </div>
         </div>
         <div class="mt-4 flex justify-end gap-2">
-          <button id="create-course" class="btn">Buat</button>
-          <button id="cancel-create" class="btn-ghost">Batal</button>
+          <button id="create-course" class="btn py-2 px-4">Buat</button>
+          <button id="cancel-create" class="btn-ghost py-2 px-4">Batal</button>
         </div>
       </div>
     </section>
@@ -222,18 +236,18 @@
       <div class="card p-4 shadow-lg rounded-xl">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div>
-            <h2 class="text-lg font-semibold">Kelola Soal</h2>
+            <h2 class="text-xl font-semibold">Kelola Soal</h2>
             <p class="text-sm muted">Pilih mata kuliah lalu tambah/edit/hapus soal.</p>
           </div>
-          <div class="flex items-center gap-2">
-            <select id="select-manage" class="p-2 border rounded bg-transparent dark-select">
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <select id="select-manage" class="p-2 border rounded bg-transparent dark-select flex-1">
               <option value="">— Pilih Mata Kuliah —</option>
             </select>
-            <button id="btn-add-q" class="px-3 py-2 bg-indigo-600 text-white rounded" disabled>Tambah Soal</button>
+            <button id="btn-add-q" class="btn text-sm px-3 py-2" disabled>Tambah Soal</button>
           </div>
         </div>
         
-        <div class="card p-4 mt-4 flex flex-col items-start gap-2 shadow-md">
+        <div class="card p-4 mt-4 flex flex-col items-start gap-2 shadow-md rounded-xl">
             <h3 class="text-md font-semibold">Unggah Soal dari File Teks</h3>
             <p class="text-sm muted">Pilih mata kuliah lalu unggah file .txt.
             Lihat <a href="#" class="underline" onclick="alert('Format file:\n\nQ: Teks soal\nA: Opsi A\nB: Opsi B\nK: A\n\nSetiap soal dipisahkan oleh baris baru. Gambar tidak didukung.')">format file</a>.</p>
@@ -250,9 +264,9 @@
     <section id="editor-section" class="hidden mt-4">
       <div class="card p-4 shadow-lg rounded-xl">
         <div class="flex items-center justify-between flex-wrap gap-2">
-          <h3 id="editor-title" class="text-lg font-semibold">Tambah Soal</h3>
+          <h3 id="editor-title" class="text-xl font-semibold">Tambah Soal</h3>
           <div>
-            <button id="editor-cancel" class="btn-ghost">Batal</button>
+            <button id="editor-cancel" class="btn-ghost py-2 px-4">Batal</button>
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
@@ -277,15 +291,15 @@
               <div class="text-sm muted">Tarik & lepas atau pilih file</div>
               <input id="file-q" type="file" accept="image/*" class="hidden" />
               <div class="mt-3 flex gap-2">
-                <button id="pick-q" class="px-3 py-2 rounded bg-indigo-600 text-white">Pilih</button>
-                <button id="clear-q" class="px-3 py-2 rounded bg-white/10">Hapus</button>
+                <button id="pick-q" class="btn py-2 px-4 text-sm">Pilih</button>
+                <button id="clear-q" class="btn-ghost py-2 px-4 text-sm">Hapus</button>
               </div>
               <img id="preview-q" class="mt-3 max-h-28 rounded hidden" alt="preview" />
             </div>
           </div>
         </div>
         <div class="mt-4 flex justify-end gap-2">
-          <button id="save-q" class="btn">Simpan Soal</button>
+          <button id="save-q" class="btn py-2 px-4">Simpan Soal</button>
         </div>
       </div>
     </section>
@@ -294,16 +308,16 @@
       <div class="card p-4 shadow-lg rounded-xl">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div>
-            <h2 class="text-lg font-semibold">Mode Ujian — Tampilkan Semua Soal</h2>
+            <h2 class="text-xl font-semibold">Mode Ujian — Tampilkan Semua Soal</h2>
             <p class="text-sm muted">Semua soal akan ditampilkan sekaligus (maks 50).
             Klik nomor di sidebar untuk lompat cepat.</p>
           </div>
-          <div class="flex items-center gap-2">
-            <select id="select-exam" class="p-2 border rounded bg-transparent dark-select">
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <select id="select-exam" class="p-2 border rounded bg-transparent dark-select flex-1">
               <option value="">— Pilih Mata Kuliah —</option>
             </select>
-            <button id="start-exam" class="btn">Mulai Ujian</button>
-            <button id="end-exam" class="btn hidden">Selesai Ujian</button>
+            <button id="start-exam" class="btn text-sm px-3 py-2">Mulai Ujian</button>
+            <button id="end-exam" class="btn-danger text-sm px-3 py-2 hidden">Selesai Ujian</button>
           </div>
         </div>
         <div id="exam-score-display" class="card p-4 my-4 hidden"></div>
@@ -408,7 +422,7 @@
     
     courses.forEach(c=>{
       const el = document.createElement('div'); 
-      el.className = 'p-4 card flex flex-col justify-between h-48 shadow-md rounded-xl';
+      el.className = 'p-4 card flex flex-col justify-between h-48 shadow-lg rounded-xl';
       el.innerHTML = `
         <div>
           <div class="text-xs muted">Mata Kuliah</div>
@@ -590,19 +604,19 @@
     }
     questions.forEach(q=>{
       const div = document.createElement('div'); 
-      div.className = 'p-3 border rounded flex justify-between items-start gap-3 bg-white/5';
+      div.className = 'p-3 card flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-md rounded-xl';
       div.innerHTML = `
         <div class="flex-1">
           <div class="font-medium">${escapeHtml(q.teks)}</div>
           <div class="text-xs muted mt-1">${new Date(q.created_at || q.createdAt || Date.now()).toLocaleString()}</div>
           <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
-            ${(q.opsi||[]).map((o,idx)=>`<div class="${idx===q.kunci?'bg-emerald-50 text-white dark:bg-emerald-700':''} p-2 border rounded text-sm">${String.fromCharCode(65+idx)}. ${escapeHtml(o)}</div>`).join('')}
+            ${(q.opsi||[]).map((o,idx)=>`<div class="${idx===q.kunci?'bg-emerald-700 text-white':'bg-white/5'} p-2 border rounded text-sm">${String.fromCharCode(65+idx)}. ${escapeHtml(o)}</div>`).join('')}
           </div>
           ${q.gambar? `<img src="${q.gambar}" class="mt-2 max-h-36 rounded" />` : ''}
         </div>
-        <div class="flex flex-col gap-2">
-          <button data-id="${q.id}" class="edit-q px-3 py-1 bg-white/10 rounded">Edit</button>
-          <button data-id="${q.id}" class="del-q px-3 py-1 bg-rose-500 text-white rounded">Hapus</button>
+        <div class="flex flex-row sm:flex-col gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+          <button data-id="${q.id}" class="edit-q btn-ghost text-sm py-2 px-4">Edit</button>
+          <button data-id="${q.id}" class="del-q btn-danger text-sm py-2 px-4">Hapus</button>
         </div>
       `;
       wrap.appendChild(div);
@@ -759,6 +773,9 @@
   const examScoreDisplay = document.getElementById('exam-score-display');
   let examState = { active: false, finished: false, items: [], answers: {}, refs: {}, answeredCount: 0 };
   
+  // New event listener for endExam button
+  endExamBtn.addEventListener('click', endExam);
+
   async function startExam(){
     const cname = document.getElementById('select-exam').value;
     const course = cname ? courses.find(x=>x.name===cname) : courses[0];
@@ -806,7 +823,7 @@
     });
     
     const totalQuestions = examState.items.length;
-    const score = Math.round((correctAnswers / totalQuestions) * 100);
+    const score = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
     // Display score summary
     examScoreDisplay.classList.remove('hidden');
     examScoreDisplay.innerHTML = `
@@ -832,7 +849,7 @@
       // Main card
       const card = document.createElement('div');
       card.id = 'q-' + q.id;
-      card.className = 'card p-4 shadow-md rounded-xl';
+      card.className = 'card p-4 shadow-lg rounded-xl';
       card.innerHTML = `
         <div class="font-medium text-lg">Soal #${i + 1}</div>
         <div class="mt-2 text-base leading-relaxed">${escapeHtml(q.teks)}</div>
@@ -885,6 +902,16 @@
         updateProgress();
       });
     });
+    
+    // Add event listeners for mobile numbers, to prevent scroll on click
+    document.querySelectorAll('#mobile-numbers button').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const index = parseInt(e.target.textContent) - 1;
+        const qid = examState.items[index].id;
+        document.getElementById('q-' + qid).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
   }
 
   function updateQuestionVisual(qid, showAnswer = false){
@@ -897,7 +924,7 @@
     
     // Reset background colors
     card.querySelectorAll('.option-btn').forEach(btn => {
-      btn.classList.remove('bg-emerald-700', 'bg-rose-700', 'bg-red-500');
+      btn.classList.remove('bg-emerald-700', 'bg-rose-700', 'bg-indigo-700');
       btn.classList.add('bg-white/5', 'hover:bg-white/10');
     });
 
@@ -910,21 +937,21 @@
         if (idx === correctKey) {
           btn.classList.remove('bg-white/5', 'hover:bg-white/10');
           btn.classList.add('bg-emerald-700');
-        } else if (idx === userAnswer) {
+        } else if (idx === userAnswer && userAnswer !== correctKey) {
           btn.classList.remove('bg-white/5', 'hover:bg-white/10');
           btn.classList.add('bg-rose-700');
         }
       });
       
       if (userAnswer === correctKey) {
-        navBtn.classList.remove('bg-white/10', 'bg-rose-500');
+        navBtn.classList.remove('bg-white/10', 'bg-rose-500', 'bg-indigo-500');
         navBtn.classList.add('bg-emerald-500');
-        mobileBtn.classList.remove('bg-white/10', 'bg-rose-500');
+        mobileBtn.classList.remove('bg-white/10', 'bg-rose-500', 'bg-indigo-500');
         mobileBtn.classList.add('bg-emerald-500');
       } else {
-        navBtn.classList.remove('bg-white/10', 'bg-emerald-500');
+        navBtn.classList.remove('bg-white/10', 'bg-emerald-500', 'bg-indigo-500');
         navBtn.classList.add('bg-rose-500');
-        mobileBtn.classList.remove('bg-white/10', 'bg-emerald-500');
+        mobileBtn.classList.remove('bg-white/10', 'bg-emerald-500', 'bg-indigo-500');
         mobileBtn.classList.add('bg-rose-500');
       }
       
@@ -934,19 +961,19 @@
         const selectedBtn = card.querySelector(`.option-btn[data-idx="${selectedIndex}"]`);
         if (selectedBtn) {
           selectedBtn.classList.remove('bg-white/5', 'hover:bg-white/10');
-          selectedBtn.classList.add('bg-white/10');
+          selectedBtn.classList.add('bg-indigo-700');
         }
         
-        navBtn.style.background = '#6366f1';
-        navBtn.style.color = '#fff';
-        mobileBtn.style.background = '#6366f1';
-        mobileBtn.style.color = '#fff';
+        navBtn.classList.remove('bg-white/5', 'bg-rose-500');
+        navBtn.classList.add('bg-indigo-500');
+        mobileBtn.classList.remove('bg-white/5', 'bg-rose-500');
+        mobileBtn.classList.add('bg-indigo-500');
 
       } else {
-          navBtn.style.background = '';
-          navBtn.style.color = '';
-          mobileBtn.style.background = '';
-          mobileBtn.style.color = '';
+          navBtn.classList.remove('bg-indigo-500', 'bg-rose-500');
+          navBtn.classList.add('bg-white/5');
+          mobileBtn.classList.remove('bg-indigo-500', 'bg-rose-500');
+          mobileBtn.classList.add('bg-white/5');
       }
     }
   }
