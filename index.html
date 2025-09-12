@@ -98,9 +98,9 @@
     /* Default (Mobile Portrait) */
     .layout { flex-direction: column; }
     .main-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-    aside.sidebar { width: 100%; flex-direction: row; gap: 6px; padding: 8px; overflow-x: auto; overflow-y: hidden; }
+    aside.sidebar { width: 100%; flex-direction: column; gap: 6px; padding: 8px; overflow-x: hidden; overflow-y: hidden; }
     aside.sidebar .logo-area, aside.sidebar .theme-toggle-area { display: none; }
-    aside.sidebar nav { flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; }
+    aside.sidebar nav { flex-direction: column; }
     aside.sidebar button { flex: 0 0 auto; }
     .mobile-floating { display: block; } /* Diubah ke block untuk menampung card di bawah */
     #mobile-numbers > div {
@@ -469,18 +469,17 @@
 
     document.querySelectorAll('.course-card').forEach(card=>{
       card.addEventListener('click', async (e)=>{
-        // Cek jika klik berasal dari tombol Kelola atau Hapus
-        if(e.target.classList.contains('open-manage-btn') || e.target.classList.contains('delete-course')) {
-          e.stopPropagation();
-          return;
+        // Hanya jalankan jika target klik BUKAN tombol
+        if (!e.target.closest('button')) {
+          e.preventDefault(); // Mencegah perilaku default
+          const id = card.dataset.id;
+          const c = courses.find(x => x.id === id);
+          if (!c) return;
+          selectManage.value = c.name;
+          await openManageForCourse(c.name);
+          showSection('manage');
+          btnAddQ.disabled = false;
         }
-        const id = card.dataset.id;
-        const c = courses.find(x=>x.id===id);
-        if(!c) return;
-        selectManage.value = c.name;
-        await openManageForCourse(c.name);
-        showSection('manage');
-        btnAddQ.disabled = false;
       });
     });
 
@@ -921,7 +920,12 @@
       sidebarEl.appendChild(navBtn);
       
       // Mobile number button
-      const mobileBtn = navBtn.cloneNode(true);
+      const mobileBtn = document.createElement('button');
+      mobileBtn.className = 'px-3 py-2 rounded-md font-semibold text-center transition-colors bg-white/5 hover:bg-white/10';
+      mobileBtn.textContent = i + 1;
+      mobileBtn.addEventListener('click', () => {
+          document.getElementById('q-' + q.id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
       mobileNumbersWrap.appendChild(mobileBtn);
     });
     
@@ -988,13 +992,11 @@
       if (userAnswer === correctKey) {
         navBtn.classList.remove('bg-white/10', 'bg-rose-500', 'bg-indigo-500');
         navBtn.classList.add('bg-emerald-500');
-        mobileBtn.classList.remove('bg-white/10', 'bg-rose-500', 'bg-indigo-500');
-        mobileBtn.classList.add('bg-emerald-500');
+        if(mobileBtn){ mobileBtn.classList.remove('bg-white/10', 'bg-rose-500', 'bg-indigo-500'); mobileBtn.classList.add('bg-emerald-500'); }
       } else {
         navBtn.classList.remove('bg-white/10', 'bg-emerald-500', 'bg-indigo-500');
         navBtn.classList.add('bg-rose-500');
-        mobileBtn.classList.remove('bg-white/10', 'bg-emerald-500', 'bg-indigo-500');
-        mobileBtn.classList.add('bg-rose-500');
+        if(mobileBtn){ mobileBtn.classList.remove('bg-white/10', 'bg-emerald-500', 'bg-indigo-500'); mobileBtn.classList.add('bg-rose-500'); }
       }
       
     } else {
@@ -1008,14 +1010,12 @@
         
         navBtn.classList.remove('bg-white/5', 'bg-rose-500');
         navBtn.classList.add('bg-indigo-500');
-        mobileBtn.classList.remove('bg-white/5', 'bg-rose-500');
-        mobileBtn.classList.add('bg-indigo-500');
+        if(mobileBtn){ mobileBtn.classList.remove('bg-white/5', 'bg-rose-500'); mobileBtn.classList.add('bg-indigo-500'); }
 
       } else {
           navBtn.classList.remove('bg-indigo-500', 'bg-rose-500');
           navBtn.classList.add('bg-white/5');
-          mobileBtn.classList.remove('bg-indigo-500', 'bg-rose-500');
-          mobileBtn.classList.add('bg-white/5');
+          if(mobileBtn){ mobileBtn.classList.remove('bg-indigo-500', 'bg-rose-500'); mobileBtn.classList.add('bg-white/5'); }
       }
     }
   }
