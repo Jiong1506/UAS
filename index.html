@@ -21,7 +21,7 @@
 
     html, body { 
       height: 100%; 
-      overflow-x: hidden; /* Mencegah scroll horizontal */
+      overflow-x: hidden;
     }
     body {
       margin: 0;
@@ -49,10 +49,11 @@
       border: none;
       cursor: pointer;
       transition: transform .1s, opacity .1s;
-      white-space: nowrap; /* Mencegah tombol terpotong */
+      white-space: nowrap;
     }
     .btn:hover { transform: translateY(-1px); }
-    .btn:active { transform: translateY(0); opacity: 0.9; }
+    .btn:active { transform: translateY(0); opacity: 0.9;
+    }
 
     .btn-ghost {
       background: transparent;
@@ -63,51 +64,51 @@
       cursor: pointer;
       transition: color .25s, border-color .25s;
     }
-    .btn-ghost:hover { color: var(--text); border-color: var(--text); }
+    .btn-ghost:hover { color: var(--text);
+      border-color: var(--text); }
 
     .sidebar-scroll { 
       scrollbar-width: thin; 
-      scrollbar-color: rgba(255,255,255,0.12) transparent; 
+      scrollbar-color: rgba(255,255,255,0.12) transparent;
     }
     .sidebar-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
-    .sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 999px; }
+    .sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 999px;
+    }
 
-    /* --- Responsiveness: Tampilan Berbeda untuk Setiap Mode --- */
-
-    /* Default (Mobile Portrait) - PERBAIKAN */
+    /* Default (Mobile Portrait) */
     .layout { 
-      flex-direction: column; 
+      flex-direction: column;
       min-height: 100vh;
     }
     
     .main-header { 
-      flex-direction: column; 
+      flex-direction: column;
       align-items: flex-start; 
       gap: 1rem; 
       margin-bottom: 1rem;
     }
     
     aside.sidebar { 
-      width: 100%; 
+      width: 100%;
       flex-direction: column; 
       padding: 1rem; 
       overflow-x: hidden; 
       overflow-y: auto;
-      max-height: 40vh; /* Batasi tinggi sidebar di mobile */
+      max-height: 40vh;
     }
     
     aside.sidebar .logo-area { 
-      display: flex; 
+      display: flex;
       justify-content: center;
       margin-bottom: 1rem;
     }
     
     aside.sidebar .theme-toggle-area { 
-      display: none; 
+      display: none;
     }
     
     aside.sidebar nav { 
-      flex-direction: column; 
+      flex-direction: column;
       width: 100%;
     }
     
@@ -118,7 +119,7 @@
     }
     
     .mobile-floating { 
-      display: block; 
+      display: block;
       position: fixed;
       bottom: 0;
       left: 0;
@@ -134,7 +135,6 @@
       gap: 1rem;
     }
     
-    /* Perbaikan untuk tombol di mode mobile */
     .mobile-button-group {
       display: flex;
       flex-direction: column;
@@ -150,22 +150,27 @@
 
     /* Media Query: Mobile Landscape (lebar minimal 576px) */
     @media (min-width: 576px) and (max-width: 899px) {
-      .layout { flex-direction: row; }
-      .main-header { flex-direction: row; align-items: center; gap: 1rem; }
+      .layout { flex-direction: row;
+      }
+      .main-header { flex-direction: row; align-items: center; gap: 1rem;
+      }
       aside.sidebar { 
         width: 12rem; 
-        min-width: 12rem; 
+        min-width: 12rem;
         max-width: 12rem; 
         flex-direction: column; 
         padding: 1rem; 
         max-height: 100vh;
       }
-      aside.sidebar .logo-area { display: flex; }
-      aside.sidebar nav { flex-direction: column; }
-      .mobile-floating { display: block; }
-      .exam-grid { grid-template-columns: 1fr 1fr; }
+      aside.sidebar .logo-area { display: flex;
+      }
+      aside.sidebar nav { flex-direction: column;
+      }
+      .mobile-floating { display: block;
+      }
+      .exam-grid { grid-template-columns: 1fr 1fr;
+      }
       
-      /* Tombol untuk tablet */
       .mobile-button-group {
         flex-direction: row;
         justify-content: flex-end;
@@ -174,28 +179,32 @@
 
     /* Media Query: Tablet dan PC (lebar minimal 900px) */
     @media (min-width: 900px) {
-      .layout { flex-direction: row; }
-      .main-header { flex-direction: row; align-items: center; gap: 1rem; }
+      .layout { flex-direction: row;
+      }
+      .main-header { flex-direction: row; align-items: center; gap: 1rem;
+      }
       aside.sidebar { 
         width: 18rem; 
-        min-width: 18rem; 
+        min-width: 18rem;
         flex-direction: column; 
         padding: 1.5rem; 
         max-height: 100vh;
       }
-      aside.sidebar .logo-area { display: flex; }
-      aside.sidebar nav { flex-direction: column; }
-      .mobile-floating { display: none; }
-      .exam-grid { grid-template-columns: 1fr 1fr 1fr; }
+      aside.sidebar .logo-area { display: flex;
+      }
+      aside.sidebar nav { flex-direction: column;
+      }
+      .mobile-floating { display: none;
+      }
+      .exam-grid { grid-template-columns: 1fr 1fr 1fr;
+      }
       
-      /* Tombol untuk desktop */
       .mobile-button-group {
         flex-direction: row;
         justify-content: flex-end;
       }
     }
 
-    /* Penyesuaian untuk dropdown dan input agar gelap */
     select.dark-select {
         background-color: var(--card) !important;
         color: var(--text) !important;
@@ -217,7 +226,6 @@
       box-sizing: border-box;
     }
 
-    /* Penyesuaian untuk dropzone gambar */
     .image-dropzone {
       background-color: var(--card);
       color: var(--text);
@@ -226,7 +234,6 @@
       box-sizing: border-box;
     }
     
-    /* Perbaikan untuk grid mata kuliah */
     #courses-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -245,7 +252,6 @@
       }
     }
     
-    /* Perbaikan untuk select di mode manage */
     .manage-controls {
       display: flex;
       flex-direction: column;
@@ -260,7 +266,6 @@
       }
     }
     
-    /* Perbaikan untuk area unggah file */
     .file-upload-area {
       width: 100%;
       overflow: hidden;
@@ -268,6 +273,79 @@
     
     .file-upload-area input[type="file"] {
       width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Perbaikan tampilan soal */
+    .question-item {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    .question-text {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    
+    .question-options {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    @media (min-width: 640px) {
+      .question-options {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .question-option {
+      padding: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+    
+    .correct-option {
+      background-color: rgba(16, 185, 129, 0.2);
+      border-color: rgba(16, 185, 129, 0.5);
+    }
+    
+    .question-image {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 1rem;
+      max-height: 200px;
+      object-fit: contain;
+    }
+    
+    .question-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      justify-content: flex-end;
+    }
+    
+    .no-questions {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+    
+    .course-preview {
+      max-height: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .course-preview div {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -377,16 +455,6 @@
           </div>
         </div>
         
-        <div class="card p-4 mt-4 flex flex-col items-start gap-2">
-            <h3 class="text-md font-semibold">Unggah Soal dari File Teks</h3>
-            <p class="text-sm muted">Pilih mata kuliah lalu unggah file .txt.
-            Lihat <a href="#" class="underline" onclick="alert('Format file:\n\nQ: Teks soal\nA: Opsi A\nB: Opsi B\nK: A\n\nSetiap soal dipisahkan oleh baris baru. Gambar tidak didukung.')">format file</a>.</p>
-            <div class="file-upload-area">
-              <input type="file" id="file-upload" accept=".txt" class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 bg-transparent text-white/90 w-full" />
-            </div>
-            <p id="upload-status" class="text-sm muted mt-2"></p>
-        </div>
-        
         <div id="questions-list" class="mt-4 space-y-3"></div>
       </div>
     </section>
@@ -426,6 +494,16 @@
               </div>
               <img id="preview-q" class="mt-3 max-h-28 rounded hidden" alt="preview" />
             </div>
+            
+            <div class="card p-4 mt-4 flex flex-col items-start gap-2">
+              <h3 class="text-md font-semibold">Unggah Soal dari File Teks</h3>
+              <p class="text-sm muted">Pilih mata kuliah lalu unggah file .txt.
+                Lihat <a href="#" class="underline" onclick="alert('Format file:\n\nQ: Teks soal\nA: Opsi A\nB: Opsi B\nK: A\n\nSetiap soal dipisahkan oleh baris baru. Gambar tidak didukung.')">format file</a>.</p>
+              <div class="file-upload-area">
+                <input type="file" id="file-upload" accept=".txt" class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 bg-transparent text-white/90 w-full" />
+              </div>
+              <p id="upload-status" class="text-sm muted mt-2"></p>
+            </div>
           </div>
         </div>
         <div class="mt-4 flex justify-end gap-2">
@@ -440,7 +518,7 @@
           <div>
             <h2 class="text-lg font-semibold">Mode Ujian — Tampilkan Semua Soal</h2>
             <p class="text-sm muted">Semua soal akan ditampilkan sekaligus (maks 50).
-            Klik nomor di sidebar untuk lompat cepat.</p>
+              Klik nomor di sidebar untuk lompat cepat.</p>
           </div>
           <div class="manage-controls">
             <select id="select-exam" class="p-2 border rounded bg-transparent dark-select">
@@ -456,7 +534,7 @@
 
         <div class="mt-4 flex flex-col md:flex-row gap-4">
           <aside id="exam-sidebar" class="hidden md:block w-16 sidebar-scroll h-[70vh] overflow-y-auto p-2 card">
-            </aside>
+          </aside>
 
           <div class="flex-1">
             <div class="flex items-center justify-between mb-3">
@@ -464,7 +542,8 @@
               <div class="small-muted" id="progress-text">0 / 0 dijawab</div>
             </div>
             <div class="h-2 bg-white/5 rounded overflow-hidden mb-4">
-              <div id="exam-progress" class="h-2 rounded" style="width:0%; background: linear-gradient(90deg,var(--accent), #5b21b6)"></div>
+              <div id="exam-progress" class="h-2 rounded" style="width:0%;
+                background: linear-gradient(90deg,var(--accent), #5b21b6)"></div>
             </div>
             <div id="exam-grid" class="grid gap-4 max-h-[70vh] overflow-y-auto p-1 exam-grid">
               </div>
@@ -498,7 +577,6 @@
     editor: document.getElementById('editor-section'),
     exam: document.getElementById('exam-section')
   };
-  
   // Navigation buttons
   const nav = {
     dashboard: document.getElementById('nav-dashboard'),
@@ -509,7 +587,8 @@
   function showSection(name){
     Object.values(sections).forEach(s => s.classList.add('hidden'));
     sections[name].classList.remove('hidden');
-    pageTitle.textContent = name === 'dashboard' ? 'Dashboard' : name === 'create' ? 'Buat Mata Kuliah' : name === 'manage' ? 'Kelola Soal' : 'Mode Ujian';
+    pageTitle.textContent = name === 'dashboard' ?
+      'Dashboard' : name === 'create' ? 'Buat Mata Kuliah' : name === 'manage' ? 'Kelola Soal' : 'Mode Ujian';
     // Nav active
     Object.values(nav).forEach(b => b.classList.remove('bg-white/5'));
     if(name === 'dashboard') nav.dashboard.classList.add('bg-white/5');
@@ -523,14 +602,14 @@
   nav.manage.addEventListener('click', ()=> showSection('manage'));
   nav.exam.addEventListener('click', async ()=> { 
     showSection('exam'); 
-    await startExam();
+    // Logic untuk memuat mata kuliah di dropdown mode ujian
+    await populateSelects();
   });
   document.getElementById('open-create').addEventListener('click', ()=> showSection('create'));
 
   // state
   let courses = [], currentCourse = null, questions = [], editing = null;
   let newCourseImage = null;
-
   // UI elements references
   const coursesGrid = document.getElementById('courses-grid');
 
@@ -559,7 +638,7 @@
         <div>
           <div class="text-xs muted">Mata Kuliah</div>
           <div class="font-semibold text-lg">${escapeHtml(c.name)}</div>
-          <div class="text-sm muted mt-1" id="preview-${c.id}">Memuat preview...</div>
+          <div class="text-sm muted mt-1 course-preview" id="preview-${c.id}">Memuat preview...</div>
         </div>
         <div class="flex justify-end items-center gap-2 mt-4">
           <button data-id="${c.id}" class="open-manage px-3 py-1 rounded bg-indigo-600 text-white text-sm">Kelola</button>
@@ -568,9 +647,15 @@
       `;
       coursesGrid.appendChild(el);
 
+      // Load preview questions
       (async ()=>{
-        const { data: qd } = await sb.from('questions').select('id,teks').eq('course_id', c.id).order('created_at', { ascending: true }).limit(lim);
+        const { data: qd, error } = await sb.from('questions').select('id,teks').eq('course_id', c.id).order('created_at', { ascending: true }).limit(lim);
         const p = document.getElementById('preview-' + c.id);
+        if(error) {
+          p.innerHTML = '<div class="text-xs muted">Error memuat soal</div>';
+          return;
+        }
+        
         if(qd && qd.length) {
           p.innerHTML = qd.map((q,i)=>`<div class="text-sm">${i+1}. ${escapeHtml(q.teks.slice(0,80))}${q.teks.length>80?'...':''}</div>`).join('');
         } else {
@@ -584,7 +669,7 @@
         const id = b.dataset.id; 
         const c = courses.find(x=>x.id===id);
         if(!c) return; 
-        await openManageForCourse(c.name); 
+        await openManageForCourse(c); 
         showSection('manage');
       });
     });
@@ -696,7 +781,8 @@
         return dataUrl;
       }
       const { data: urlData } = sb.storage.from(STORAGE_BUCKET).getPublicUrl(filename);
-      return (urlData && urlData.publicUrl) ? urlData.publicUrl : dataUrl;
+      return (urlData && urlData.publicUrl) ?
+        urlData.publicUrl : dataUrl;
     }catch(err){ 
       console.warn('upload exception', err); 
       return dataUrl;
@@ -707,18 +793,24 @@
   const selectManage = document.getElementById('select-manage');
   const btnAddQ = document.getElementById('btn-add-q');
   selectManage.addEventListener('change', async ()=> { 
-    const nm = selectManage.value; 
-    await openManageForCourse(nm); 
-    btnAddQ.disabled = !nm; 
+    const courseName = selectManage.value;
+    const course = courses.find(c => c.name === courseName);
+    if (course) {
+      await openManageForCourse(course); 
+      btnAddQ.disabled = false; 
+    } else {
+      btnAddQ.disabled = true;
+      document.getElementById('questions-list').innerHTML = ''; // Clear the list
+    }
   });
-  async function openManageForCourse(name){
-    const c = courses.find(x=>x.name===name); 
-    currentCourse = c||null;
-    if(!c){ 
-      document.getElementById('questions-list').innerHTML = '<div class="muted">Pilih mata kuliah terlebih dahulu.</div>'; 
+  async function openManageForCourse(course){
+    currentCourse = course;
+    if(!course){ 
+      document.getElementById('questions-list').innerHTML = '<div class="muted">Pilih mata kuliah terlebih dahulu.</div>';
       return;
     }
-    const { data, error } = await sb.from('questions').select('*').eq('course_id', c.id).order('created_at', { ascending: false });
+    
+    const { data, error } = await sb.from('questions').select('*').eq('course_id', course.id).order('created_at', { ascending: false });
     if(error){ 
       alert('Gagal ambil soal: '+error.message); 
       return; 
@@ -731,36 +823,38 @@
     const wrap = document.getElementById('questions-list'); 
     wrap.innerHTML = '';
     if(!questions || questions.length === 0){ 
-      wrap.innerHTML = '<div class="muted text-center p-4 card">Belum ada soal.</div>';
+      wrap.innerHTML = '<div class="no-questions">Belum ada soal untuk mata kuliah ini.</div>';
       return;
     }
+    
     questions.forEach(q=>{
       const div = document.createElement('div'); 
-      div.className = 'p-3 border rounded flex justify-between items-start gap-3 bg-white/5';
+      div.className = 'question-item';
       div.innerHTML = `
-        <div class="flex-1">
-          <div class="font-medium">${escapeHtml(q.teks)}</div>
-          <div class="text-xs muted mt-1">${new Date(q.created_at || q.createdAt || Date.now()).toLocaleString()}</div>
-          <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
-            ${(q.opsi||[]).map((o,idx)=>`<div class="${idx===q.kunci?'bg-emerald-50 text-white dark:bg-emerald-700':''} p-2 border rounded text-sm">${String.fromCharCode(65+idx)}. ${escapeHtml(o)}</div>`).join('')}
-          </div>
-          ${q.gambar? `<img src="${q.gambar}" class="mt-2 max-h-36 rounded" />` : ''}
+        <div class="question-text">${escapeHtml(q.teks)}</div>
+        <div class="text-xs muted">${new Date(q.created_at).toLocaleString('id-ID')}</div>
+        <div class="question-options">
+          ${(q.opsi||[]).map((o,idx)=>`
+            <div class="question-option ${idx===q.kunci ? 'correct-option' : ''}">
+              <span class="font-semibold">${String.fromCharCode(65+idx)}.</span> ${escapeHtml(o)}
+            </div>
+          `).join('')}
         </div>
-        <div class="flex flex-col gap-2">
-          <button data-id="${q.id}" class="edit-q px-3 py-1 bg-white/10 rounded">Edit</button>
-          <button data-id="${q.id}" class="del-q px-3 py-1 bg-rose-500 text-white rounded">Hapus</button>
+        ${q.gambar ? `<img src="${q.gambar}" class="question-image" />` : ''}
+        <div class="question-actions">
+          <button data-id="${q.id}" class="edit-q px-3 py-1 bg-white/10 rounded text-sm">Edit</button>
+          <button data-id="${q.id}" class="del-q px-3 py-1 bg-rose-500 text-white rounded text-sm">Hapus</button>
         </div>
       `;
       wrap.appendChild(div);
     });
-
     // bind actions
     wrap.querySelectorAll('.del-q').forEach(b=> b.addEventListener('click', async ()=>{
       if(!confirm('Hapus soal?')) return;
       const id = b.dataset.id; 
       const { error } = await sb.from('questions').delete().eq('id', id);
       if(error) return alert('Gagal hapus: '+error.message);
-      await openManageForCourse(currentCourse.name);
+      await openManageForCourse(currentCourse);
     }));
     wrap.querySelectorAll('.edit-q').forEach(b=> b.addEventListener('click', ()=>{
       const id = b.dataset.id; 
@@ -770,7 +864,9 @@
       document.getElementById('editor-title').textContent = 'Edit Soal';
       document.getElementById('qe-text').value = editing.teks || '';
       for(let i=0;i<4;i++) document.getElementById('qe-opt-'+i).value = (editing.opsi && editing.opsi[i]) || '';
-      document.getElementById('qe-key').value = editing.kunci;
+      document.getElementById('qe-key').value = editing.kunci !== null && editing.kunci !== undefined ? editing.kunci : '';
+      
+      
       if(editing.gambar){ 
         document.getElementById('preview-q').src = editing.gambar; 
         document.getElementById('preview-q').classList.remove('hidden'); 
@@ -781,6 +877,7 @@
       window.scrollTo({top: document.getElementById('editor-section').offsetTop - 20, behavior:'smooth'});
     }));
   }
+  
   // Add question button
   btnAddQ.addEventListener('click', ()=> {
     if(!currentCourse) return alert('Pilih mata kuliah dulu');
@@ -794,7 +891,6 @@
     sections.editor.classList.remove('hidden');
     window.scrollTo({top: document.getElementById('editor-section').offsetTop - 20, behavior:'smooth'});
   });
-
   // editor file handlers
   const fileQ = document.getElementById('file-q'), pickQ = document.getElementById('pick-q'), clearQ = document.getElementById('clear-q'), previewQ = document.getElementById('preview-q');
   pickQ.addEventListener('click', ()=> fileQ.click());
@@ -814,26 +910,44 @@
     const teks = document.getElementById('qe-text').value.trim();
     const opsi = [0,1,2,3].map(i=>document.getElementById('qe-opt-'+i).value.trim()).filter(Boolean);
     const key = document.getElementById('qe-key').value;
-    if(!teks || opsi.length < 2 || key === '') return alert('Lengkapi teks, minimal 2 opsi, dan kunci.');
+    
+    if(!teks) return alert('Teks soal wajib diisi.');
+    if(opsi.length < 2) return alert('Minimal diperlukan 2 opsi jawaban.');
+    if(key === '') return alert('Kunci jawaban wajib dipilih.');
 
     let gambarToSave = editing._localImage || editing.gambar || null;
-    if(editing._localImage) gambarToSave = await uploadImage(editing._localImage);
+    if(editing._localImage) {
+      gambarToSave = await uploadImage(editing._localImage);
+    }
 
     if(editing.id){
-      const { error } = await sb.from('questions').update({ teks, opsi, kunci: parseInt(key,10), gambar: gambarToSave }).eq('id', editing.id);
+      const { error } = await sb.from('questions').update({ 
+        teks, 
+        opsi, 
+        kunci: parseInt(key,10), 
+        gambar: gambarToSave 
+      }).eq('id', editing.id);
+      
       if(error) return alert('Gagal update: '+error.message);
       alert('Soal diperbarui');
     } else {
-      const { data, error } = await sb.from('questions').insert({ course_id: currentCourse.id, teks, opsi, kunci: parseInt(key,10), gambar: gambarToSave }).select().single();
+      const { data, error } = await sb.from('questions').insert({ 
+        course_id: currentCourse.id, 
+        teks, 
+        opsi, 
+        kunci: parseInt(key,10), 
+        gambar: gambarToSave 
+      }).select().single();
       if(error) return alert('Gagal tambah: '+error.message);
       alert('Soal ditambahkan');
     }
-    await openManageForCourse(currentCourse.name);
+    
+    await openManageForCourse(currentCourse);
     sections.editor.classList.add('hidden');
   });
   document.getElementById('editor-cancel').addEventListener('click', ()=> sections.editor.classList.add('hidden'));
 
-  // NEW FEATURE: File Upload
+  // File Upload feature
   const fileUploadEl = document.getElementById('file-upload');
   const uploadStatusEl = document.getElementById('upload-status');
   fileUploadEl.addEventListener('change', async (e) => {
@@ -857,7 +971,7 @@
           alert(`Gagal mengunggah soal: ${error.message}`);
         } else {
           uploadStatusEl.textContent = `Berhasil mengunggah ${questionsToInsert.length} soal.`;
-          await openManageForCourse(currentCourse.name);
+          await openManageForCourse(currentCourse);
           alert(`Berhasil mengunggah ${questionsToInsert.length} soal.`);
         }
       } else {
@@ -867,29 +981,34 @@
       uploadStatusEl.textContent = `Error: ${err.message}`;
       alert(`Terjadi kesalahan saat memproses file: ${err.message}`);
     } finally {
-      fileUploadEl.value = ''; // Reset file input
+      fileUploadEl.value = '';
     }
   });
-
   function parseQuestionsFromFile(text) {
     const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
     const questions = [];
     let currentQ = null;
-
     lines.forEach(line => {
       if (line.startsWith('Q:')) {
         if (currentQ) {
-          questions.push(currentQ);
+          if (currentQ.teks && currentQ.opsi.length >= 2 && currentQ.kunci !== null) {
+            questions.push(currentQ);
+          }
         }
-        currentQ = { course_id: currentCourse.id, teks: line.substring(2).trim(), opsi: [], kunci: null };
+        currentQ = { 
+          course_id: currentCourse.id, 
+          teks: line.substring(2).trim(), 
+          opsi: [], 
+          kunci: null 
+        };
       } else if (line.startsWith('A:')) {
-        if (currentQ) currentQ.opsi.push(line.substring(2).trim());
+        if (currentQ) currentQ.opsi[0] = line.substring(2).trim();
       } else if (line.startsWith('B:')) {
-        if (currentQ) currentQ.opsi.push(line.substring(2).trim());
+        if (currentQ) currentQ.opsi[1] = line.substring(2).trim();
       } else if (line.startsWith('C:')) {
-        if (currentQ) currentQ.opsi.push(line.substring(2).trim());
+        if (currentQ) currentQ.opsi[2] = line.substring(2).trim();
       } else if (line.startsWith('D:')) {
-        if (currentQ) currentQ.opsi.push(line.substring(2).trim());
+        if (currentQ) currentQ.opsi[3] = line.substring(2).trim();
       } else if (line.startsWith('K:')) {
         const keyChar = line.substring(2).trim().toUpperCase();
         if (currentQ) {
@@ -898,12 +1017,11 @@
         }
       }
     });
-
     if (currentQ && currentQ.teks && currentQ.opsi.length >= 2 && currentQ.kunci !== null) {
       questions.push(currentQ);
     }
 
-    return questions.filter(q => q.teks && q.opsi.length >= 2 && q.kunci !== null);
+    return questions;
   }
 
   // EXAM: show all and scroll-spy + mobile numbers
@@ -914,19 +1032,24 @@
   const progressText = document.getElementById('progress-text');
   const startExamBtn = document.getElementById('start-exam');
   const endExamBtn = document.getElementById('end-exam');
+  const selectExam = document.getElementById('select-exam');
   const examScoreDisplay = document.getElementById('exam-score-display');
   let examState = { active: false, finished: false, items: [], answers: {}, refs: {}, answeredCount: 0 };
 
   async function startExam(){
-    const cname = document.getElementById('select-exam').value;
-    const course = cname ? courses.find(x=>x.name===cname) : courses[0];
+    const cname = selectExam.value;
+    const course = cname ? courses.find(x=>x.name===cname) : null;
     if(!course) {
-      alert('Belum ada mata kuliah untuk memulai ujian.');
-      showSection('dashboard');
+      alert('Silakan pilih mata kuliah untuk memulai ujian.');
       return;
     }
-    const count = 50;
-    const { data } = await sb.from('questions').select('*').eq('course_id', course.id);
+    
+    const { data, error } = await sb.from('questions').select('*').eq('course_id', course.id);
+    if(error) {
+      alert('Gagal memuat soal: ' + error.message);
+      return;
+    }
+    
     if(!data || data.length === 0) {
       alert('Belum ada soal di mata kuliah ini.');
       showSection('manage');
@@ -934,15 +1057,13 @@
     }
 
     // Shuffle and limit to 50
-    const arr = data.sort(() => Math.random() - 0.5).slice(0, Math.min(count, data.length));
-    
+    const arr = data.sort(() => Math.random() - 0.5).slice(0, Math.min(50, data.length));
     examState.active = true;
     examState.finished = false;
     examState.items = arr;
     examState.answers = {};
     examState.refs = {};
     examState.answeredCount = 0;
-
     // UI states
     startExamBtn.classList.add('hidden');
     endExamBtn.classList.remove('hidden');
@@ -963,10 +1084,8 @@
       }
       updateQuestionVisual(q.id, true); // Show correct answer and user's answer
     });
-
     const totalQuestions = examState.items.length;
     const score = Math.round((correctAnswers / totalQuestions) * 100);
-    
     examScoreDisplay.innerHTML = `
       <div class="flex items-center justify-between">
         <div>
@@ -979,9 +1098,8 @@
     examScoreDisplay.classList.remove('hidden');
     endExamBtn.classList.add('hidden');
     startExamBtn.classList.remove('hidden');
-    document.getElementById('select-exam').disabled = false;
-    document.getElementById('select-exam').value = '';
-    // Show correct answers
+    selectExam.disabled = false;
+    selectExam.value = '';
   }
 
   function renderExamAll(){
@@ -992,12 +1110,15 @@
       // Create sidebar/mobile button
       const btn = document.createElement('button');
       btn.textContent = i + 1;
-      btn.className = 'w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors duration-200';
+      btn.className = 'w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors duration-200 bg-white/5';
       btn.dataset.id = q.id;
       btn.dataset.index = i;
       btn.addEventListener('click', () => scrollToQuestion(q.id));
       sidebarEl.appendChild(btn.cloneNode(true));
-      mobileNumbersWrap.appendChild(btn);
+      
+      const mobileBtn = btn.cloneNode(true);
+      mobileBtn.className = 'w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors duration-200 bg-white/5';
+      mobileNumbersWrap.appendChild(mobileBtn);
 
       // Create question card
       const card = document.createElement('div');
@@ -1008,7 +1129,8 @@
           <div class="flex-shrink-0 text-white/40">${i+1}.</div>
           <div>${escapeHtml(q.teks)}</div>
         </div>
-        ${q.gambar ? `<img src="${q.gambar}" class="rounded max-h-40" />` : ''}
+        ${q.gambar ?
+          `<img src="${q.gambar}" class="rounded max-h-40" />` : ''}
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           ${q.opsi.map((o, idx) => `
             <button class="exam-opt w-full text-left p-3 border rounded border-white/10 hover:bg-white/5 transition-colors duration-200" data-qid="${q.id}" data-idx="${idx}">
@@ -1018,9 +1140,8 @@
         </div>
       `;
       gridEl.appendChild(card);
-      examState.refs[q.id] = { element: card, sidebarBtn: btn };
+      examState.refs[q.id] = { element: card, sidebarBtn: btn, mobileBtn: mobileBtn };
     });
-
     // Option click listener
     gridEl.querySelectorAll('.exam-opt').forEach(b => {
       b.addEventListener('click', () => {
@@ -1054,41 +1175,48 @@
   function updateQuestionVisual(qid, isFinished = false){
     const ref = examState.refs[qid];
     if(!ref) return;
-
     // Sidebar button color
     const btn = ref.sidebarBtn;
+    const mobileBtn = ref.mobileBtn;
     if(examState.answers[qid] !== undefined) {
-        btn.classList.add('bg-indigo-600', 'text-white');
-        btn.classList.remove('bg-white/5');
+      btn.classList.add('bg-indigo-600', 'text-white');
+      btn.classList.remove('bg-white/5');
+      mobileBtn.classList.add('bg-indigo-600', 'text-white');
+      mobileBtn.classList.remove('bg-white/5');
     } else {
-        btn.classList.remove('bg-indigo-600', 'text-white');
-        btn.classList.add('bg-white/5');
+      btn.classList.remove('bg-indigo-600', 'text-white');
+      btn.classList.add('bg-white/5');
+      mobileBtn.classList.remove('bg-indigo-600', 'text-white');
+      mobileBtn.classList.add('bg-white/5');
     }
 
     if(isFinished){
-        const q = examState.items.find(x=>x.id===qid);
-        const userAnswer = examState.answers[qid];
-        const card = document.getElementById(`q-${qid}`);
-        card.querySelectorAll('.exam-opt').forEach(opt => {
-            const idx = parseInt(opt.dataset.idx, 10);
-            opt.classList.remove('bg-indigo-600');
-            opt.style.pointerEvents = 'none';
+      const q = examState.items.find(x=>x.id===qid);
+      const userAnswer = examState.answers[qid];
+      const card = document.getElementById(`q-${qid}`);
+      card.querySelectorAll('.exam-opt').forEach(opt => {
+        const idx = parseInt(opt.dataset.idx, 10);
+        opt.classList.remove('bg-indigo-600');
+        opt.style.pointerEvents = 'none';
 
-            if(idx === q.kunci){
-                opt.classList.add('bg-emerald-600');
-            } else if(idx === userAnswer && idx !== q.kunci){
-                opt.classList.add('bg-rose-600');
-            }
-        });
-
-        // Sidebar color for finished state
-        if (userAnswer === q.kunci) {
-            btn.style.background = '#10B981'; // success-clr
-            btn.style.color = '#fff';
-        } else {
-            btn.style.background = '#EF4444'; // danger-clr
-            btn.style.color = '#fff'; 
+        if(idx === q.kunci){
+          opt.classList.add('bg-emerald-600');
+        } else if(idx === userAnswer && idx !== q.kunci){
+          opt.classList.add('bg-rose-600');
         }
+      });
+      // Sidebar color for finished state
+      if (userAnswer === q.kunci) {
+        btn.style.background = '#10B981';
+        btn.style.color = '#fff';
+        mobileBtn.style.background = '#10B981';
+        mobileBtn.style.color = '#fff';
+      } else {
+        btn.style.background = '#EF4444';
+        btn.style.color = '#fff';
+        mobileBtn.style.background = '#EF4444';
+        mobileBtn.style.color = '#fff';
+      }
     }
   }
 
@@ -1100,10 +1228,15 @@
     progressText.textContent = `${answered} / ${total} dijawab`;
   }
 
-  function populateSelects(){
+  async function populateSelects(){
     const selManage = document.getElementById('select-manage');
     const selExam = document.getElementById('select-exam');
     const cur1 = selManage.value, cur2 = selExam.value;
+    
+    const { data: coursesData, error } = await sb.from('courses').select('*').order('name');
+    if(error){ console.error(error); return; }
+    courses = coursesData;
+
     [selManage, selExam].forEach(s=>{
       s.innerHTML = '<option value="">— Pilih Mata Kuliah —</option>';
       courses.forEach(c => { 
@@ -1113,10 +1246,19 @@
         s.appendChild(o); 
       });
     });
+    
     document.getElementById('btn-add-q').disabled = !document.getElementById('select-manage').value;
     document.getElementById('select-manage').value = cur1 || '';
     document.getElementById('select-exam').value = cur2 || '';
   }
+
+  // Event listeners untuk tombol batal
+  document.getElementById('cancel-create').addEventListener('click', () => {
+    showSection('dashboard');
+  });
+  // Event listeners untuk tombol mulai ujian dan selesai ujian
+  startExamBtn.addEventListener('click', startExam);
+  endExamBtn.addEventListener('click', endExam);
 
   // Initial load
   loadCourses();
