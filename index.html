@@ -73,13 +73,31 @@
     /* Default (Mobile Portrait) */
     .layout { flex-direction: column; }
     .main-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-    aside.sidebar { width: 100%; flex-direction: row; gap: 6px; padding: 8px; overflow-x: auto; overflow-y: hidden; }
+    aside.sidebar { 
+      width: 100%;
+      flex-direction: column; /* PERBAIKAN: Mengubah ini dari row ke column */
+      padding: 1rem; /* Menyesuaikan padding agar lebih rapih */
+      overflow-x: hidden; /* PERBAIKAN: Mencegah scroll horizontal */
+      overflow-y: hidden;
+    }
     aside.sidebar .logo-area, aside.sidebar .theme-toggle-area { display: none; }
-    aside.sidebar nav { flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; }
+    aside.sidebar nav { 
+      flex-direction: column; /* PERBAIKAN: Mengubah ini dari row ke column */
+      flex-wrap: nowrap;
+      justify-content: flex-start; 
+    }
     aside.sidebar button { flex: 0 0 auto; }
     .mobile-floating { display: block; }
     .exam-grid { grid-template-columns: 1fr; }
-
+    /* PERBAIKAN: Menambahkan tata letak vertikal untuk tombol di mobile */
+    .manage-header-btns, .exam-header-btns {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 10px;
+      align-items: stretch;
+    }
+    
     /* Media Query: Mobile Landscape (lebar minimal 576px) */
     @media (min-width: 576px) and (max-width: 899px) {
       .layout { flex-direction: row; }
@@ -100,6 +118,11 @@
       aside.sidebar nav { flex-direction: column; }
       .mobile-floating { display: none; }
       .exam-grid { grid-template-columns: 1fr 1fr 1fr; }
+      /* PERBAIKAN: Mengembalikan tata letak horizontal di desktop */
+      .manage-header-btns, .exam-header-btns {
+        flex-direction: row;
+        width: auto;
+      }
     }
 
     /* Penyesuaian untuk dropdown dan input agar gelap */
@@ -186,8 +209,8 @@
             <div class="grid grid-cols-2 gap-2 mt-2">
               <input class="opt init p-2 border rounded dark-input" placeholder="Opsi A" />
               <input class="opt init p-2 border rounded dark-input" placeholder="Opsi B" />
-              <input class="opt init p-2 border rounded dark-input" placeholder="Opsi C (opsional)" />
-              <input class="opt init p-2 border rounded dark-input" placeholder="Opsi D (opsional)" />
+              <input class="opt init p-2 border rounded dark-input" placeholder="Opsi C" />
+              <input class="opt init p-2 border rounded dark-input" placeholder="Opsi D" />
             </div>
             <div class="flex items-center gap-2 mt-3">
               <select id="initial-key" class="p-2 border rounded bg-transparent muted dark-select">
@@ -223,7 +246,7 @@
             <h2 class="text-lg font-semibold">Kelola Soal</h2>
             <p class="text-sm muted">Pilih mata kuliah lalu tambah/edit/hapus soal.</p>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="manage-header-btns">
             <select id="select-manage" class="p-2 border rounded bg-transparent dark-select">
               <option value="">— Pilih Mata Kuliah —</option>
             </select>
@@ -296,19 +319,19 @@
             <p class="text-sm muted">Semua soal akan ditampilkan sekaligus (maks 50).
             Klik nomor di sidebar untuk lompat cepat.</p>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="exam-header-btns">
             <select id="select-exam" class="p-2 border rounded bg-transparent dark-select">
               <option value="">— Pilih Mata Kuliah —</option>
             </select>
             <button id="start-exam" class="btn">Mulai Ujian</button>
-            <button id="end-exam" class="btn hidden">Selesai Ujian</button>
+            <button id="end-exam" class="btn hidden">Selesih Ujian</button>
           </div>
         </div>
         <div id="exam-score-display" class="card p-4 my-4 hidden"></div>
 
         <div class="mt-4 flex gap-4">
           <aside id="exam-sidebar" class="hidden md:block w-16 sidebar-scroll h-[70vh] overflow-y-auto p-2 card">
-            </aside>
+          </aside>
 
           <div class="flex-1">
             <div class="flex items-center justify-between mb-3">
@@ -319,7 +342,7 @@
               <div id="exam-progress" class="h-2 rounded" style="width:0%; background: linear-gradient(90deg,var(--accent), #5b21b6)"></div>
             </div>
             <div id="exam-grid" class="grid gap-4 max-h-[70vh] overflow-y-auto p-1 exam-grid">
-              </div>
+            </div>
           </div>
         </div>
 
@@ -327,652 +350,636 @@
           <div class="bg-white/5 px-3 py-2 rounded-full flex gap-1 overflow-x-auto max-w-[90vw]">
           </div>
         </div>
-
       </div>
     </section>
   </main>
 </div>
 
 <script>
-(async function(){
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession: false } });
+  (async function(){
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession: false } });
 
-  // DOM refs
-  const app = document.getElementById('app'); 
-  const pageTitle = document.getElementById('page-title');
-  const pageSub = document.getElementById('page-sub');
+    // DOM refs
+    const app = document.getElementById('app'); 
+    const pageTitle = document.getElementById('page-title');
+    const pageSub = document.getElementById('page-sub');
 
-  // Section refs
-  const sections = {
-    dashboard: document.getElementById('dashboard-section'),
-    create: document.getElementById('create-section'),
-    manage: document.getElementById('manage-section'),
-    editor: document.getElementById('editor-section'),
-    exam: document.getElementById('exam-section')
-  };
-  
-  // Navigation buttons
-  const nav = {
-    dashboard: document.getElementById('nav-dashboard'),
-    create: document.getElementById('nav-create'),
-    manage: document.getElementById('nav-manage'),
-    exam: document.getElementById('nav-exam')
-  };
-  function showSection(name){
-    Object.values(sections).forEach(s => s.classList.add('hidden'));
-    sections[name].classList.remove('hidden');
-    pageTitle.textContent = name === 'dashboard' ? 'Dashboard' : name === 'create' ? 'Buat Mata Kuliah' : name === 'manage' ? 'Kelola Soal' : 'Mode Ujian';
-    // Nav active
-    Object.values(nav).forEach(b => b.classList.remove('bg-white/5'));
-    if(name === 'dashboard') nav.dashboard.classList.add('bg-white/5');
-    if(name === 'create') nav.create.classList.add('bg-white/5');
-    if(name === 'manage') nav.manage.classList.add('bg-white/5');
-    if(name === 'exam') nav.exam.classList.add('bg-white/5');
-  }
-
-  nav.dashboard.addEventListener('click', ()=> showSection('dashboard'));
-  nav.create.addEventListener('click', ()=> showSection('create'));
-  nav.manage.addEventListener('click', ()=> showSection('manage'));
-  nav.exam.addEventListener('click', async ()=> { 
-    showSection('exam'); 
-    await startExam();
-  });
-  document.getElementById('open-create').addEventListener('click', ()=> showSection('create'));
-
-  // state
-  let courses = [], currentCourse = null, questions = [], editing = null;
-  let newCourseImage = null;
-
-  // UI elements references
-  const coursesGrid = document.getElementById('courses-grid');
-
-  async function loadCourses(){
-    const { data, error } = await sb.from('courses').select('*').order('created_at', { ascending: false });
-    if(error){ console.error(error); alert('Gagal memuat mata kuliah: '+error.message); return; }
-    courses = data || [];
-    renderCourses(); 
-    populateSelects();
-  }
-
-  function escapeHtml(s){ return String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-  function renderCourses(){
-    coursesGrid.innerHTML = '';
-    const lim = 10;
-    if(courses.length === 0){ 
-      coursesGrid.innerHTML = '<div class="p-4 card col-span-full text-center">Belum ada mata kuliah. Buat mata kuliah baru.</div>'; 
-      return; 
+    // Section refs
+    const sections = {
+      dashboard: document.getElementById('dashboard-section'),
+      create: document.getElementById('create-section'),
+      manage: document.getElementById('manage-section'),
+      editor: document.getElementById('editor-section'),
+      exam: document.getElementById('exam-section')
+    };
+    // Navigation buttons
+    const nav = {
+      dashboard: document.getElementById('nav-dashboard'),
+      create: document.getElementById('nav-create'),
+      manage: document.getElementById('nav-manage'),
+      exam: document.getElementById('nav-exam')
+    };
+    function showSection(name){
+      Object.values(sections).forEach(s => s.classList.add('hidden'));
+      sections[name].classList.remove('hidden');
+      pageTitle.textContent = name === 'dashboard' ?
+      'Dashboard' : name === 'create' ? 'Buat Mata Kuliah' : name === 'manage' ? 'Kelola Soal' : 'Mode Ujian';
+      // Nav active
+      Object.values(nav).forEach(b => b.classList.remove('bg-white/5'));
+      if(name === 'dashboard') nav.dashboard.classList.add('bg-white/5');
+      if(name === 'create') nav.create.classList.add('bg-white/5');
+      if(name === 'manage') nav.manage.classList.add('bg-white/5');
+      if(name === 'exam') nav.exam.classList.add('bg-white/5');
     }
-    
-    courses.forEach(c=>{
-      const el = document.createElement('div'); 
-      el.className = 'p-4 card flex flex-col justify-between h-48';
-      el.innerHTML = `
-        <div>
-          <div class="text-xs muted">Mata Kuliah</div>
-          <div class="font-semibold text-lg">${escapeHtml(c.name)}</div>
-          <div class="text-sm muted mt-1" id="preview-${c.id}">Memuat preview...</div>
-        </div>
-        <div class="flex justify-end items-center gap-2 mt-4">
-          <button data-id="${c.id}" class="open-manage px-3 py-1 rounded bg-indigo-600 text-white text-sm">Kelola</button>
-          <button data-id="${c.id}" class="delete-course px-3 py-1 rounded bg-rose-500 text-white text-sm">Hapus</button>
-        </div>
-      `;
-      coursesGrid.appendChild(el);
 
-      (async ()=>{
-        const { data: qd } = await sb.from('questions').select('id,teks').eq('course_id', c.id).order('created_at', { ascending: true }).limit(lim);
-        const p = document.getElementById('preview-' + c.id);
-        if(qd && qd.length) {
-          p.innerHTML = qd.map((q,i)=>`<div class="text-sm">${i+1}. ${escapeHtml(q.teks.slice(0,80))}${q.teks.length>80?'...':''}</div>`).join('');
-        } else {
-          p.innerHTML = '<div class="text-xs muted">Belum ada soal</div>';
-        }
-      })();
+    nav.dashboard.addEventListener('click', ()=> showSection('dashboard'));
+    nav.create.addEventListener('click', ()=> showSection('create'));
+    nav.manage.addEventListener('click', ()=> showSection('manage'));
+    nav.exam.addEventListener('click', async ()=> { 
+      showSection('exam'); 
+      await startExam();
     });
+    document.getElementById('open-create').addEventListener('click', ()=> showSection('create'));
+    // state
+    let courses = [], currentCourse = null, questions = [], editing = null;
+    let newCourseImage = null;
+    // UI elements references
+    const coursesGrid = document.getElementById('courses-grid');
 
-    document.querySelectorAll('.open-manage').forEach(b=>{
-      b.addEventListener('click', async ()=>{
-        const id = b.dataset.id; 
-        const c = courses.find(x=>x.id===id);
-        if(!c) return; 
-        await openManageForCourse(c.name); 
-        showSection('manage');
-      });
-    });
-    document.querySelectorAll('.delete-course').forEach(b=>{
-      b.addEventListener('click', async ()=>{
-        const id = b.dataset.id;
-        const c = courses.find(x=>x.id===id);
-        if(!c) return;
-        if(confirm(`Apakah Anda yakin ingin menghapus mata kuliah "${c.name}"? Ini akan menghapus semua soal di dalamnya.`)){
-          const { error } = await sb.from('courses').delete().eq('id', id);
-          if(error) {
-            alert('Gagal menghapus mata kuliah: ' + error.message);
+    async function loadCourses(){
+      const { data, error } = await sb.from('courses').select('*').order('created_at', { ascending: false });
+      if(error){ console.error(error); alert('Gagal memuat mata kuliah: '+error.message); return; }
+      courses = data || [];
+      renderCourses(); 
+      populateSelects();
+    }
+
+    function escapeHtml(s){ return String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function renderCourses(){
+      coursesGrid.innerHTML = '';
+      const lim = 10;
+      if(courses.length === 0){ 
+        coursesGrid.innerHTML = '<div class="p-4 card col-span-full text-center">Belum ada mata kuliah. Buat mata kuliah baru.</div>'; 
+        return; 
+      }
+      
+      courses.forEach(c=>{
+        const el = document.createElement('div'); 
+        el.className = 'p-4 card flex flex-col justify-between h-48';
+        el.innerHTML = `
+          <div>
+            <div class="text-xs muted">Mata Kuliah</div>
+            <div class="font-semibold text-lg">${escapeHtml(c.name)}</div>
+            <div class="text-sm muted mt-1" id="preview-${c.id}">Memuat preview...</div>
+          </div>
+          <div class="flex justify-end items-center gap-2 mt-4">
+            <button data-id="${c.id}" class="open-manage px-3 py-1 rounded bg-indigo-600 text-white text-sm">Kelola</button>
+            <button data-id="${c.id}" class="delete-course px-3 py-1 rounded bg-rose-500 text-white text-sm">Hapus</button>
+          </div>
+        `;
+        coursesGrid.appendChild(el);
+
+        (async ()=>{
+          const { data: qd } = await sb.from('questions').select('id,teks').eq('course_id', c.id).order('created_at', { ascending: true }).limit(lim);
+          const p = document.getElementById('preview-' + c.id);
+          if(qd && qd.length) {
+            p.innerHTML = qd.map((q,i)=>`<div class="text-sm">${i+1}. ${escapeHtml(q.teks.slice(0,80))}${q.teks.length>80?'...':''}</div>`).join('');
           } else {
-            alert('Mata kuliah berhasil dihapus.');
-            await loadCourses();
-            showSection('dashboard');
+            p.innerHTML = '<div class="text-xs muted">Belum ada soal</div>';
+          }
+        })();
+      });
+
+      document.querySelectorAll('.open-manage').forEach(b=>{
+        b.addEventListener('click', async ()=>{
+          const id = b.dataset.id; 
+          const c = courses.find(x=>x.id===id);
+          if(!c) return; 
+          await openManageForCourse(c.name); 
+          showSection('manage');
+        });
+      });
+      document.querySelectorAll('.delete-course').forEach(b=>{
+        b.addEventListener('click', async ()=>{
+          const id = b.dataset.id;
+          const c = courses.find(x=>x.id===id);
+          if(!c) return;
+          if(confirm(`Apakah Anda yakin ingin menghapus mata kuliah "${c.name}"? Ini akan menghapus semua soal di dalamnya.`)){
+            const { error } = await sb.from('courses').delete().eq('id', id);
+            if(error) {
+              alert('Gagal menghapus mata kuliah: ' + error.message);
+            } else {
+              alert('Mata kuliah berhasil dihapus.');
+              await loadCourses();
+              showSection('dashboard');
+            }
+          }
+        });
+      });
+    }
+
+    // Create Course: image pick
+    const fileNew = document.getElementById('file-new'), pickNew = document.getElementById('pick-new'), clearNew = document.getElementById('clear-new'), previewNew = document.getElementById('preview-new');
+    pickNew.addEventListener('click', ()=> fileNew.click());
+    fileNew.addEventListener('change', e => handleFileInput(e,'new'));
+    clearNew.addEventListener('click', ()=> { newCourseImage = null; previewNew.src=''; previewNew.classList.add('hidden'); fileNew.value=''; });
+    document.getElementById('drop-new').addEventListener('drop', e=>{ e.preventDefault(); handleDrop(e,'new'); });
+    document.getElementById('drop-new').addEventListener('dragover', e=> e.preventDefault());
+
+    async function createCourse(){
+      const name = document.getElementById('course-name').value.trim();
+      if(!name) return alert('Nama mata kuliah wajib.');
+      const { data, error } = await sb.from('courses').insert({ name }).select().single();
+      if(error){ alert('Gagal membuat matkul: '+error.message); return; }
+      const courseId = data.id;
+      const teks = document.getElementById('initial-question').value.trim();
+      const opts = Array.from(document.querySelectorAll('.opt.init')).map(i=>i.value.trim()).filter(Boolean);
+      const key = document.getElementById('initial-key').value;
+      let gambarUrl = null;
+      if(newCourseImage) {
+        gambarUrl = await uploadImage(newCourseImage);
+      }
+      if(teks && opts.length >= 2 && key !== '') {
+        const { error: qErr } = await sb.from('questions').insert({ course_id: courseId, teks, opsi: opts, kunci: parseInt(key,10), gambar: gambarUrl });
+        if(qErr) console.warn('Initial question error', qErr);
+      }
+      document.getElementById('course-name').value=''; 
+      document.getElementById('initial-question').value='';
+      document.querySelectorAll('.opt.init').forEach(i=>i.value=''); 
+      document.getElementById('initial-key').value='';
+      newCourseImage = null; 
+      previewNew.src=''; 
+      previewNew.classList.add('hidden'); 
+      fileNew.value='';
+      await loadCourses();
+      alert('Mata kuliah berhasil dibuat.'); 
+      showSection('dashboard');
+    }
+    document.getElementById('create-course').addEventListener('click', createCourse);
+    
+    function handleFileInput(e,target){
+      const f = e.target.files[0];
+      if(!f) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        if(target === 'new'){ 
+          newCourseImage = ev.target.result;
+          previewNew.src = newCourseImage; 
+          previewNew.classList.remove('hidden');
+        }
+        else if(target === 'q'){ 
+          editing._localImage = ev.target.result;
+          document.getElementById('preview-q').src = editing._localImage; 
+          document.getElementById('preview-q').classList.remove('hidden');
+        }
+      };
+      reader.readAsDataURL(f);
+    }
+
+    function handleDrop(e,target){
+      const f = e.dataTransfer.files[0]; 
+      if(!f) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        if(target === 'new'){ 
+          newCourseImage = ev.target.result;
+          previewNew.src=newCourseImage; 
+          previewNew.classList.remove('hidden'); 
+        }
+        else if(target === 'q'){ 
+          editing._localImage = ev.target.result;
+          document.getElementById('preview-q').src = editing._localImage; 
+          document.getElementById('preview-q').classList.remove('hidden');
+        }
+      }; 
+      reader.readAsDataURL(f);
+    }
+
+    async function uploadImage(dataUrl){
+      if(!dataUrl) return null;
+      try{
+        const res = await fetch(dataUrl); 
+        const blob = await res.blob();
+        const filename = `img_${Date.now()}.png`;
+        const { data, error } = await sb.storage.from(STORAGE_BUCKET).upload(filename, blob, { cacheControl:'3600', upsert:false });
+        if(error){ 
+          console.warn('upload error', error.message); 
+          return dataUrl;
+        }
+        const { data: urlData } = sb.storage.from(STORAGE_BUCKET).getPublicUrl(filename);
+        return (urlData && urlData.publicUrl) ? urlData.publicUrl : dataUrl;
+      }catch(err){ 
+        console.warn('upload exception', err); 
+        return dataUrl;
+      }
+    }
+
+    // Manage section
+    const selectManage = document.getElementById('select-manage');
+    const btnAddQ = document.getElementById('btn-add-q');
+    selectManage.addEventListener('change', async ()=> { 
+      const nm = selectManage.value; 
+      await openManageForCourse(nm); 
+      btnAddQ.disabled = !nm; 
+    });
+    async function openManageForCourse(name){
+      const c = courses.find(x=>x.name===name); 
+      currentCourse = c||null;
+      if(!c){ 
+        document.getElementById('questions-list').innerHTML = '<div class="muted">Pilih mata kuliah terlebih dahulu.</div>'; 
+        return;
+      }
+      const { data, error } = await sb.from('questions').select('*').eq('course_id', c.id).order('created_at', { ascending: false });
+      if(error){ 
+        alert('Gagal ambil soal: '+error.message); 
+        return; 
+      }
+      questions = data || []; 
+      renderQuestionList();
+    }
+
+    function renderQuestionList(){
+      const wrap = document.getElementById('questions-list'); 
+      wrap.innerHTML = '';
+      if(!questions || questions.length === 0){ 
+        wrap.innerHTML = '<div class="muted text-center p-4 card">Belum ada soal.</div>';
+        return;
+      }
+      questions.forEach(q=>{
+        const div = document.createElement('div'); 
+        div.className = 'p-3 border rounded flex justify-between items-start gap-3 bg-white/5';
+        div.innerHTML = `
+          <div class="flex-1">
+            <div class="font-medium">${escapeHtml(q.teks)}</div>
+            <div class="text-xs muted mt-1">${new Date(q.created_at || q.createdAt || Date.now()).toLocaleString()}</div>
+            <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+              ${(q.opsi||[]).map((o,idx)=>`<div class="${idx===q.kunci?'bg-emerald-50 text-white dark:bg-emerald-700':''} p-2 border rounded text-sm">${String.fromCharCode(65+idx)}. ${escapeHtml(o)}</div>`).join('')}
+            </div>
+            ${q.gambar? `<img src="${q.gambar}" class="mt-2 max-h-36 rounded" />` : ''}
+          </div>
+          <div class="flex flex-col gap-2">
+            <button data-id="${q.id}" class="edit-q px-3 py-1 bg-white/10 rounded">Edit</button>
+            <button data-id="${q.id}" class="del-q px-3 py-1 bg-rose-500 text-white rounded">Hapus</button>
+          </div>
+        `;
+        wrap.appendChild(div);
+      });
+
+      // bind actions
+      wrap.querySelectorAll('.del-q').forEach(b=> b.addEventListener('click', async ()=>{
+        if(!confirm('Hapus soal?')) return;
+        const id = b.dataset.id; 
+        const { error } = await sb.from('questions').delete().eq('id', id);
+        if(error) return alert('Gagal hapus: '+error.message);
+        await openManageForCourse(currentCourse.name);
+      }));
+      wrap.querySelectorAll('.edit-q').forEach(b=> b.addEventListener('click', ()=>{
+        const id = b.dataset.id; 
+        const q = questions.find(x=>x.id===id); 
+        if(!q) return;
+        editing = JSON.parse(JSON.stringify(q));
+        document.getElementById('editor-title').textContent = 'Edit Soal';
+        document.getElementById('qe-text').value = editing.teks || '';
+        for(let i=0;i<4;i++) document.getElementById('qe-opt-'+i).value = (editing.opsi && editing.opsi[i]) || '';
+        document.getElementById('qe-key').value = editing.kunci;
+        if(editing.gambar){ 
+          document.getElementById('preview-q').src = editing.gambar; 
+          document.getElementById('preview-q').classList.remove('hidden'); 
+        } else { 
+          document.getElementById('preview-q').classList.add('hidden'); 
+        }
+        sections.editor.classList.remove('hidden');
+        window.scrollTo({top: document.getElementById('editor-section').offsetTop - 20, behavior:'smooth'});
+      }));
+    }
+    // Add question button
+    btnAddQ.addEventListener('click', ()=> {
+      if(!currentCourse) return alert('Pilih mata kuliah dulu');
+      editing = { id:null, teks:'', opsi:['','','',''], kunci:'', gambar:null, _localImage:null };
+      document.getElementById('editor-title').textContent = 'Tambah Soal';
+      document.getElementById('qe-text').value = '';
+      for(let i=0;i<4;i++) document.getElementById('qe-opt-'+i).value='';
+      document.getElementById('qe-key').value='';
+      document.getElementById('preview-q').classList.add('hidden');
+      document.getElementById('preview-q').src='';
+      sections.editor.classList.remove('hidden');
+      window.scrollTo({top: document.getElementById('editor-section').offsetTop - 20, behavior:'smooth'});
+    });
+    // editor file handlers
+    const fileQ = document.getElementById('file-q'), pickQ = document.getElementById('pick-q'), clearQ = document.getElementById('clear-q'), previewQ = document.getElementById('preview-q');
+    pickQ.addEventListener('click', ()=> fileQ.click());
+    fileQ.addEventListener('change', (e)=> handleFileInput(e,'q'));
+    clearQ.addEventListener('click', ()=> {
+      editing._localImage = null;
+      editing.gambar = null;
+      previewQ.src='';
+      previewQ.classList.add('hidden');
+      fileQ.value='';
+    });
+    document.getElementById('drop-q').addEventListener('drop', e=>{ e.preventDefault(); handleDrop(e,'q'); });
+    document.getElementById('drop-q').addEventListener('dragover', e=> e.preventDefault());
+
+    // Save question
+    document.getElementById('save-q').addEventListener('click', async ()=>{
+      const teks = document.getElementById('qe-text').value.trim();
+      const opsi = [0,1,2,3].map(i=>document.getElementById('qe-opt-'+i).value.trim()).filter(Boolean);
+      const key = document.getElementById('qe-key').value;
+      if(!teks || opsi.length < 2 || key === '') return alert('Lengkapi teks, minimal 2 opsi, dan kunci.');
+
+      let gambarToSave = editing._localImage || editing.gambar || null;
+      if(editing._localImage) gambarToSave = await uploadImage(editing._localImage);
+
+      if(editing.id){
+        const { error } = await sb.from('questions').update({ teks, opsi, kunci: parseInt(key,10), gambar: gambarToSave }).eq('id', editing.id);
+        if(error) return alert('Gagal update: '+error.message);
+        alert('Soal diperbarui');
+      } else {
+        const { data, error } = await sb.from('questions').insert({ course_id: currentCourse.id, teks, opsi, kunci: parseInt(key,10), gambar: gambarToSave }).select().single();
+        if(error) return alert('Gagal tambah: '+error.message);
+        alert('Soal ditambahkan');
+      }
+      await openManageForCourse(currentCourse.name);
+      sections.editor.classList.add('hidden');
+    });
+    document.getElementById('editor-cancel').addEventListener('click', ()=> sections.editor.classList.add('hidden'));
+    // NEW FEATURE: File Upload
+    const fileUploadEl = document.getElementById('file-upload');
+    const uploadStatusEl = document.getElementById('upload-status');
+    fileUploadEl.addEventListener('change', async (e) => {
+      if(!currentCourse) {
+        alert('Pilih mata kuliah terlebih dahulu untuk mengunggah soal.');
+        fileUploadEl.value = '';
+        return;
+      }
+      const file = e.target.files[0];
+      if(!file) return;
+
+      uploadStatusEl.textContent = 'Mengunggah dan memproses file...';
+      try {
+        const text = await file.text();
+        const questionsToInsert = parseQuestionsFromFile(text);
+
+        if (questionsToInsert.length > 0) {
+          const { error } = await sb.from('questions').insert(questionsToInsert);
+          if (error) {
+            uploadStatusEl.textContent = `Gagal mengunggah soal: ${error.message}`;
+            alert(`Gagal mengunggah soal: ${error.message}`);
+          } else {
+            uploadStatusEl.textContent = `Berhasil mengunggah ${questionsToInsert.length} soal.`;
+            await openManageForCourse(currentCourse.name);
+            alert(`Berhasil mengunggah ${questionsToInsert.length} soal.`);
+          }
+        } else {
+          uploadStatusEl.textContent = 'Tidak ada soal yang valid ditemukan di file.';
+        }
+      } catch (err) {
+        uploadStatusEl.textContent = `Error: ${err.message}`;
+        alert(`Terjadi kesalahan saat memproses file: ${err.message}`);
+      } finally {
+        fileUploadEl.value = '';
+      }
+    });
+    function parseQuestionsFromFile(text) {
+      const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
+      const questions = [];
+      let currentQ = null;
+      lines.forEach(line => {
+        if (line.startsWith('Q:')) {
+          if (currentQ) {
+            questions.push(currentQ);
+          }
+          currentQ = { course_id: currentCourse.id, teks: line.substring(2).trim(), opsi: [], kunci: null };
+        } else if (line.startsWith('A:')) {
+          if (currentQ) currentQ.opsi.push(line.substring(2).trim());
+        } else if (line.startsWith('B:')) {
+          if (currentQ) currentQ.opsi.push(line.substring(2).trim());
+        } else if (line.startsWith('C:')) {
+          if (currentQ) currentQ.opsi.push(line.substring(2).trim());
+        } else if (line.startsWith('D:')) {
+          if (currentQ) currentQ.opsi.push(line.substring(2).trim());
+        } else if (line.startsWith('K:')) {
+          const keyChar = line.substring(2).trim().toUpperCase();
+          if (currentQ) {
+            const keyMap = {'A': 0, 'B': 1, 'C': 2, 'D': 3};
+            currentQ.kunci = keyMap[keyChar] !== undefined ? keyMap[keyChar] : null;
           }
         }
       });
-    });
-  }
-
-  // Create Course: image pick
-  const fileNew = document.getElementById('file-new'), pickNew = document.getElementById('pick-new'), clearNew = document.getElementById('clear-new'), previewNew = document.getElementById('preview-new');
-  pickNew.addEventListener('click', ()=> fileNew.click());
-  fileNew.addEventListener('change', e => handleFileInput(e,'new'));
-  clearNew.addEventListener('click', ()=> { newCourseImage = null; previewNew.src=''; previewNew.classList.add('hidden'); fileNew.value=''; });
-  document.getElementById('drop-new').addEventListener('drop', e=>{ e.preventDefault(); handleDrop(e,'new'); });
-  document.getElementById('drop-new').addEventListener('dragover', e=> e.preventDefault());
-
-  async function createCourse(){
-    const name = document.getElementById('course-name').value.trim();
-    if(!name) return alert('Nama mata kuliah wajib.');
-    const { data, error } = await sb.from('courses').insert({ name }).select().single();
-    if(error){ alert('Gagal membuat matkul: '+error.message); return; }
-    const courseId = data.id;
-    const teks = document.getElementById('initial-question').value.trim();
-    const opts = Array.from(document.querySelectorAll('.opt.init')).map(i=>i.value.trim()).filter(Boolean);
-    const key = document.getElementById('initial-key').value;
-    let gambarUrl = null;
-    if(newCourseImage) {
-      gambarUrl = await uploadImage(newCourseImage);
-    }
-    if(teks && opts.length >= 2 && key !== '') {
-      const { error: qErr } = await sb.from('questions').insert({ course_id: courseId, teks, opsi: opts, kunci: parseInt(key,10), gambar: gambarUrl });
-      if(qErr) console.warn('Initial question error', qErr);
-    }
-    document.getElementById('course-name').value=''; 
-    document.getElementById('initial-question').value='';
-    document.querySelectorAll('.opt.init').forEach(i=>i.value=''); 
-    document.getElementById('initial-key').value='';
-    newCourseImage = null; 
-    previewNew.src=''; 
-    previewNew.classList.add('hidden'); 
-    fileNew.value='';
-    await loadCourses();
-    alert('Mata kuliah berhasil dibuat.'); 
-    showSection('dashboard');
-  }
-  document.getElementById('create-course').addEventListener('click', createCourse);
-  
-  function handleFileInput(e,target){
-    const f = e.target.files[0];
-    if(!f) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      if(target === 'new'){ 
-        newCourseImage = ev.target.result;
-        previewNew.src = newCourseImage; 
-        previewNew.classList.remove('hidden');
+      if (currentQ && currentQ.teks && currentQ.opsi.length >= 2 && currentQ.kunci !== null) {
+        questions.push(currentQ);
       }
-      else if(target === 'q'){ 
-        editing._localImage = ev.target.result;
-        document.getElementById('preview-q').src = editing._localImage; 
-        document.getElementById('preview-q').classList.remove('hidden');
+
+      return questions.filter(q => q.teks && q.opsi.length >= 2 && q.kunci !== null);
+    }
+
+    // EXAM: show all and scroll-spy + mobile numbers
+    const sidebarEl = document.getElementById('exam-sidebar');
+    const gridEl = document.getElementById('exam-grid');
+    const mobileNumbersWrap = document.querySelector('#mobile-numbers > div');
+    const progressBar = document.getElementById('exam-progress');
+    const progressText = document.getElementById('progress-text');
+    const startExamBtn = document.getElementById('start-exam');
+    const endExamBtn = document.getElementById('end-exam');
+    const examScoreDisplay = document.getElementById('exam-score-display');
+    let examState = { active: false, finished: false, items: [], answers: {}, refs: {}, answeredCount: 0 };
+    async function startExam(){
+      const cname = document.getElementById('select-exam').value;
+      const course = cname ? courses.find(x=>x.name===cname) : courses[0];
+      if(!course) {
+        alert('Belum ada mata kuliah untuk memulai ujian.');
+        showSection('dashboard');
+        return;
       }
-    };
-    reader.readAsDataURL(f);
-  }
-
-  function handleDrop(e,target){
-    const f = e.dataTransfer.files[0]; 
-    if(!f) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      if(target === 'new'){ 
-        newCourseImage = ev.target.result;
-        previewNew.src=newCourseImage; 
-        previewNew.classList.remove('hidden'); 
+      const count = 50;
+      const { data } = await sb.from('questions').select('*').eq('course_id', course.id);
+      if(!data || data.length === 0) {
+        alert('Belum ada soal di mata kuliah ini.');
+        showSection('manage');
+        return;
       }
-      else if(target === 'q'){ 
-        editing._localImage = ev.target.result;
-        document.getElementById('preview-q').src = editing._localImage; 
-        document.getElementById('preview-q').classList.remove('hidden');
-      }
-    }; 
-    reader.readAsDataURL(f);
-  }
 
-  async function uploadImage(dataUrl){
-    if(!dataUrl) return null;
-    try{
-      const res = await fetch(dataUrl); 
-      const blob = await res.blob();
-      const filename = `img_${Date.now()}.png`;
-      const { data, error } = await sb.storage.from(STORAGE_BUCKET).upload(filename, blob, { cacheControl:'3600', upsert:false });
-      if(error){ 
-        console.warn('upload error', error.message); 
-        return dataUrl;
-      }
-      const { data: urlData } = sb.storage.from(STORAGE_BUCKET).getPublicUrl(filename);
-      return (urlData && urlData.publicUrl) ? urlData.publicUrl : dataUrl;
-    }catch(err){ 
-      console.warn('upload exception', err); 
-      return dataUrl;
-    }
-  }
-
-  // Manage section
-  const selectManage = document.getElementById('select-manage');
-  const btnAddQ = document.getElementById('btn-add-q');
-  selectManage.addEventListener('change', async ()=> { 
-    const nm = selectManage.value; 
-    await openManageForCourse(nm); 
-    btnAddQ.disabled = !nm; 
-  });
-  async function openManageForCourse(name){
-    const c = courses.find(x=>x.name===name); 
-    currentCourse = c||null;
-    if(!c){ 
-      document.getElementById('questions-list').innerHTML = '<div class="muted">Pilih mata kuliah terlebih dahulu.</div>'; 
-      return;
-    }
-    const { data, error } = await sb.from('questions').select('*').eq('course_id', c.id).order('created_at', { ascending: false });
-    if(error){ 
-      alert('Gagal ambil soal: '+error.message); 
-      return; 
-    }
-    questions = data || []; 
-    renderQuestionList();
-  }
-
-  function renderQuestionList(){
-    const wrap = document.getElementById('questions-list'); 
-    wrap.innerHTML = '';
-    if(!questions || questions.length === 0){ 
-      wrap.innerHTML = '<div class="muted text-center p-4 card">Belum ada soal.</div>';
-      return;
-    }
-    questions.forEach(q=>{
-      const div = document.createElement('div'); 
-      div.className = 'p-3 border rounded flex justify-between items-start gap-3 bg-white/5';
-      div.innerHTML = `
-        <div class="flex-1">
-          <div class="font-medium">${escapeHtml(q.teks)}</div>
-          <div class="text-xs muted mt-1">${new Date(q.created_at || q.createdAt || Date.now()).toLocaleString()}</div>
-          <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
-            ${(q.opsi||[]).map((o,idx)=>`<div class="${idx===q.kunci?'bg-emerald-50 text-white dark:bg-emerald-700':''} p-2 border rounded text-sm">${String.fromCharCode(65+idx)}. ${escapeHtml(o)}</div>`).join('')}
-          </div>
-          ${q.gambar? `<img src="${q.gambar}" class="mt-2 max-h-36 rounded" />` : ''}
-        </div>
-        <div class="flex flex-col gap-2">
-          <button data-id="${q.id}" class="edit-q px-3 py-1 bg-white/10 rounded">Edit</button>
-          <button data-id="${q.id}" class="del-q px-3 py-1 bg-rose-500 text-white rounded">Hapus</button>
-        </div>
-      `;
-      wrap.appendChild(div);
-    });
-
-    // bind actions
-    wrap.querySelectorAll('.del-q').forEach(b=> b.addEventListener('click', async ()=>{
-      if(!confirm('Hapus soal?')) return;
-      const id = b.dataset.id; 
-      const { error } = await sb.from('questions').delete().eq('id', id);
-      if(error) return alert('Gagal hapus: '+error.message);
-      await openManageForCourse(currentCourse.name);
-    }));
-    wrap.querySelectorAll('.edit-q').forEach(b=> b.addEventListener('click', ()=>{
-      const id = b.dataset.id; 
-      const q = questions.find(x=>x.id===id); 
-      if(!q) return;
-      editing = JSON.parse(JSON.stringify(q));
-      document.getElementById('editor-title').textContent = 'Edit Soal';
-      document.getElementById('qe-text').value = editing.teks || '';
-      for(let i=0;i<4;i++) document.getElementById('qe-opt-'+i).value = (editing.opsi && editing.opsi[i]) || '';
-      document.getElementById('qe-key').value = editing.kunci;
-      if(editing.gambar){ 
-        document.getElementById('preview-q').src = editing.gambar; 
-        document.getElementById('preview-q').classList.remove('hidden'); 
-      } else { 
-        document.getElementById('preview-q').classList.add('hidden'); 
-      }
-      sections.editor.classList.remove('hidden');
-      window.scrollTo({top: document.getElementById('editor-section').offsetTop - 20, behavior:'smooth'});
-    }));
-  }
-  // Add question button
-  btnAddQ.addEventListener('click', ()=> {
-    if(!currentCourse) return alert('Pilih mata kuliah dulu');
-    editing = { id:null, teks:'', opsi:['','','',''], kunci:'', gambar:null, _localImage:null };
-    document.getElementById('editor-title').textContent = 'Tambah Soal';
-    document.getElementById('qe-text').value = '';
-    for(let i=0;i<4;i++) document.getElementById('qe-opt-'+i).value='';
-    document.getElementById('qe-key').value='';
-    document.getElementById('preview-q').classList.add('hidden');
-    document.getElementById('preview-q').src='';
-    sections.editor.classList.remove('hidden');
-    window.scrollTo({top: document.getElementById('editor-section').offsetTop - 20, behavior:'smooth'});
-  });
-
-  // editor file handlers
-  const fileQ = document.getElementById('file-q'), pickQ = document.getElementById('pick-q'), clearQ = document.getElementById('clear-q'), previewQ = document.getElementById('preview-q');
-  pickQ.addEventListener('click', ()=> fileQ.click());
-  fileQ.addEventListener('change', (e)=> handleFileInput(e,'q'));
-  clearQ.addEventListener('click', ()=> {
-    editing._localImage = null;
-    editing.gambar = null;
-    previewQ.src='';
-    previewQ.classList.add('hidden');
-    fileQ.value='';
-  });
-  document.getElementById('drop-q').addEventListener('drop', e=>{ e.preventDefault(); handleDrop(e,'q'); });
-  document.getElementById('drop-q').addEventListener('dragover', e=> e.preventDefault());
-
-  // Save question
-  document.getElementById('save-q').addEventListener('click', async ()=>{
-    const teks = document.getElementById('qe-text').value.trim();
-    const opsi = [0,1,2,3].map(i=>document.getElementById('qe-opt-'+i).value.trim()).filter(Boolean);
-    const key = document.getElementById('qe-key').value;
-    if(!teks || opsi.length < 2 || key === '') return alert('Lengkapi teks, minimal 2 opsi, dan kunci.');
-
-    let gambarToSave = editing._localImage || editing.gambar || null;
-    if(editing._localImage) gambarToSave = await uploadImage(editing._localImage);
-
-    if(editing.id){
-      const { error } = await sb.from('questions').update({ teks, opsi, kunci: parseInt(key,10), gambar: gambarToSave }).eq('id', editing.id);
-      if(error) return alert('Gagal update: '+error.message);
-      alert('Soal diperbarui');
-    } else {
-      const { data, error } = await sb.from('questions').insert({ course_id: currentCourse.id, teks, opsi, kunci: parseInt(key,10), gambar: gambarToSave }).select().single();
-      if(error) return alert('Gagal tambah: '+error.message);
-      alert('Soal ditambahkan');
-    }
-    await openManageForCourse(currentCourse.name);
-    sections.editor.classList.add('hidden');
-  });
-  document.getElementById('editor-cancel').addEventListener('click', ()=> sections.editor.classList.add('hidden'));
-
-  // NEW FEATURE: File Upload
-  const fileUploadEl = document.getElementById('file-upload');
-  const uploadStatusEl = document.getElementById('upload-status');
-  fileUploadEl.addEventListener('change', async (e) => {
-    if(!currentCourse) {
-      alert('Pilih mata kuliah terlebih dahulu untuk mengunggah soal.');
-      fileUploadEl.value = '';
-      return;
-    }
-    const file = e.target.files[0];
-    if(!file) return;
-
-    uploadStatusEl.textContent = 'Mengunggah dan memproses file...';
-    try {
-      const text = await file.text();
-      const questionsToInsert = parseQuestionsFromFile(text);
-
-      if (questionsToInsert.length > 0) {
-        const { error } = await sb.from('questions').insert(questionsToInsert);
-        if (error) {
-          uploadStatusEl.textContent = `Gagal mengunggah soal: ${error.message}`;
-          alert(`Gagal mengunggah soal: ${error.message}`);
-        } else {
-          uploadStatusEl.textContent = `Berhasil mengunggah ${questionsToInsert.length} soal.`;
-          await openManageForCourse(currentCourse.name);
-          alert(`Berhasil mengunggah ${questionsToInsert.length} soal.`);
-        }
-      } else {
-        uploadStatusEl.textContent = 'Tidak ada soal yang valid ditemukan di file.';
-      }
-    } catch (err) {
-      uploadStatusEl.textContent = `Error: ${err.message}`;
-      alert(`Terjadi kesalahan saat memproses file: ${err.message}`);
-    } finally {
-      fileUploadEl.value = ''; // Reset file input
-    }
-  });
-
-  function parseQuestionsFromFile(text) {
-    const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
-    const questions = [];
-    let currentQ = null;
-
-    lines.forEach(line => {
-      if (line.startsWith('Q:')) {
-        if (currentQ) {
-          questions.push(currentQ);
-        }
-        currentQ = { course_id: currentCourse.id, teks: line.substring(2).trim(), opsi: [], kunci: null };
-      } else if (line.startsWith('A:')) {
-        if (currentQ) currentQ.opsi.push(line.substring(2).trim());
-      } else if (line.startsWith('B:')) {
-        if (currentQ) currentQ.opsi.push(line.substring(2).trim());
-      } else if (line.startsWith('C:')) {
-        if (currentQ) currentQ.opsi.push(line.substring(2).trim());
-      } else if (line.startsWith('D:')) {
-        if (currentQ) currentQ.opsi.push(line.substring(2).trim());
-      } else if (line.startsWith('K:')) {
-        const keyChar = line.substring(2).trim().toUpperCase();
-        if (currentQ) {
-          const keyMap = {'A': 0, 'B': 1, 'C': 2, 'D': 3};
-          currentQ.kunci = keyMap[keyChar] !== undefined ? keyMap[keyChar] : null;
-        }
-      }
-    });
-
-    if (currentQ && currentQ.teks && currentQ.opsi.length >= 2 && currentQ.kunci !== null) {
-      questions.push(currentQ);
+      // Shuffle and limit to 50
+      const arr = data.sort(() => Math.random() - 0.5).slice(0, Math.min(count, data.length));
+      examState.active = true;
+      examState.finished = false;
+      examState.items = arr;
+      examState.answers = {};
+      examState.refs = {};
+      examState.answeredCount = 0;
+      // UI states
+      startExamBtn.classList.add('hidden');
+      endExamBtn.classList.remove('hidden');
+      document.getElementById('select-exam').disabled = true;
+      examScoreDisplay.classList.add('hidden');
+      renderExamAll();
+      setTimeout(()=> { document.getElementById('exam-grid').scrollTo({ top:0, behavior:'smooth' }); }, 80);
     }
 
-    return questions.filter(q => q.teks && q.opsi.length >= 2 && q.kunci !== null);
-  }
-
-  // EXAM: show all and scroll-spy + mobile numbers
-  const sidebarEl = document.getElementById('exam-sidebar');
-  const gridEl = document.getElementById('exam-grid');
-  const mobileNumbersWrap = document.querySelector('#mobile-numbers > div');
-  const progressBar = document.getElementById('exam-progress');
-  const progressText = document.getElementById('progress-text');
-  const startExamBtn = document.getElementById('start-exam');
-  const endExamBtn = document.getElementById('end-exam');
-  const examScoreDisplay = document.getElementById('exam-score-display');
-  let examState = { active: false, finished: false, items: [], answers: {}, refs: {}, answeredCount: 0 };
-
-  async function startExam(){
-    const cname = document.getElementById('select-exam').value;
-    const course = cname ? courses.find(x=>x.name===cname) : courses[0];
-    if(!course) {
-      alert('Belum ada mata kuliah untuk memulai ujian.');
-      showSection('dashboard');
-      return;
-    }
-    const count = 50;
-    const { data } = await sb.from('questions').select('*').eq('course_id', course.id);
-    if(!data || data.length === 0) {
-      alert('Belum ada soal di mata kuliah ini.');
-      showSection('manage');
-      return;
-    }
-
-    // Shuffle and limit to 50
-    const arr = data.sort(() => Math.random() - 0.5).slice(0, Math.min(count, data.length));
-    
-    examState.active = true;
-    examState.finished = false;
-    examState.items = arr;
-    examState.answers = {};
-    examState.refs = {};
-    examState.answeredCount = 0;
-
-    // UI states
-    startExamBtn.classList.add('hidden');
-    endExamBtn.classList.remove('hidden');
-    document.getElementById('select-exam').disabled = true;
-    examScoreDisplay.classList.add('hidden');
-    renderExamAll();
-    setTimeout(()=> { document.getElementById('exam-grid').scrollTo({ top:0, behavior:'smooth' }); }, 80);
-  }
-
-  async function endExam(){
-    examState.finished = true;
-    let correctAnswers = 0;
-    // Iterate and check answers
-    examState.items.forEach(q => {
-      const userAnswer = examState.answers[q.id];
-      if (userAnswer === q.kunci) {
-        correctAnswers++;
-      }
-      updateQuestionVisual(q.id, true); // Show correct answer and user's answer
-    });
-
-    const totalQuestions = examState.items.length;
-    const score = Math.round((correctAnswers / totalQuestions) * 100);
-    
-    examScoreDisplay.innerHTML = `
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="font-semibold text-lg">Ujian Selesai!</div>
-          <div class="small-muted">Jawaban benar: ${correctAnswers} dari ${totalQuestions}</div>
-        </div>
-        <div class="text-3xl font-bold">${score}</div>
-      </div>
-    `;
-    examScoreDisplay.classList.remove('hidden');
-    endExamBtn.classList.add('hidden');
-    startExamBtn.classList.remove('hidden');
-    document.getElementById('select-exam').disabled = false;
-    document.getElementById('select-exam').value = '';
-    // Show correct answers
-  }
-
-  function renderExamAll(){
-    gridEl.innerHTML = '';
-    sidebarEl.innerHTML = '';
-    mobileNumbersWrap.innerHTML = '';
-    examState.items.forEach((q, i) => {
-      // Create sidebar/mobile button
-      const btn = document.createElement('button');
-      btn.textContent = i + 1;
-      btn.className = 'w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors duration-200';
-      btn.dataset.id = q.id;
-      btn.dataset.index = i;
-      btn.addEventListener('click', () => scrollToQuestion(q.id));
-      sidebarEl.appendChild(btn.cloneNode(true));
-      mobileNumbersWrap.appendChild(btn);
-
-      // Create question card
-      const card = document.createElement('div');
-      card.id = `q-${q.id}`;
-      card.className = 'p-4 card flex flex-col gap-3';
-      card.innerHTML = `
-        <div class="font-medium flex items-start gap-2">
-          <div class="flex-shrink-0 text-white/40">${i+1}.</div>
-          <div>${escapeHtml(q.teks)}</div>
-        </div>
-        ${q.gambar ? `<img src="${q.gambar}" class="rounded max-h-40" />` : ''}
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          ${q.opsi.map((o, idx) => `
-            <button class="exam-opt w-full text-left p-3 border rounded border-white/10 hover:bg-white/5 transition-colors duration-200" data-qid="${q.id}" data-idx="${idx}">
-              <span class="text-white/40">${String.fromCharCode(65+idx)}.</span> ${escapeHtml(o)}
-            </button>
-          `).join('')}
-        </div>
-      `;
-      gridEl.appendChild(card);
-      examState.refs[q.id] = { element: card, sidebarBtn: btn };
-    });
-
-    // Option click listener
-    gridEl.querySelectorAll('.exam-opt').forEach(b => {
-      b.addEventListener('click', () => {
-        const qid = b.dataset.qid;
-        const idx = parseInt(b.dataset.idx, 10);
-        const card = document.getElementById(`q-${qid}`);
-        
-        // Remove active state from other options
-        card.querySelectorAll('.exam-opt').forEach(opt => opt.classList.remove('bg-indigo-600', 'text-white'));
-        
-        // Add active state to clicked option
-        b.classList.add('bg-indigo-600', 'text-white');
-        
-        const isNewAnswer = examState.answers[qid] === undefined;
-        examState.answers[qid] = idx;
-        if(isNewAnswer) {
-          examState.answeredCount++;
-        }
-        updateProgress();
-        updateQuestionVisual(qid);
-      });
-    });
-    updateProgress();
-  }
-
-  function scrollToQuestion(qid){
-    const qEl = document.getElementById(`q-${qid}`);
-    if(qEl) qEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function updateQuestionVisual(qid, isFinished = false){
-    const ref = examState.refs[qid];
-    if(!ref) return;
-
-    // Sidebar button color
-    const btn = ref.sidebarBtn;
-    if(examState.answers[qid] !== undefined) {
-        btn.classList.add('bg-indigo-600', 'text-white');
-        btn.classList.remove('bg-white/5');
-    } else {
-        btn.classList.remove('bg-indigo-600', 'text-white');
-        btn.classList.add('bg-white/5');
-    }
-
-    if(isFinished){
-        const q = examState.items.find(x=>x.id===qid);
-        const userAnswer = examState.answers[qid];
-        const card = document.getElementById(`q-${qid}`);
-        card.querySelectorAll('.exam-opt').forEach(opt => {
-            const idx = parseInt(opt.dataset.idx, 10);
-            opt.classList.remove('bg-indigo-600');
-            opt.style.pointerEvents = 'none';
-
-            if(idx === q.kunci){
-                opt.classList.add('bg-emerald-600');
-            } else if(idx === userAnswer && idx !== q.kunci){
-                opt.classList.add('bg-rose-600');
-            }
-        });
-
-        // Sidebar color for finished state
+    async function endExam(){
+      examState.finished = true;
+      let correctAnswers = 0;
+      // Iterate and check answers
+      examState.items.forEach(q => {
+        const userAnswer = examState.answers[q.id];
         if (userAnswer === q.kunci) {
-            btn.style.background = '#10B981'; // success-clr
-            btn.style.color = '#fff';
-        } else {
-            btn.style.background = '#EF4444'; // danger-clr
-            btn.style.color = '#fff'; 
+          correctAnswers++;
         }
-    }
-  }
-
-  function updateProgress(){
-    const total = examState.items.length;
-    const answered = examState.answeredCount || Object.keys(examState.answers).length;
-    const pct = total ? Math.round((answered/total)*100) : 0;
-    progressBar.style.width = pct + '%';
-    progressText.textContent = `${answered} / ${total} dijawab`;
-  }
-
-  function populateSelects(){
-    const selManage = document.getElementById('select-manage');
-    const selExam = document.getElementById('select-exam');
-    const cur1 = selManage.value, cur2 = selExam.value;
-    [selManage, selExam].forEach(s=>{
-      s.innerHTML = '<option value="">— Pilih Mata Kuliah —</option>';
-      courses.forEach(c => { 
-        const o = document.createElement('option'); 
-        o.value = c.name; 
-        o.textContent = c.name; 
-        s.appendChild(o); 
+        updateQuestionVisual(q.id, true); // Show correct answer and user's answer
       });
-    });
-    document.getElementById('btn-add-q').disabled = !document.getElementById('select-manage').value;
-    document.getElementById('select-manage').value = cur1 || '';
-    document.getElementById('select-exam').value = cur2 || '';
-  }
+      const totalQuestions = examState.items.length;
+      const score = Math.round((correctAnswers / totalQuestions) * 100);
+      examScoreDisplay.innerHTML = `
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-semibold text-lg">Ujian Selesai!</div>
+            <div class="small-muted">Jawaban benar: ${correctAnswers} dari ${totalQuestions}</div>
+          </div>
+          <div class="text-3xl font-bold">${score}</div>
+        </div>
+      `;
+      examScoreDisplay.classList.remove('hidden');
+      endExamBtn.classList.add('hidden');
+      startExamBtn.classList.remove('hidden');
+      document.getElementById('select-exam').disabled = false;
+      document.getElementById('select-exam').value = '';
+      // Show correct answers
+    }
 
-  // Initial load
-  loadCourses();
-})();
+    function renderExamAll(){
+      gridEl.innerHTML = '';
+      sidebarEl.innerHTML = '';
+      mobileNumbersWrap.innerHTML = '';
+      examState.items.forEach((q, i) => {
+        // Create sidebar/mobile button
+        const btn = document.createElement('button');
+        btn.textContent = i + 1;
+        btn.className = 'w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors duration-200';
+        btn.dataset.id = q.id;
+        btn.dataset.index = i;
+        btn.addEventListener('click', () => scrollToQuestion(q.id));
+        sidebarEl.appendChild(btn.cloneNode(true));
+        mobileNumbersWrap.appendChild(btn);
+
+        // Create question card
+        const card = document.createElement('div');
+        card.id = `q-${q.id}`;
+        card.className = 'p-4 card flex flex-col gap-3';
+        card.innerHTML = `
+          <div class="font-medium flex items-start gap-2">
+            <div class="flex-shrink-0 text-white/40">${i+1}.</div>
+            <div>${escapeHtml(q.teks)}</div>
+          </div>
+          ${q.gambar ? `<img src="${q.gambar}" class="rounded max-h-40" />` : ''}
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            ${q.opsi.map((o, idx) => `
+              <button class="exam-opt w-full text-left p-3 border rounded border-white/10 hover:bg-white/5 transition-colors duration-200" data-qid="${q.id}" data-idx="${idx}">
+                <span class="text-white/40">${String.fromCharCode(65+idx)}.</span> ${escapeHtml(o)}
+              </button>
+            `).join('')}
+          </div>
+        `;
+        gridEl.appendChild(card);
+        examState.refs[q.id] = { element: card, sidebarBtn: btn };
+      });
+      // Option click listener
+      gridEl.querySelectorAll('.exam-opt').forEach(b => {
+        b.addEventListener('click', () => {
+          const qid = b.dataset.qid;
+          const idx = parseInt(b.dataset.idx, 10);
+          const card = document.getElementById(`q-${qid}`);
+          
+          // Remove active state from other options
+          card.querySelectorAll('.exam-opt').forEach(opt => opt.classList.remove('bg-indigo-600', 'text-white'));
+          
+          // Add active state to clicked option
+          b.classList.add('bg-indigo-600', 'text-white');
+          
+          const isNewAnswer = examState.answers[qid] === undefined;
+          examState.answers[qid] = idx;
+          if(isNewAnswer) {
+            examState.answeredCount++;
+          }
+          updateProgress();
+          updateQuestionVisual(qid);
+        });
+      });
+      updateProgress();
+    }
+
+    function scrollToQuestion(qid){
+      const qEl = document.getElementById(`q-${qid}`);
+      if(qEl) qEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function updateQuestionVisual(qid, isFinished = false){
+      const ref = examState.refs[qid];
+      if(!ref) return;
+      // Sidebar button color
+      const btn = ref.sidebarBtn;
+      if(examState.answers[qid] !== undefined) {
+          btn.classList.add('bg-indigo-600', 'text-white');
+          btn.classList.remove('bg-white/5');
+      } else {
+          btn.classList.remove('bg-indigo-600', 'text-white');
+          btn.classList.add('bg-white/5');
+      }
+
+      if(isFinished){
+          const q = examState.items.find(x=>x.id===qid);
+          const userAnswer = examState.answers[qid];
+          const card = document.getElementById(`q-${qid}`);
+          card.querySelectorAll('.exam-opt').forEach(opt => {
+              const idx = parseInt(opt.dataset.idx, 10);
+              opt.classList.remove('bg-indigo-600');
+              opt.style.pointerEvents = 'none';
+
+              if(idx === q.kunci){
+                  opt.classList.add('bg-emerald-600');
+              } else if(idx === userAnswer && idx !== q.kunci){
+                  opt.classList.add('bg-rose-600');
+              }
+          });
+          // Sidebar color for finished state
+          if (userAnswer === q.kunci) {
+              btn.style.background = '#10B981';
+              btn.style.color = '#fff';
+          } else {
+              btn.style.background = '#EF4444';
+              btn.style.color = '#fff';
+          }
+      }
+    }
+
+    function updateProgress(){
+      const total = examState.items.length;
+      const answered = examState.answeredCount || Object.keys(examState.answers).length;
+      const pct = total ? Math.round((answered/total)*100) : 0;
+      progressBar.style.width = pct + '%';
+      progressText.textContent = `${answered} / ${total} dijawab`;
+    }
+
+    function populateSelects(){
+      const selManage = document.getElementById('select-manage');
+      const selExam = document.getElementById('select-exam');
+      const cur1 = selManage.value, cur2 = selExam.value;
+      [selManage, selExam].forEach(s=>{
+        s.innerHTML = '<option value="">— Pilih Mata Kuliah —</option>';
+        courses.forEach(c => { 
+          const o = document.createElement('option'); 
+          o.value = c.name; 
+          o.textContent = c.name; 
+          s.appendChild(o); 
+        });
+      });
+      document.getElementById('btn-add-q').disabled = !document.getElementById('select-manage').value;
+      document.getElementById('select-manage').value = cur1 || '';
+      document.getElementById('select-exam').value = cur2 || '';
+    }
+
+    // Initial load
+    loadCourses();
+  })();
 </script>
 </body>
 </html>
