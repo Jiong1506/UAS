@@ -36,9 +36,19 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.25);
       transition: background-color .25s, box-shadow .25s;
     }
+    
+    .course-card {
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .course-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
 
     .btn {
-      background: linear-gradient(90deg, #6366f1, #a855f7); /* Updated gradient */
+      background: linear-gradient(90deg, #6366f1, #a855f7);
       color: white;
       padding: 10px 14px;
       border-radius: 10px;
@@ -92,17 +102,12 @@
     aside.sidebar .logo-area, aside.sidebar .theme-toggle-area { display: none; }
     aside.sidebar nav { flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; }
     aside.sidebar button { flex: 0 0 auto; }
-    .mobile-floating { display: flex; }
-    /* Perbaikan: Ganti overflow-x-auto dengan flex-wrap */
+    .mobile-floating { display: block; } /* Diubah ke block untuk menampung card di bawah */
     #mobile-numbers > div {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr); /* 5 kolom */
+        gap: 8px;
         justify-content: center;
-        max-width: 90vw;
-        background: rgba(255, 255, 255, 0.05);
-        padding: 8px 12px;
-        border-radius: 999px;
     }
     .exam-grid { grid-template-columns: 1fr; }
 
@@ -351,7 +356,10 @@
         </div>
 
         <div id="mobile-numbers" class="mobile-floating fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
-          <div class="bg-white/5 px-3 py-2 rounded-full flex flex-wrap gap-1.5 justify-center max-w-[90vw] overflow-y-auto">
+          <div class="card p-4 flex flex-col gap-2 shadow-lg w-[95vw] sm:w-[50vw]">
+            <h3 class="font-semibold text-lg">Lompati Soal</h3>
+            <div class="grid grid-cols-5 gap-2">
+            </div>
           </div>
         </div>
 
@@ -433,7 +441,8 @@
     
     courses.forEach(c=>{
       const el = document.createElement('div'); 
-      el.className = 'p-4 card flex flex-col justify-between h-48 shadow-lg rounded-xl';
+      el.className = 'p-4 card flex flex-col justify-between h-48 shadow-lg rounded-xl course-card';
+      el.dataset.id = c.id;
       el.innerHTML = `
         <div>
           <div class="text-xs muted">Mata Kuliah</div>
@@ -441,7 +450,7 @@
           <div class="text-sm muted mt-1" id="preview-${c.id}">Memuat preview...</div>
         </div>
         <div class="flex justify-end items-center gap-2 mt-4">
-          <button data-id="${c.id}" class="open-manage px-3 py-1 rounded bg-indigo-600 text-white text-sm">Kelola</button>
+          <button data-id="${c.id}" class="open-manage-btn px-3 py-1 rounded bg-indigo-600 text-white text-sm">Kelola</button>
           <button data-id="${c.id}" class="delete-course px-3 py-1 rounded bg-rose-500 text-white text-sm">Hapus</button>
         </div>
       `;
@@ -458,17 +467,39 @@
       })();
     });
 
-    document.querySelectorAll('.open-manage').forEach(b=>{
-      b.addEventListener('click', async ()=>{
+    document.querySelectorAll('.course-card').forEach(card=>{
+      card.addEventListener('click', async (e)=>{
+        // Cek jika klik berasal dari tombol Kelola atau Hapus
+        if(e.target.classList.contains('open-manage-btn') || e.target.classList.contains('delete-course')) {
+          e.stopPropagation();
+          return;
+        }
+        const id = card.dataset.id;
+        const c = courses.find(x=>x.id===id);
+        if(!c) return;
+        selectManage.value = c.name;
+        await openManageForCourse(c.name);
+        showSection('manage');
+        btnAddQ.disabled = false;
+      });
+    });
+
+    document.querySelectorAll('.open-manage-btn').forEach(b=>{
+      b.addEventListener('click', async (e)=>{
+        e.stopPropagation();
         const id = b.dataset.id; 
         const c = courses.find(x=>x.id===id);
         if(!c) return; 
+        selectManage.value = c.name;
         await openManageForCourse(c.name); 
         showSection('manage');
+        btnAddQ.disabled = false;
       });
     });
+    
     document.querySelectorAll('.delete-course').forEach(b=>{
-      b.addEventListener('click', async ()=>{
+      b.addEventListener('click', async (e)=>{
+        e.stopPropagation();
         const id = b.dataset.id;
         const c = courses.find(x=>x.id===id);
         if(!c) return;
@@ -776,7 +807,7 @@
   // EXAM: show all and scroll-spy + mobile numbers
   const sidebarEl = document.getElementById('exam-sidebar');
   const gridEl = document.getElementById('exam-grid');
-  const mobileNumbersWrap = document.querySelector('#mobile-numbers > div');
+  const mobileNumbersWrap = document.querySelector('#mobile-numbers .grid');
   const progressBar = document.getElementById('exam-progress');
   const progressText = document.getElementById('progress-text');
   const startExamBtn = document.getElementById('start-exam');
@@ -931,7 +962,7 @@
     if (!card || !question) return;
 
     const navBtn = document.querySelector(`#exam-sidebar button:nth-child(${examState.items.findIndex(q => q.id === qid) + 1})`);
-    const mobileBtn = document.querySelector(`#mobile-numbers > div > button:nth-child(${examState.items.findIndex(q => q.id === qid) + 1})`);
+    const mobileBtn = document.querySelector(`#mobile-numbers .grid button:nth-child(${examState.items.findIndex(q => q.id === qid) + 1})`);
     
     // Reset background colors
     card.querySelectorAll('.option-btn').forEach(btn => {
