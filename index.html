@@ -350,6 +350,38 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
+    /* Gaya untuk modal pop-up yang baru */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .modal-overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-content {
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(-20px);
+      transition: transform 0.3s ease-in-out;
+    }
+    .modal-overlay.visible .modal-content {
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body data-theme="dark">
@@ -459,59 +491,6 @@
       </div>
     </section>
 
-    <section id="editor-section" class="hidden mt-4">
-      <div class="card p-4">
-        <div class="flex items-center justify-between">
-          <h3 id="editor-title" class="text-lg font-semibold">Tambah Soal</h3>
-          <div>
-            <button id="editor-cancel" class="btn-ghost">Batal</button>
-          </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
-          <div>
-            <label class="text-sm muted">Teks Soal</label>
-            <textarea id="qe-text" class="mt-2 p-3 border rounded w-full bg-transparent dark-input"></textarea>
-            <div class="grid grid-cols-2 gap-2 mt-2">
-              <input id="qe-opt-0" class="p-2 border rounded dark-input" placeholder="Opsi A" />
-              <input id="qe-opt-1" class="p-2 border rounded dark-input" placeholder="Opsi B" />
-              <input id="qe-opt-2" class="p-2 border rounded dark-input" placeholder="Opsi C (opsional)" />
-              <input id="qe-opt-3" class="p-2 border rounded dark-input" placeholder="Opsi D (opsional)" />
-            </div>
-            <div class="flex items-center gap-2 mt-3">
-              <select id="qe-key" class="p-2 border rounded bg-transparent dark-select">
-                <option value="">— Pilih Kunci —</option><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label class="text-sm muted">Gambar (opsional)</label>
-            <div id="drop-q" class="mt-2 p-3 border rounded flex flex-col items-center justify-center image-dropzone h-44">
-              <div class="text-sm muted">Tarik & lepas atau pilih file</div>
-              <input id="file-q" type="file" accept="image/*" class="hidden" />
-              <div class="mt-3 flex gap-2">
-                <button id="pick-q" class="px-3 py-2 rounded bg-indigo-600 text-white">Pilih</button>
-                <button id="clear-q" class="px-3 py-2 rounded bg-white/10">Hapus</button>
-              </div>
-              <img id="preview-q" class="mt-3 max-h-28 rounded hidden" alt="preview" />
-            </div>
-            
-            <div class="card p-4 mt-4 flex flex-col items-start gap-2">
-              <h3 class="text-md font-semibold">Unggah Soal dari File Teks</h3>
-              <p class="text-sm muted">Pilih mata kuliah lalu unggah file .txt.
-                Lihat <a href="#" class="underline" onclick="alert('Format file:\n\nQ: Teks soal\nA: Opsi A\nB: Opsi B\nK: A\n\nSetiap soal dipisahkan oleh baris baru. Gambar tidak didukung.')">format file</a>.</p>
-              <div class="file-upload-area">
-                <input type="file" id="file-upload" accept=".txt" class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 bg-transparent text-white/90 w-full" />
-              </div>
-              <p id="upload-status" class="text-sm muted mt-2"></p>
-            </div>
-          </div>
-        </div>
-        <div class="mt-4 flex justify-end gap-2">
-          <button id="save-q" class="btn">Simpan Soal</button>
-        </div>
-      </div>
-    </section>
-
     <section id="exam-section" class="hidden mt-4">
       <div class="card p-4">
         <div class="flex items-center justify-between flex-col md:flex-row gap-4 md:gap-0">
@@ -558,6 +537,60 @@
       </div>
     </section>
   </main>
+
+  <div id="editor-modal" class="modal-overlay hidden">
+    <div class="modal-content card p-4">
+      <div class="flex items-center justify-between">
+        <h3 id="editor-title" class="text-lg font-semibold">Tambah Soal</h3>
+        <div>
+          <button id="editor-cancel" class="btn-ghost">Batal</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+        <div>
+          <label class="text-sm muted">Teks Soal</label>
+          <textarea id="qe-text" class="mt-2 p-3 border rounded w-full bg-transparent dark-input"></textarea>
+          <div class="grid grid-cols-2 gap-2 mt-2">
+            <input id="qe-opt-0" class="p-2 border rounded dark-input" placeholder="Opsi A" />
+            <input id="qe-opt-1" class="p-2 border rounded dark-input" placeholder="Opsi B" />
+            <input id="qe-opt-2" class="p-2 border rounded dark-input" placeholder="Opsi C (opsional)" />
+            <input id="qe-opt-3" class="p-2 border rounded dark-input" placeholder="Opsi D (opsional)" />
+          </div>
+          <div class="flex items-center gap-2 mt-3">
+            <select id="qe-key" class="p-2 border rounded bg-transparent dark-select">
+              <option value="">— Pilih Kunci —</option><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="text-sm muted">Gambar (opsional)</label>
+          <div id="drop-q" class="mt-2 p-3 border rounded flex flex-col items-center justify-center image-dropzone h-44">
+            <div class="text-sm muted">Tarik & lepas atau pilih file</div>
+            <input id="file-q" type="file" accept="image/*" class="hidden" />
+            <div class="mt-3 flex gap-2">
+              <button id="pick-q" class="px-3 py-2 rounded bg-indigo-600 text-white">Pilih</button>
+              <button id="clear-q" class="px-3 py-2 rounded bg-white/10">Hapus</button>
+            </div>
+            <img id="preview-q" class="mt-3 max-h-28 rounded hidden" alt="preview" />
+          </div>
+          
+          <div class="card p-4 mt-4 flex flex-col items-start gap-2">
+            <h3 class="text-md font-semibold">Unggah Soal dari File Teks</h3>
+            <p class="text-sm muted">Pilih mata kuliah lalu unggah file .txt.
+              Lihat <a href="#" class="underline" onclick="alert('Format file:\n\nQ: Teks soal\nA: Opsi A\nB: Opsi B\nK: A\n\nSetiap soal dipisahkan oleh baris baru. Gambar tidak didukung.')">format file</a>.</p>
+            <div class="file-upload-area">
+              <input type="file" id="file-upload" accept=".txt" class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 bg-transparent text-white/90 w-full" />
+            </div>
+            <p id="upload-status" class="text-sm muted mt-2"></p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 flex justify-end gap-2">
+        <button id="save-q" class="btn">Simpan Soal</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -574,7 +607,6 @@
     dashboard: document.getElementById('dashboard-section'),
     create: document.getElementById('create-section'),
     manage: document.getElementById('manage-section'),
-    editor: document.getElementById('editor-section'),
     exam: document.getElementById('exam-section')
   };
   // Navigation buttons
@@ -584,6 +616,9 @@
     manage: document.getElementById('nav-manage'),
     exam: document.getElementById('nav-exam')
   };
+  // Modal refs
+  const editorModal = document.getElementById('editor-modal');
+
   function showSection(name){
     Object.values(sections).forEach(s => s.classList.add('hidden'));
     sections[name].classList.remove('hidden');
@@ -596,13 +631,28 @@
     if(name === 'manage') nav.manage.classList.add('bg-white/5');
     if(name === 'exam') nav.exam.classList.add('bg-white/5');
   }
+  
+  function showEditorModal(){
+    editorModal.classList.remove('hidden');
+    // Tambahkan class visible setelah jeda singkat untuk efek transisi
+    setTimeout(() => {
+        editorModal.classList.add('visible');
+    }, 10);
+  }
+
+  function hideEditorModal(){
+    editorModal.classList.remove('visible');
+    // Hapus class hidden setelah transisi selesai
+    setTimeout(() => {
+        editorModal.classList.add('hidden');
+    }, 300); // Sesuaikan dengan durasi transisi CSS
+  }
 
   nav.dashboard.addEventListener('click', ()=> showSection('dashboard'));
   nav.create.addEventListener('click', ()=> showSection('create'));
   nav.manage.addEventListener('click', ()=> showSection('manage'));
   nav.exam.addEventListener('click', async ()=> { 
     showSection('exam'); 
-    // Logic untuk memuat mata kuliah di dropdown mode ujian
     await populateSelects();
   });
   document.getElementById('open-create').addEventListener('click', ()=> showSection('create'));
@@ -873,8 +923,7 @@
       } else { 
         document.getElementById('preview-q').classList.add('hidden'); 
       }
-      sections.editor.classList.remove('hidden');
-      window.scrollTo({top: document.getElementById('editor-section').offsetTop - 20, behavior:'smooth'});
+      showEditorModal();
     }));
   }
   
@@ -888,8 +937,7 @@
     document.getElementById('qe-key').value='';
     document.getElementById('preview-q').classList.add('hidden');
     document.getElementById('preview-q').src='';
-    sections.editor.classList.remove('hidden');
-    window.scrollTo({top: document.getElementById('editor-section').offsetTop - 20, behavior:'smooth'});
+    showEditorModal();
   });
   // editor file handlers
   const fileQ = document.getElementById('file-q'), pickQ = document.getElementById('pick-q'), clearQ = document.getElementById('clear-q'), previewQ = document.getElementById('preview-q');
@@ -943,9 +991,9 @@
     }
     
     await openManageForCourse(currentCourse);
-    sections.editor.classList.add('hidden');
+    hideEditorModal();
   });
-  document.getElementById('editor-cancel').addEventListener('click', ()=> sections.editor.classList.add('hidden'));
+  document.getElementById('editor-cancel').addEventListener('click', () => hideEditorModal());
 
   // File Upload feature
   const fileUploadEl = document.getElementById('file-upload');
