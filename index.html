@@ -177,7 +177,7 @@
     </section>
 
     <section id="create-section" class="hidden">
-      <div class="card p-4">
+      <div class="card p-4 shadow-lg rounded-xl">
         <h2 class="text-lg font-semibold">Buat Mata Kuliah</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
           <div>
@@ -188,8 +188,8 @@
             <div class="grid grid-cols-2 gap-2 mt-2">
               <input class="opt init p-2 border rounded dark-input" placeholder="Opsi A" />
               <input class="opt init p-2 border rounded dark-input" placeholder="Opsi B" />
-              <input class="opt init p-2 border rounded dark-input" placeholder="Opsi C (opsional)" />
-              <input class="opt init p-2 border rounded dark-input" placeholder="Opsi D (opsional)" />
+              <input class="opt init p-2 border rounded dark-input" placeholder="Opsi C" />
+              <input class="opt init p-2 border rounded dark-input" placeholder="Opsi D" />
             </div>
             <div class="flex items-center gap-2 mt-3">
               <select id="initial-key" class="p-2 border rounded bg-transparent muted dark-select">
@@ -219,8 +219,8 @@
     </section>
 
     <section id="manage-section" class="hidden">
-      <div class="card p-4">
-        <div class="flex items-center justify-between">
+      <div class="card p-4 shadow-lg rounded-xl">
+        <div class="flex items-center justify-between flex-wrap gap-2">
           <div>
             <h2 class="text-lg font-semibold">Kelola Soal</h2>
             <p class="text-sm muted">Pilih mata kuliah lalu tambah/edit/hapus soal.</p>
@@ -233,9 +233,10 @@
           </div>
         </div>
         
-        <div class="card p-4 mt-4 flex flex-col items-start gap-2">
+        <div class="card p-4 mt-4 flex flex-col items-start gap-2 shadow-md">
             <h3 class="text-md font-semibold">Unggah Soal dari File Teks</h3>
-            <p class="text-sm muted">Pilih mata kuliah lalu unggah file .txt. Lihat <a href="#" class="underline" onclick="alert('Format file:\n\nQ: Teks soal\nA: Opsi A\nB: Opsi B\nK: A\n\nSetiap soal dipisahkan oleh baris baru. Gambar tidak didukung.')">format file</a>.</p>
+            <p class="text-sm muted">Pilih mata kuliah lalu unggah file .txt.
+            Lihat <a href="#" class="underline" onclick="alert('Format file:\n\nQ: Teks soal\nA: Opsi A\nB: Opsi B\nK: A\n\nSetiap soal dipisahkan oleh baris baru. Gambar tidak didukung.')">format file</a>.</p>
             <div class="flex items-center gap-2 w-full">
               <input type="file" id="file-upload" accept=".txt" class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 bg-transparent text-white/90" />
             </div>
@@ -247,8 +248,8 @@
     </section>
 
     <section id="editor-section" class="hidden mt-4">
-      <div class="card p-4">
-        <div class="flex items-center justify-between">
+      <div class="card p-4 shadow-lg rounded-xl">
+        <div class="flex items-center justify-between flex-wrap gap-2">
           <h3 id="editor-title" class="text-lg font-semibold">Tambah Soal</h3>
           <div>
             <button id="editor-cancel" class="btn-ghost">Batal</button>
@@ -290,11 +291,12 @@
     </section>
 
     <section id="exam-section" class="hidden mt-4">
-      <div class="card p-4">
-        <div class="flex items-center justify-between">
+      <div class="card p-4 shadow-lg rounded-xl">
+        <div class="flex items-center justify-between flex-wrap gap-2">
           <div>
             <h2 class="text-lg font-semibold">Mode Ujian — Tampilkan Semua Soal</h2>
-            <p class="text-sm muted">Semua soal akan ditampilkan sekaligus (maks 50). Klik nomor di sidebar untuk lompat cepat.</p>
+            <p class="text-sm muted">Semua soal akan ditampilkan sekaligus (maks 50).
+            Klik nomor di sidebar untuk lompat cepat.</p>
           </div>
           <div class="flex items-center gap-2">
             <select id="select-exam" class="p-2 border rounded bg-transparent dark-select">
@@ -325,7 +327,7 @@
 
         <div id="mobile-numbers" class="mobile-floating fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
           <div class="bg-white/5 px-3 py-2 rounded-full flex gap-1 overflow-x-auto max-w-[90vw]">
-            </div>
+          </div>
         </div>
 
       </div>
@@ -358,14 +360,10 @@
     manage: document.getElementById('nav-manage'),
     exam: document.getElementById('nav-exam')
   };
-
   function showSection(name){
     Object.values(sections).forEach(s => s.classList.add('hidden'));
     sections[name].classList.remove('hidden');
-    pageTitle.textContent = name === 'dashboard' ? 'Dashboard' : 
-      name === 'create' ? 'Buat Mata Kuliah' : 
-      name === 'manage' ? 'Kelola Soal' : 'Mode Ujian';
-    
+    pageTitle.textContent = name === 'dashboard' ? 'Dashboard' : name === 'create' ? 'Buat Mata Kuliah' : name === 'manage' ? 'Kelola Soal' : 'Mode Ujian';
     // Nav active
     Object.values(nav).forEach(b => b.classList.remove('bg-white/5'));
     if(name === 'dashboard') nav.dashboard.classList.add('bg-white/5');
@@ -386,7 +384,7 @@
   // state
   let courses = [], currentCourse = null, questions = [], editing = null;
   let newCourseImage = null;
-  
+
   // UI elements references
   const coursesGrid = document.getElementById('courses-grid');
 
@@ -410,7 +408,7 @@
     
     courses.forEach(c=>{
       const el = document.createElement('div'); 
-      el.className = 'p-4 card flex flex-col justify-between h-48';
+      el.className = 'p-4 card flex flex-col justify-between h-48 shadow-md rounded-xl';
       el.innerHTML = `
         <div>
           <div class="text-xs muted">Mata Kuliah</div>
@@ -444,7 +442,6 @@
         showSection('manage');
       });
     });
-
     document.querySelectorAll('.delete-course').forEach(b=>{
       b.addEventListener('click', async ()=>{
         const id = b.dataset.id;
@@ -481,7 +478,7 @@
     const teks = document.getElementById('initial-question').value.trim();
     const opts = Array.from(document.querySelectorAll('.opt.init')).map(i=>i.value.trim()).filter(Boolean);
     const key = document.getElementById('initial-key').value;
-    let gambarUrl = null; 
+    let gambarUrl = null;
     if(newCourseImage) {
       gambarUrl = await uploadImage(newCourseImage);
     }
@@ -504,17 +501,17 @@
   document.getElementById('create-course').addEventListener('click', createCourse);
   
   function handleFileInput(e,target){
-    const f = e.target.files[0]; 
+    const f = e.target.files[0];
     if(!f) return;
     const reader = new FileReader();
     reader.onload = ev => {
       if(target === 'new'){ 
-        newCourseImage = ev.target.result; 
+        newCourseImage = ev.target.result;
         previewNew.src = newCourseImage; 
         previewNew.classList.remove('hidden');
       }
       else if(target === 'q'){ 
-        editing._localImage = ev.target.result; 
+        editing._localImage = ev.target.result;
         document.getElementById('preview-q').src = editing._localImage; 
         document.getElementById('preview-q').classList.remove('hidden');
       }
@@ -525,7 +522,7 @@
   function handleDrop(e,target){
     const f = e.dataTransfer.files[0]; 
     if(!f) return;
-    const reader = new FileReader(); 
+    const reader = new FileReader();
     reader.onload = ev => {
       if(target === 'new'){ 
         newCourseImage = ev.target.result;
@@ -533,7 +530,7 @@
         previewNew.classList.remove('hidden'); 
       }
       else if(target === 'q'){ 
-        editing._localImage = ev.target.result; 
+        editing._localImage = ev.target.result;
         document.getElementById('preview-q').src = editing._localImage; 
         document.getElementById('preview-q').classList.remove('hidden');
       }
@@ -556,7 +553,7 @@
       return (urlData && urlData.publicUrl) ? urlData.publicUrl : dataUrl;
     }catch(err){ 
       console.warn('upload exception', err); 
-      return dataUrl; 
+      return dataUrl;
     }
   }
 
@@ -568,7 +565,6 @@
     await openManageForCourse(nm); 
     btnAddQ.disabled = !nm; 
   });
-  
   async function openManageForCourse(name){
     const c = courses.find(x=>x.name===name); 
     currentCourse = c||null;
@@ -589,7 +585,7 @@
     const wrap = document.getElementById('questions-list'); 
     wrap.innerHTML = '';
     if(!questions || questions.length === 0){ 
-      wrap.innerHTML = '<div class="muted text-center p-4 card">Belum ada soal.</div>'; 
+      wrap.innerHTML = '<div class="muted text-center p-4 card">Belum ada soal.</div>';
       return;
     }
     questions.forEach(q=>{
@@ -620,7 +616,6 @@
       if(error) return alert('Gagal hapus: '+error.message);
       await openManageForCourse(currentCourse.name);
     }));
-
     wrap.querySelectorAll('.edit-q').forEach(b=> b.addEventListener('click', ()=>{
       const id = b.dataset.id; 
       const q = questions.find(x=>x.id===id); 
@@ -649,7 +644,7 @@
     document.getElementById('qe-text').value = '';
     for(let i=0;i<4;i++) document.getElementById('qe-opt-'+i).value='';
     document.getElementById('qe-key').value='';
-    document.getElementById('preview-q').classList.add('hidden'); 
+    document.getElementById('preview-q').classList.add('hidden');
     document.getElementById('preview-q').src='';
     sections.editor.classList.remove('hidden'); 
     window.scrollTo({top: document.getElementById('editor-section').offsetTop - 20, behavior:'smooth'});
@@ -680,7 +675,7 @@
       if(error) return alert('Gagal tambah: '+error.message);
       alert('Soal ditambahkan');
     }
-    await openManageForCourse(currentCourse.name); 
+    await openManageForCourse(currentCourse.name);
     sections.editor.classList.add('hidden');
   });
   document.getElementById('editor-cancel').addEventListener('click', ()=> sections.editor.classList.add('hidden'));
@@ -688,7 +683,6 @@
   // NEW FEATURE: File Upload
   const fileUploadEl = document.getElementById('file-upload');
   const uploadStatusEl = document.getElementById('upload-status');
-  
   fileUploadEl.addEventListener('change', async (e) => {
     if(!currentCourse) {
       alert('Pilih mata kuliah terlebih dahulu untuk mengunggah soal.');
@@ -697,30 +691,28 @@
     }
     const file = e.target.files[0];
     if(!file) return;
-
     uploadStatusEl.textContent = 'Mengunggah dan memproses file...';
-
     try {
-        const text = await file.text();
-        const questionsToInsert = parseQuestionsFromFile(text);
-        if (questionsToInsert.length > 0) {
-            const { error } = await sb.from('questions').insert(questionsToInsert);
-            if (error) {
-                uploadStatusEl.textContent = `Gagal mengunggah soal: ${error.message}`;
-                alert(`Gagal mengunggah soal: ${error.message}`);
-            } else {
-                uploadStatusEl.textContent = `Berhasil mengunggah ${questionsToInsert.length} soal.`;
-                await openManageForCourse(currentCourse.name);
-                alert(`Berhasil mengunggah ${questionsToInsert.length} soal.`);
-            }
+      const text = await file.text();
+      const questionsToInsert = parseQuestionsFromFile(text);
+      if (questionsToInsert.length > 0) {
+        const { error } = await sb.from('questions').insert(questionsToInsert);
+        if (error) {
+          uploadStatusEl.textContent = `Gagal mengunggah soal: ${error.message}`;
+          alert(`Gagal mengunggah soal: ${error.message}`);
         } else {
-            uploadStatusEl.textContent = 'Tidak ada soal yang valid ditemukan di file.';
+          uploadStatusEl.textContent = `Berhasil mengunggah ${questionsToInsert.length} soal.`;
+          await openManageForCourse(currentCourse.name);
+          alert(`Berhasil mengunggah ${questionsToInsert.length} soal.`);
         }
+      } else {
+        uploadStatusEl.textContent = 'Tidak ada soal yang valid ditemukan di file.';
+      }
     } catch (err) {
-        uploadStatusEl.textContent = `Error: ${err.message}`;
-        alert(`Terjadi kesalahan saat memproses file: ${err.message}`);
+      uploadStatusEl.textContent = `Error: ${err.message}`;
+      alert(`Terjadi kesalahan saat memproses file: ${err.message}`);
     } finally {
-        fileUploadEl.value = ''; // Reset file input
+      fileUploadEl.value = ''; // Reset file input
     }
   });
 
@@ -728,7 +720,6 @@
     const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
     const questions = [];
     let currentQ = null;
-
     lines.forEach(line => {
       if (line.startsWith('Q:')) {
         if (currentQ) {
@@ -746,16 +737,14 @@
       } else if (line.startsWith('K:')) {
         const keyChar = line.substring(2).trim().toUpperCase();
         if (currentQ) {
-            const keyMap = {'A': 0, 'B': 1, 'C': 2, 'D': 3};
-            currentQ.kunci = keyMap[keyChar] !== undefined ? keyMap[keyChar] : null;
+          const keyMap = {'A': 0, 'B': 1, 'C': 2, 'D': 3};
+          currentQ.kunci = keyMap[keyChar] !== undefined ? keyMap[keyChar] : null;
         }
       }
     });
-
     if (currentQ && currentQ.teks && currentQ.opsi.length >= 2 && currentQ.kunci !== null) {
-        questions.push(currentQ);
+      questions.push(currentQ);
     }
-    
     return questions.filter(q => q.teks && q.opsi.length >= 2 && q.kunci !== null);
   }
 
@@ -774,11 +763,10 @@
     const cname = document.getElementById('select-exam').value;
     const course = cname ? courses.find(x=>x.name===cname) : courses[0];
     if(!course) {
-        alert('Belum ada mata kuliah untuk memulai ujian.');
-        showSection('dashboard');
-        return;
+      alert('Belum ada mata kuliah untuk memulai ujian.');
+      showSection('dashboard');
+      return;
     }
-
     const count = 50;
     const { data } = await sb.from('questions').select('*').eq('course_id', course.id);
     if(!data || data.length === 0) {
@@ -786,15 +774,13 @@
       showSection('manage');
       return;
     }
-    
     // Shuffle and limit to 50
     const arr = data.sort(() => Math.random() - 0.5).slice(0, Math.min(count, data.length));
-    
-    examState.active = true; 
+    examState.active = true;
     examState.finished = false;
-    examState.items = arr; 
-    examState.answers = {}; 
-    examState.refs = {}; 
+    examState.items = arr;
+    examState.answers = {};
+    examState.refs = {};
     examState.answeredCount = 0;
     
     // UI states
@@ -802,175 +788,167 @@
     endExamBtn.classList.remove('hidden');
     document.getElementById('select-exam').disabled = true;
     examScoreDisplay.classList.add('hidden');
-    
     renderExamAll();
-    
     setTimeout(()=> { document.getElementById('exam-grid').scrollTo({ top:0, behavior:'smooth' }); }, 80);
   }
-
+  
   async function endExam(){
     examState.finished = true;
     let correctAnswers = 0;
     
     // Iterate and check answers
     examState.items.forEach(q => {
-        const userAnswer = examState.answers[q.id];
-        if (userAnswer === q.kunci) {
-            correctAnswers++;
-        }
-        updateQuestionVisual(q.id, true); // Show correct answer and user's answer
+      const userAnswer = examState.answers[q.id];
+      if (userAnswer === q.kunci) {
+        correctAnswers++;
+      }
+      updateQuestionVisual(q.id, true); // Show correct answer and user's answer
     });
-
+    
     const totalQuestions = examState.items.length;
     const score = Math.round((correctAnswers / totalQuestions) * 100);
-
     // Display score summary
     examScoreDisplay.classList.remove('hidden');
     examScoreDisplay.innerHTML = `
-        <h3 class="text-xl font-bold">Hasil Ujian</h3>
-        <p class="text-sm mt-2">Anda menjawab **${correctAnswers}** dari **${totalQuestions}** pertanyaan dengan benar.</p>
-        <p class="text-3xl font-extrabold mt-3">Skor: ${score}%</p>
+      <h3 class="text-xl font-bold">Hasil Ujian</h3>
+      <p class="text-sm mt-2">Anda menjawab **${correctAnswers}** dari **${totalQuestions}** pertanyaan dengan benar.</p>
+      <p class="text-3xl font-extrabold mt-2">Skor: ${score}%</p>
     `;
-
-    // Disable all option buttons
-    const allOptBtns = document.querySelectorAll('#exam-grid button');
-    allOptBtns.forEach(btn => btn.disabled = true);
-
-    endExamBtn.classList.add('hidden');
+    
     startExamBtn.classList.remove('hidden');
-    startExamBtn.textContent = 'Mulai Ujian Baru';
+    endExamBtn.classList.add('hidden');
     document.getElementById('select-exam').disabled = false;
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-
-  document.getElementById('start-exam').addEventListener('click', startExam);
-  document.getElementById('end-exam').addEventListener('click', endExam);
-  
-  function renderExamAll(){
-    const arr = examState.items;
+  // Quiz rendering and state management
+  function renderExamAll() {
+    gridEl.innerHTML = '';
     sidebarEl.innerHTML = '';
     mobileNumbersWrap.innerHTML = '';
-    gridEl.innerHTML = '';
     
-    arr.forEach((q,i)=>{
-      // sidebar button
-      const btn = document.createElement('button');
-      btn.className = 'w-10 h-10 m-1 rounded-full flex items-center justify-center text-sm transition-all duration-200 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
-      btn.textContent = i+1;
-      btn.addEventListener('click', ()=> scrollToIndex(i));
-      sidebarEl.appendChild(btn);
-
-      // mobile number
-      const mbtn = document.createElement('button');
-      mbtn.className = 'w-8 h-8 rounded-full flex items-center justify-center text-xs bg-white/5 text-white/90';
-      mbtn.textContent = i+1;
-      mbtn.addEventListener('click', ()=> scrollToIndex(i));
-      mobileNumbersWrap.appendChild(mbtn);
-
-      // question card
+    examState.items.forEach((q, i) => {
+      // Main card
       const card = document.createElement('div');
-      card.className = 'bg-white/5 dark:bg-white/10 rounded-xl p-4 card';
-      card.dataset.index = i;
+      card.id = 'q-' + q.id;
+      card.className = 'card p-4 shadow-md rounded-xl';
       card.innerHTML = `
-        <div class="font-semibold mb-2">${i+1}. ${escapeHtml(q.teks)}</div>
-        ${q.gambar ? `<img src="${q.gambar}" class="w-full h-40 object-cover rounded mb-2" />` : ''}
-        <div class="flex flex-col gap-2" data-qid="${q.id}"></div>
+        <div class="font-medium text-lg">Soal #${i + 1}</div>
+        <div class="mt-2 text-base leading-relaxed">${escapeHtml(q.teks)}</div>
+        ${q.gambar ? `<img src="${q.gambar}" class="mt-4 max-h-48 rounded-lg shadow-md" />` : ''}
+        <div class="flex flex-col gap-2 mt-4" id="options-${q.id}">
+          ${(q.opsi || []).map((o, idx) => `
+            <button
+              data-q-id="${q.id}"
+              data-idx="${idx}"
+              class="option-btn text-left p-3 border rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+            >
+              <span class="font-semibold">${String.fromCharCode(65 + idx)}.</span> ${escapeHtml(o)}
+            </button>
+          `).join('')}
+        </div>
       `;
-      
-      const optsWrap = card.querySelector('[data-qid]');
-      (q.opsi || []).forEach((o, idx) => {
-        const optBtn = document.createElement('button');
-        optBtn.className = 'px-3 py-2 rounded text-left bg-gray-100 dark:bg-gray-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition';
-        optBtn.innerHTML = `<strong>${String.fromCharCode(65+idx)}.</strong> ${escapeHtml(o)}`;
-        optBtn.addEventListener('click', async ()=>{
-            if(examState.finished) return;
-            if(!examState.answers[q.id]) { 
-              examState.answeredCount++; 
-            }
-            examState.answers[q.id] = idx;
-            updateQuestionVisual(q.id);
-            updateProgress();
-        });
-        optsWrap.appendChild(optBtn);
-      });
       gridEl.appendChild(card);
-      examState.refs[i] = card;
+      examState.refs[q.id] = card;
+      
+      // Sidebar button
+      const navBtn = document.createElement('button');
+      navBtn.className = 'px-2 py-1 rounded w-full text-center transition-colors';
+      navBtn.textContent = i + 1;
+      navBtn.addEventListener('click', () => {
+        document.getElementById('q-' + q.id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      sidebarEl.appendChild(navBtn);
+      
+      // Mobile number button
+      const mobileBtn = navBtn.cloneNode(true);
+      mobileNumbersWrap.appendChild(mobileBtn);
+    });
+    
+    bindExamActions();
+    updateProgress();
+  }
+
+  function bindExamActions(){
+    document.querySelectorAll('.option-btn').forEach(b => {
+      b.addEventListener('click', (e) => {
+        const qid = e.target.dataset.qId || e.target.closest('button').dataset.qId;
+        const optIdx = parseInt(e.target.dataset.idx || e.target.closest('button').dataset.idx, 10);
+        
+        if (examState.answers[qid] === undefined) {
+          examState.answeredCount++;
+        }
+        
+        examState.answers[qid] = optIdx;
+        updateQuestionVisual(qid);
+        updateProgress();
+      });
+    });
+  }
+
+  function updateQuestionVisual(qid, showAnswer = false){
+    const card = examState.refs[qid];
+    const question = examState.items.find(q=>q.id===qid);
+    if (!card || !question) return;
+
+    const navBtn = document.querySelector(`#exam-sidebar button:nth-child(${examState.items.findIndex(q => q.id === qid) + 1})`);
+    const mobileBtn = document.querySelector(`#mobile-numbers > div > button:nth-child(${examState.items.findIndex(q => q.id === qid) + 1})`);
+    
+    // Reset background colors
+    card.querySelectorAll('.option-btn').forEach(btn => {
+      btn.classList.remove('bg-emerald-700', 'bg-rose-700', 'bg-red-500');
+      btn.classList.add('bg-white/5', 'hover:bg-white/10');
     });
 
-    const observer = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          const idx = parseInt(entry.target.dataset.index,10);
-          highlightNumber(idx);
+    if (showAnswer) {
+      const userAnswer = examState.answers[qid];
+      const correctKey = question.kunci;
+      
+      card.querySelectorAll('.option-btn').forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === correctKey) {
+          btn.classList.remove('bg-white/5', 'hover:bg-white/10');
+          btn.classList.add('bg-emerald-700');
+        } else if (idx === userAnswer) {
+          btn.classList.remove('bg-white/5', 'hover:bg-white/10');
+          btn.classList.add('bg-rose-700');
         }
       });
-    }, { threshold: 0.6 });
-
-    Object.values(examState.refs).forEach(el=>{
-      observer.observe(el);
-    });
-
-    updateProgress();
-    sidebarEl.classList.remove('hidden');
-    document.getElementById('mobile-numbers').classList.remove('hidden');
-  }
-
-  function scrollToIndex(i){
-    const el = examState.refs[i];
-    if(!el) return;
-    el.scrollIntoView({ behavior:'smooth', block:'start' });
-    highlightNumber(i);
-  }
-
-  function highlightNumber(i){
-    const btns = Array.from(sidebarEl.children);
-    btns.forEach((b, idx)=> {
-      if(idx === i) { 
-        b.style.background = 'var(--accent)'; 
-        b.style.color = '#fff'; 
-      } else { 
-        b.style.background = ''; 
-        b.style.color = ''; 
+      
+      if (userAnswer === correctKey) {
+        navBtn.classList.remove('bg-white/10', 'bg-rose-500');
+        navBtn.classList.add('bg-emerald-500');
+        mobileBtn.classList.remove('bg-white/10', 'bg-rose-500');
+        mobileBtn.classList.add('bg-emerald-500');
+      } else {
+        navBtn.classList.remove('bg-white/10', 'bg-emerald-500');
+        navBtn.classList.add('bg-rose-500');
+        mobileBtn.classList.remove('bg-white/10', 'bg-emerald-500');
+        mobileBtn.classList.add('bg-rose-500');
       }
-    });
-
-    const mbtns = Array.from(mobileNumbersWrap.children);
-    mbtns.forEach((b, idx)=> { 
-      b.style.opacity = idx===i? '1': '0.6'; 
-      b.style.transform = idx===i? 'scale(1.05)':'scale(1)'; 
-    });
-  }
-
-  function updateQuestionVisual(qid, forceShowAnswer = false){
-    const card = Array.from(gridEl.children).find(c => (c.querySelector('[data-qid]')||{}).getAttribute('data-qid') === String(qid));
-    if(!card) return;
-    const q = examState.items[Array.from(gridEl.children).indexOf(card)];
-    const selected = examState.answers[qid];
-    const opts = card.querySelectorAll('button');
-    opts.forEach((btn, idx)=>{
-        btn.className = 'px-3 py-2 rounded text-left transition';
-        btn.classList.add('bg-gray-100','dark:bg-gray-800');
-        if(forceShowAnswer) {
-            if(idx === q.kunci) {
-                btn.style.background = 'var(--success-clr)';
-                btn.style.color = '#fff';
-            }
-            if(selected !== undefined && idx === selected && idx !== q.kunci) {
-                btn.style.background = 'var(--danger-clr)';
-                btn.style.color = '#fff';
-            }
-        } else {
-            if(selected !== undefined){
-                if(idx === selected) { 
-                    btn.style.background = 'var(--accent)'; 
-                    btn.style.color = '#fff'; 
-                } else {
-                    btn.style.background = '';
-                    btn.style.color = '';
-                }
-            }
+      
+    } else {
+      const selectedIndex = examState.answers[qid];
+      if (selectedIndex !== undefined) {
+        const selectedBtn = card.querySelector(`.option-btn[data-idx="${selectedIndex}"]`);
+        if (selectedBtn) {
+          selectedBtn.classList.remove('bg-white/5', 'hover:bg-white/10');
+          selectedBtn.classList.add('bg-white/10');
         }
-    });
+        
+        navBtn.style.background = '#6366f1';
+        navBtn.style.color = '#fff';
+        mobileBtn.style.background = '#6366f1';
+        mobileBtn.style.color = '#fff';
+
+      } else {
+          navBtn.style.background = '';
+          navBtn.style.color = '';
+          mobileBtn.style.background = '';
+          mobileBtn.style.color = '';
+      }
+    }
   }
 
   function updateProgress(){
@@ -999,10 +977,8 @@
     document.getElementById('select-exam').value = cur2 || '';
   }
 
-  document.getElementById('cancel-create').addEventListener('click', ()=> showSection('dashboard'));
+  loadCourses();
 
-  // load initial
-  await loadCourses();
 })();
 </script>
 </body>
