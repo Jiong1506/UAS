@@ -93,6 +93,17 @@
     aside.sidebar nav { flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; }
     aside.sidebar button { flex: 0 0 auto; }
     .mobile-floating { display: flex; }
+    /* Perbaikan: Ganti overflow-x-auto dengan flex-wrap */
+    #mobile-numbers > div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: center;
+        max-width: 90vw;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 8px 12px;
+        border-radius: 999px;
+    }
     .exam-grid { grid-template-columns: 1fr; }
 
     /* Media Query: Mobile Landscape (lebar minimal 576px) */
@@ -340,7 +351,7 @@
         </div>
 
         <div id="mobile-numbers" class="mobile-floating fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
-          <div class="bg-white/5 px-3 py-2 rounded-full flex gap-1 overflow-x-auto max-w-[90vw]">
+          <div class="bg-white/5 px-3 py-2 rounded-full flex flex-wrap gap-1.5 justify-center max-w-[90vw] overflow-y-auto">
           </div>
         </div>
 
