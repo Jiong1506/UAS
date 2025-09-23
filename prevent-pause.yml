@@ -1,0 +1,49 @@
+name: Ping Supabase to Prevent Pausing
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Menjalankan workflow setiap hari pada tengah malam UTC
+  workflow_dispatch: # Memungkinkan eksekusi manual dari GitHub UI
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Supabase JS
+        run: npm install @supabase/supabase-js
+
+      - name: Ping Supabase Database
+        env:
+          SUPABASE_URL: ${{ sb_publishable_lTl6ck_8CewtZAmG9gJbkA_fCUD19rV }}
+          SUPABASE_KEY: ${{ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpub3NxeWFwbWRmdWp0cXdkc2RtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2NDE1MTIsImV4cCI6MjA3MzIxNzUxMn0.R-WmeGOY0LX0oJv-UhWloXfAFVyGrbTgBYF3X1cHeUk }}
+        run: |
+          node -e "
+            const { createClient } = require('@supabase/supabase-js');
+            const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+
+            async function pingDatabase() {
+              try {
+                const { data, error } = await supabase
+                  .from('nama_tabel_kecil_Anda')
+                  .select('id')
+                  .limit(1);
+
+                if (error) {
+                  throw error;
+                }
+                console.log('Successfully pinged the Supabase database!');
+              } catch (e) {
+                console.error('Error pinging Supabase:', e.message);
+                process.exit(1);
+              }
+            }
+            pingDatabase();
+          "
