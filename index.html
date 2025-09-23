@@ -12,14 +12,15 @@
     @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap');
     
     :root {
-      --bg: #1A202C; /* Dark Slate */
-      --card: #2D3748; /* Darker Slate */
-      --text: #E2E8F0; /* Light Gray */
-      --muted: #718096; /* Muted Gray */
-      --accent: linear-gradient(135deg, #FF69B4, #87CEEB); /* Hot Pink to Sky Blue */
+      --bg: #1A202C;
+      --card: #2D3748;
+      --text: #E2E8F0;
+      --muted: #718096;
+      --accent: linear-gradient(135deg, #FF69B4, #87CEEB);
       --accent-soft: #FF69B4;
-      --success-clr: #32CD32; /* Lime Green */
-      --danger-clr: #FF6347; /* Tomato Red */
+      --success-clr: #32CD32;
+      --danger-clr: #FF6347;
+      --selected-clr: #4A90E2;
       --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
 
@@ -37,7 +38,7 @@
 
     .card {
       background: var(--card);
-      border-radius: 40px;
+      border-radius: 20px;
       box-shadow: var(--shadow-soft);
       transition: all .25s ease-in-out;
     }
@@ -45,8 +46,8 @@
     .btn {
       background: var(--accent);
       color: white;
-      padding: 14px 24px;
-      border-radius: 9999px;
+      padding: 12px 20px;
+      border-radius: 12px;
       font-weight: 600;
       border: none;
       cursor: pointer;
@@ -54,7 +55,7 @@
       white-space: nowrap;
     }
     .btn:hover { 
-      box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5); 
+      box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5);
       transform: translateY(-2px);
     }
     .btn:active { 
@@ -66,8 +67,8 @@
       background: transparent;
       color: var(--muted);
       border: 1px solid var(--muted);
-      padding: 12px 20px;
-      border-radius: 9999px;
+      padding: 10px 16px;
+      border-radius: 12px;
       cursor: pointer;
       font-weight: 500;
       transition: color .25s, border-color .25s, background-color .25s;
@@ -125,7 +126,7 @@
       border: 1px solid var(--muted) !important;
       width: 100%;
       max-width: 100%;
-      border-radius: 9999px;
+      border-radius: 12px;
       padding: 12px 20px;
       -webkit-appearance: none;
       -moz-appearance: none;
@@ -140,8 +141,8 @@
       background-color: var(--card) !important;
       color: var(--text) !important;
       border: 1px solid var(--muted) !important;
-      border-radius: 20px;
-      padding: 16px 20px;
+      border-radius: 12px;
+      padding: 14px 16px;
       width: 100%;
       box-sizing: border-box;
       transition: border-color .2s;
@@ -156,7 +157,7 @@
       background-color: var(--card);
       color: var(--text);
       border: 2px dashed var(--muted);
-      border-radius: 20px;
+      border-radius: 12px;
       transition: border-color .2s;
     }
     .image-dropzone:hover {
@@ -165,9 +166,9 @@
 
     .question-item {
       border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 40px;
-      padding: 2rem;
-      margin-bottom: 1.5rem;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
       background-color: var(--card);
       box-shadow: var(--shadow-soft);
     }
@@ -178,31 +179,36 @@
     }
 
     .question-option {
-      padding: 1.25rem;
-      border-radius: 9999px;
+      padding: 1rem;
+      border-radius: 12px;
       background-color: #262D3B;
-      /* Slightly lighter dark */
       font-weight: 500;
       transition: all .2s;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+    }
+    
+    .question-option.selected {
+      background-color: var(--selected-clr);
+      color: white;
     }
     
     .correct-option {
       background-color: var(--success-clr) !important;
       color: white;
-      border: 1px solid var(--success-clr);
     }
 
     .question-image {
       max-width: 100%;
-      border-radius: 20px;
+      border-radius: 12px;
       margin-top: 1rem;
-      max-height: 250px;
+      max-height: 200px;
       object-fit: contain;
     }
     
     .no-questions {
       text-align: center;
-      padding: 3rem;
+      padding: 2rem;
       color: var(--muted);
       font-style: italic;
     }
@@ -223,8 +229,8 @@
 
     .popout-content {
       background-color: var(--bg);
-      border-radius: 40px;
-      padding: 2.5rem;
+      border-radius: 20px;
+      padding: 1.5rem;
       box-shadow: 0 16px 30px rgba(0,0,0,0.5);
       width: 95%;
       max-width: 800px;
@@ -250,9 +256,9 @@
     
     .result-card {
       background-color: var(--card);
-      border-radius: 20px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
       box-shadow: var(--shadow-soft);
     }
     
@@ -261,7 +267,16 @@
       border: 1px solid rgba(50, 205, 50, 0.4);
     }
 
-    /* Modern & Cute UI */
+    .correct-answer {
+      background-color: rgba(50, 205, 50, 0.2);
+      border: 1px solid rgba(50, 205, 50, 0.4);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+
+    /* Layout */
     .layout {
       display: flex;
       flex-direction: column;
@@ -271,8 +286,8 @@
     .nav-item {
       color: var(--muted);
       font-weight: 500;
-      padding: 14px 24px;
-      border-radius: 9999px;
+      padding: 12px 20px;
+      border-radius: 12px;
       transition: all .2s;
     }
     .nav-item:hover {
@@ -289,45 +304,46 @@
       color: white;
     }
 
-    /* Cloud-like Card for Courses */
+    /* Course Card */
     .course-card {
       background-color: var(--card);
-      border-radius: 40px;
+      border-radius: 16px;
       box-shadow: var(--shadow-soft);
       border: 2px solid transparent;
       transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease, background-color .3s ease;
-      padding: 2rem;
+      padding: 1.5rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
     }
     .course-card:hover {
-      transform: translateY(-8px) scale(1.02);
+      transform: translateY(-4px);
       border-color: #FF69B4;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
     .course-card .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
     }
     .course-card .title {
       font-weight: 700;
-      font-size: 1.5rem;
-      line-height: 1.75rem;
+      font-size: 1.25rem;
+      line-height: 1.5rem;
       color: #FF69B4;
     }
     .course-card .actions {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.5rem;
     }
     .course-card .actions button {
-      padding: 0.5rem 1rem;
-      border-radius: 9999px;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
       font-weight: 500;
       transition: background-color .2s, color .2s;
+      font-size: 0.9rem;
     }
     .course-card .actions .open-manage {
       background-color: #FF69B4;
@@ -342,10 +358,51 @@
       font-size: 0.8rem;
     }
     
+    /* Mobile sidebar untuk ujian */
+    .mobile-exam-sidebar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border-top: 1px solid var(--muted);
+      padding: 1rem;
+      z-index: 50;
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+    
+    .mobile-exam-sidebar .question-nav {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+    }
+    
+    .mobile-exam-sidebar .nav-btn {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      background-color: #262D3B;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    
+    .mobile-exam-sidebar .nav-btn.answered {
+      background-color: var(--success-clr);
+      color: white;
+    }
+    
+    .mobile-exam-sidebar .nav-btn.current {
+      border: 2px solid var(--accent-soft);
+    }
+    
     @media (min-width: 1024px) {
       .layout {
         display: grid;
-        grid-template-columns: 18rem 1fr;
+        grid-template-columns: 16rem 1fr;
         grid-template-rows: auto 1fr;
         height: 100vh;
         overflow: hidden;
@@ -373,6 +430,44 @@
       .exam-grid {
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       }
+      
+      /* Desktop exam sidebar */
+      .exam-sidebar-desktop {
+        width: 80px;
+        height: 70vh;
+        overflow-y: auto;
+        padding: 1rem;
+        background-color: var(--card);
+        border-radius: 12px;
+      }
+      
+      .exam-sidebar-desktop .question-nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+      }
+      
+      .exam-sidebar-desktop .nav-btn {
+        aspect-ratio: 1;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        background-color: #262D3B;
+        color: var(--text);
+        transition: all 0.2s;
+        font-size: 0.8rem;
+      }
+      
+      .exam-sidebar-desktop .nav-btn.answered {
+        background-color: var(--success-clr);
+        color: white;
+      }
+      
+      .exam-sidebar-desktop .nav-btn.current {
+        border: 2px solid var(--accent-soft);
+      }
     }
   </style>
 </head>
@@ -385,21 +480,21 @@
 </script>
 
 <div id="app" class="min-h-screen layout">
-
-  <aside class="sidebar card flex-shrink-0 flex flex-col gap-6 p-6">
-    <div class="logo-area flex items-center gap-3 mb-4">
-      <div class="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-pink-500 to-green-400 text-white shadow-lg">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden class="w-8 h-8">
+  <!-- Sidebar -->
+  <aside class="sidebar card flex-shrink-0 flex flex-col gap-4 p-4">
+    <div class="logo-area flex items-center gap-3 mb-2">
+      <div class="w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-pink-500 to-green-400 text-white shadow-lg">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden class="w-6 h-6">
           <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.074 4.996 5.313.419c1.179.092 1.638 1.547.749 2.373l-4.045 3.618 1.156 5.271c.207.942-.743 1.646-1.564 1.118l-4.72-3.146-4.721 3.147c-.821.528-.43-2.275.749-2.372l5.313-.42L10.788 3.21z" clip-rule="evenodd" />
         </svg>
       </div>
-  
+      
       <div>
-        <div class="font-bold text-2xl">UAS App</div>
+        <div class="font-bold text-xl">UAS App</div>
       </div>
     </div>
 
-    <nav class="flex gap-2 flex-col">
+    <nav class="flex gap-1 flex-col">
       <button id="nav-dashboard" class="text-left nav-item active">Dashboard</button>
       <button id="nav-create" class="text-left nav-item">Buat Mata Kuliah</button>
       <button id="nav-manage" class="text-left nav-item">Kelola Soal</button>
@@ -407,47 +502,46 @@
     </nav>
   </aside>
 
-  <main class="flex-1 p-6 overflow-y-auto">
-    <div 
-class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
-   
+  <!-- Main Content -->
+  <main class="flex-1 p-4 overflow-y-auto">
+    <div class="main-header flex items-center justify-between flex-wrap gap-3 mb-6">
       <div>
-        <h1 id="page-title" class="text-3xl font-bold">Dashboard</h1>
+        <h1 id="page-title" class="text-2xl font-bold">Dashboard</h1>
         <p id="page-sub" class="text-sm text-gray-500 mt-1">Ringkasan mata kuliah & soal</p>
       </div>
 
-      <div class="flex items-center gap-3 flex-wrap">
+      <div class="flex items-center gap-2 flex-wrap">
         <button id="open-create" class="btn">
           <span class="md:hidden">Buat</span>
           <span class="hidden md:inline">Buat Mata Kuliah</span>
         </button>
-  
       </div>
-   
     </div>
 
+    <!-- Dashboard Section -->
     <section id="dashboard-section">
-      <div id="courses-grid" class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3"></div>
+      <div id="courses-grid" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
     </section>
 
+    <!-- Create Course Section -->
     <section id="create-section" class="hidden">
-      <div class="card p-8 md:p-12">
-        <h2 class="text-3xl font-semibold mb-8">Buat Mata Kuliah Baru</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="card p-6">
+        <h2 class="text-2xl font-semibold mb-6">Buat Mata Kuliah Baru</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label class="text-sm text-gray-500 block mb-2">Nama Mata Kuliah</label>
             <input id="course-name" class="cute-input" placeholder="Contoh: Basis Data" />
             
-            <div class="mt-8">
-              <label class="text-sm text-gray-500 mt-4 block mb-2">Soal pertama (opsional)</label>
+            <div class="mt-6">
+              <label class="text-sm text-gray-500 mt-3 block mb-2">Soal pertama (opsional)</label>
               <textarea id="initial-question" class="cute-input h-24" placeholder="Teks soal (opsional)"></textarea>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
                 <input class="opt init cute-input" placeholder="Opsi A" />
                 <input class="opt init cute-input" placeholder="Opsi B" />
                 <input class="opt init cute-input" placeholder="Opsi C" />
                 <input class="opt init cute-input" placeholder="Opsi D" />
               </div>
-              <div class="flex items-center gap-3 mt-4">
+              <div class="flex items-center gap-2 mt-3">
                 <select id="initial-key" class="cute-select">
                   <option value="">Kunci (opsional)</option>
                   <option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option>
@@ -457,11 +551,11 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
           </div>
           <div>
             <label class="text-sm text-gray-500 block mb-2">Gambar (opsional)</label>
-            <div id="drop-new" class="p-8 border-2 border-dashed rounded-3xl flex flex-col items-center justify-center image-dropzone h-52 cursor-pointer">
+            <div id="drop-new" class="p-6 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center image-dropzone h-48 cursor-pointer">
               <div class="text-sm text-gray-400">Tarik & lepas atau pilih file</div>
               <input id="file-new" type="file" accept="image/*" class="hidden" />
-              <img id="preview-new" class="mt-4 max-h-24 rounded-2xl hidden" alt="preview" />
-              <div class="mt-4 flex gap-2">
+              <img id="preview-new" class="mt-3 max-h-20 rounded-xl hidden" alt="preview" />
+              <div class="mt-3 flex gap-2">
                 <button id="pick-new" class="btn text-sm">Pilih Gambar</button>
                 <button id="clear-new" class="btn-ghost text-sm">Hapus</button>
               </div>
@@ -469,37 +563,39 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
           </div>
         </div>
         
-        <div class="mt-8 flex justify-end gap-3">
+        <div class="mt-6 flex justify-end gap-2">
           <button id="cancel-create" class="btn-ghost btn-cancel">Batal</button>
           <button id="create-course" class="btn">Buat</button>
         </div>
       </div>
     </section>
 
+    <!-- Manage Questions Section -->
     <section id="manage-section" class="hidden">
-      <div class="card p-8 md:p-12">
-        <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
-          <h2 class="text-3xl font-semibold">Kelola Soal</h2>
-          <div class="flex gap-3 items-center flex-wrap">
+      <div class="card p-6">
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+          <h2 class="text-2xl font-semibold">Kelola Soal</h2>
+          <div class="flex gap-2 items-center flex-wrap">
             <select id="select-manage" class="cute-select">
               <option value="">— Pilih Mata Kuliah —</option>
             </select>
-            <button id="btn-add-q" class="btn px-4 py-2" disabled>Tambah Soal</button>
+            <button id="btn-add-q" class="btn px-3 py-2">Tambah Soal</button>
           </div>
         </div>
-        <div id="questions-list" class="mt-4 space-y-6"></div>
+        <div id="questions-list" class="mt-3 space-y-4"></div>
       </div>
     </section>
 
+    <!-- Question Editor Popout -->
     <div id="editor-popout" class="popout-backdrop hidden">
       <div class="popout-content">
-        <div class="flex items-center justify-between mb-8">
-          <h3 id="editor-title" class="text-2xl font-semibold">Tambah Soal</h3>
+        <div class="flex items-center justify-between mb-6">
+          <h3 id="editor-title" class="text-xl font-semibold">Tambah Soal</h3>
           <div>
             <button id="editor-cancel" class="btn-ghost btn-cancel">Batal</button>
           </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label class="text-sm text-gray-500 block mb-2">Teks Soal</label>
             <div class="flex gap-2 my-2">
@@ -508,13 +604,13 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
               <button id="underline-btn" type="button" class="btn-ghost" title="Underline"><u>U</u></button>
             </div>
             <textarea id="qe-text" class="cute-input h-24"></textarea>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
               <input id="qe-opt-0" class="cute-input" placeholder="Opsi A" />
               <input id="qe-opt-1" class="cute-input" placeholder="Opsi B" />
               <input id="qe-opt-2" class="cute-input" placeholder="Opsi C (opsional)" />
               <input id="qe-opt-3" class="cute-input" placeholder="Opsi D (opsional)" />
             </div>
-            <div class="flex items-center gap-3 mt-4">
+            <div class="flex items-center gap-2 mt-3">
               <select id="qe-key" class="cute-select">
                 <option value="">— Pilih Kunci —</option><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option>
               </select>
@@ -522,20 +618,18 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
           </div>
           <div>
             <label class="text-sm text-gray-500 block mb-2">Gambar (opsional)</label>
-            <div id="drop-q" class="p-8 border-2 border-dashed rounded-3xl flex flex-col items-center justify-center image-dropzone h-52 cursor-pointer">
+            <div id="drop-q" class="p-6 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center image-dropzone h-48 cursor-pointer">
               <div class="text-sm text-gray-400">Tarik & lepas atau pilih file</div>
               <input id="file-q" type="file" accept="image/*" class="hidden" />
-              <img id="preview-q" class="mt-4 max-h-28 rounded-2xl hidden" alt="preview" />
-                <div class="mt-4 flex gap-2">
+              <img id="preview-q" class="mt-3 max-h-24 rounded-xl hidden" alt="preview" />
+              <div class="mt-3 flex gap-2">
                 <button id="pick-q" class="btn text-sm">Pilih Gambar</button>
                 <button id="clear-q" class="btn-ghost text-sm">Hapus</button>
               </div>
             </div>
-            <div class="card p-8 mt-8 flex flex-col items-start gap-4">
+            <div class="card p-6 mt-6 flex flex-col items-start gap-3">
               <h3 class="text-lg font-semibold">Unggah Soal dari File Teks</h3>
-              <p class="text-sm text-gray-500">Pilih mata kuliah lalu unggah file .txt.
-                Lihat <a href="#" class="underline text-accent" onclick="alert('Format file:\n\nQ: Teks soal\nA: Opsi A\nB: Opsi B\nK: A\n\nSetiap soal dipisahkan oleh baris baru. Gambar tidak didukung.')">format file</a>.
-              </p>
+              <p class="text-sm text-gray-500">Pilih mata kuliah lalu unggah file .txt. Format: Q: Pertanyaan, A: Opsi A, B: Opsi B, K: A</p>
               <div class="file-upload-area w-full">
                 <input type="file" id="file-upload" accept=".txt" class="w-full text-sm text-gray-500
                   file:mr-4 file:py-2 file:px-4
@@ -549,39 +643,40 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
           </div>
         </div>
         
-        <div class="mt-8 flex justify-end gap-3">
+        <div class="mt-6 flex justify-end gap-2">
           <button id="save-q" class="btn">Simpan Soal</button>
         </div>
       </div>
     </div>
     
+    <!-- Exam Section -->
     <section id="exam-section" class="hidden">
-      <div class="card p-8 md:p-12">
-        <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
-          <h2 class="text-3xl font-semibold">Mode Ujian</h2>
-          <div class="flex gap-3 items-center flex-wrap">
+      <div class="card p-6">
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+          <h2 class="text-2xl font-semibold">Mode Ujian</h2>
+          <div class="flex gap-2 items-center flex-wrap">
             <select id="select-exam" class="cute-select">
               <option value="">— Pilih Mata Kuliah —</option>
             </select>
-            <button id="start-exam" class="btn px-4 py-2" disabled>Mulai Ujian</button>
-            <button id="end-exam" class="btn px-4 py-2 hidden">Selesai Ujian</button>
+            <button id="start-exam" class="btn px-3 py-2" disabled>Mulai Ujian</button>
+            <button id="end-exam" class="btn px-3 py-2 hidden">Selesai Ujian</button>
           </div>
         </div>
 
-        <div id="exam-score-display" class="card p-8 md:p-12 my-4 hidden"></div>
+        <div id="exam-score-display" class="card p-6 my-3 hidden"></div>
 
-        <div class="flex flex-col md:flex-row gap-8 mt-6">
-          <aside id="exam-sidebar" class="hidden md:block w-20 sidebar-scroll h-[70vh] overflow-y-auto p-4 card"></aside>
+        <div class="flex flex-col md:flex-row gap-6 mt-4">
+          <aside id="exam-sidebar-desktop" class="hidden md:block exam-sidebar-desktop"></aside>
 
           <div class="flex-1">
-            <div class="flex items-center justify-between mb-3 text-sm text-gray-500">
+            <div class="flex items-center justify-between mb-2 text-sm text-gray-500">
               <div>Progress</div>
               <div id="progress-text">0 / 0 dijawab</div>
             </div>
-            <div class="h-4 bg-gray-700 rounded-full overflow-hidden mb-8">
-              <div id="exam-progress" class="h-4 rounded-full bg-gradient-to-r from-pink-500 to-green-400" style="width:0%;"></div>
+            <div class="h-3 bg-gray-700 rounded-full overflow-hidden mb-6">
+              <div id="exam-progress" class="h-3 rounded-full bg-gradient-to-r from-pink-500 to-green-400" style="width:0%;"></div>
             </div>
-            <div id="exam-grid" class="grid gap-6 max-h-[70vh] overflow-y-auto p-1 exam-grid"></div>
+            <div id="exam-grid" class="grid gap-4 max-h-[60vh] overflow-y-auto p-1 exam-grid"></div>
           </div>
         </div>
       </div>
@@ -589,9 +684,39 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
   </main>
 </div>
 
+<!-- Mobile Exam Sidebar -->
+<div id="mobile-exam-sidebar" class="mobile-exam-sidebar hidden">
+  <div class="flex justify-between items-center mb-2">
+    <h3 class="text-lg font-semibold">Navigasi Soal</h3>
+    <button id="close-mobile-sidebar" class="btn-ghost btn-cancel text-sm">Tutup</button>
+  </div>
+  <div id="mobile-sidebar-grid" class="question-nav"></div>
+</div>
+  
+<!-- Mobile Exam Floating Bar -->
+<div id="mobile-exam-floating" class="md:hidden mobile-floating hidden">
+  <div class="flex items-center justify-between px-3 py-2">
+    <button id="open-mobile-sidebar" class="btn px-3 py-2">Navigasi</button>
+    <button id="end-exam-mobile" class="btn-ghost btn-cancel hidden">Selesai Ujian</button>
+  </div>
+</div>
+
 <script>
 (async function(){
+  // Inisialisasi Supabase
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession: false } });
+  const bucket = sb.storage.from(STORAGE_BUCKET);
+  
+  // Konstanta
+  const EXAM_BATCH_SIZE = 20;
+  
+  // Variabel state
+  let courses = [], currentCourse = null, questions = [], editing = null;
+  let newCourseImage = null;
+  let examQuestions = [], userAnswers = [], currentExamBatch = 0;
+  let currentQuestionIndex = 0;
+  
+  // Elemen DOM
   const app = document.getElementById('app'); 
   const pageTitle = document.getElementById('page-title');
   const pageSub = document.getElementById('page-sub');
@@ -601,6 +726,16 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
     manage: document.getElementById('manage-section'),
     exam: document.getElementById('exam-section')
   };
+  
+  // Navigation
+  const nav = {
+    dashboard: document.getElementById('nav-dashboard'),
+    create: document.getElementById('nav-create'),
+    manage: document.getElementById('nav-manage'),
+    exam: document.getElementById('nav-exam')
+  };
+  
+  // Editor elements
   const editorPopout = document.getElementById('editor-popout');
   const editorPopoutContent = editorPopout.querySelector('.popout-content');
   const editorTitle = document.getElementById('editor-title');
@@ -615,66 +750,77 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
   const qeClearBtn = document.getElementById('clear-q');
   const qeDropzone = document.getElementById('drop-q');
   
-  const nav = {
-    dashboard: document.getElementById('nav-dashboard'),
-    create: document.getElementById('nav-create'),
-    manage: document.getElementById('nav-manage'),
-    exam: document.getElementById('nav-exam')
-  };
-
+  // Manage section elements
   const manageSelect = document.getElementById('select-manage');
   const btnAddQ = document.getElementById('btn-add-q');
   const questionsList = document.getElementById('questions-list');
-  const courseGrid = document.getElementById('courses-grid');
   
-  let courses = [], currentCourse = null, questions = [], editing = null;
-  let newCourseImage = null;
-
-  // Supabase
-  const bucket = sb.storage.from(STORAGE_BUCKET);
-  const EXAM_DURATION_MINUTES = 60;
-  let examQuestions = [], currentExamQuestion = 0, userAnswers = [], examTimer = null;
+  // Exam elements
   const examGrid = document.getElementById('exam-grid');
   const examProgress = document.getElementById('exam-progress');
   const progressText = document.getElementById('progress-text');
   const selectExam = document.getElementById('select-exam');
   const startExamBtn = document.getElementById('start-exam');
   const endExamBtn = document.getElementById('end-exam');
+  const endExamMobileBtn = document.getElementById('end-exam-mobile');
   const examScoreDisplay = document.getElementById('exam-score-display');
-  const examSidebar = document.getElementById('exam-sidebar');
-
+  const examSidebarDesktop = document.getElementById('exam-sidebar-desktop');
+  const mobileExamSidebar = document.getElementById('mobile-exam-sidebar');
+  const mobileSidebarGrid = document.getElementById('mobile-sidebar-grid');
+  const openMobileSidebarBtn = document.getElementById('open-mobile-sidebar');
+  const closeMobileSidebarBtn = document.getElementById('close-mobile-sidebar');
+  const mobileExamFloating = document.getElementById('mobile-exam-floating');
+  
+  // Fungsi untuk menampilkan section
   function showSection(name){
     Object.values(sections).forEach(s => s.classList.add('hidden'));
     sections[name].classList.remove('hidden');
-    pageTitle.textContent = name === 'dashboard' ? 'Dashboard' : name === 'create' ? 'Buat Mata Kuliah' : name === 'manage' ? 'Kelola Soal' : 'Mode Ujian';
+    
+    // Update judul halaman
+    const titles = {
+      'dashboard': 'Dashboard',
+      'create': 'Buat Mata Kuliah',
+      'manage': 'Kelola Soal',
+      'exam': 'Mode Ujian'
+    };
+    const subtitles = {
+      'dashboard': 'Ringkasan mata kuliah & soal',
+      'create': 'Buat mata kuliah baru',
+      'manage': currentCourse ? `Kelola soal untuk: ${escapeHtml(currentCourse.name)}` : 'Pilih mata kuliah untuk mengelola soal',
+      'exam': 'Jalankan ujian untuk mata kuliah'
+    };
+    
+    pageTitle.textContent = titles[name];
+    pageSub.textContent = subtitles[name];
+    
+    // Update navigasi aktif
     Object.values(nav).forEach(b => b.classList.remove('active'));
     nav[name].classList.add('active');
+    
+    // Toggle UI khusus ujian
+    if (name === 'exam') {
+      mobileExamFloating.classList.remove('hidden');
+    } else {
+      mobileExamFloating.classList.add('hidden');
+    }
   }
-
-  function displayMessage(el, text, type = 'success'){
-    el.textContent = text;
-    el.className = `text-sm mt-2 font-semibold ${type === 'success' ? 'text-success-clr' : 'text-danger-clr'}`;
-  }
-
-  // Initial load
-  loadCourses();
   
+  // Fungsi utilitas
   function escapeHtml(s){
     const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
     return String(s || '').replace(/[&<>"']/g, m => map[m]);
   }
-
-  // NEW FUNCTION: Convert markdown-like syntax to HTML
+  
   function formatText(text) {
     if (!text) return '';
     let formattedText = escapeHtml(text);
-    formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>'); // Bold
-    formattedText = formattedText.replace(/\*(.*?)\*/g, '<i>$1</i>'); // Italic
-    formattedText = formattedText.replace(/__(.*?)__/g, '<u>$1</u>'); // Underline
+    formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+    formattedText = formattedText.replace(/\*(.*?)\*/g, '<i>$1</i>');
+    formattedText = formattedText.replace(/__(.*?)__/g, '<u>$1</u>');
     return formattedText;
   }
-
-  // --- CRUD Courses ---
+  
+  // Fungsi untuk memuat mata kuliah
   async function loadCourses(){
     const { data, error } = await sb.from('courses').select('*').order('created_at', { ascending: false });
     if(error){
@@ -686,13 +832,17 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
     renderCourses();
     populateSelects();
   }
-
+  
+  // Fungsi untuk merender daftar mata kuliah
   function renderCourses(){
+    const courseGrid = document.getElementById('courses-grid');
     courseGrid.innerHTML = '';
+    
     if(courses.length === 0){
-      courseGrid.innerHTML = '<div class="p-8 card col-span-full text-center text-muted">Belum ada mata kuliah. Buat mata kuliah baru.</div>';
+      courseGrid.innerHTML = '<div class="p-6 card col-span-full text-center text-muted">Belum ada mata kuliah. Buat mata kuliah baru.</div>';
       return;
     }
+    
     courses.forEach(c => {
       const el = document.createElement('div');
       el.className = 'course-card';
@@ -704,19 +854,21 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
             <button data-id="${c.id}" class="delete-course delete-btn text-sm">Hapus</button>
           </div>
         </div>
-        <div class="created-at">Dibuat: ${new Date(c.created_at).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'})}</div>
+        <div class="created-at">Dibuat: ${new Date(c.created_at).toLocaleDateString('id-ID')}</div>
       `;
       courseGrid.appendChild(el);
     });
-
+    
+    // Event listeners untuk tombol
     document.querySelectorAll('.open-manage').forEach(b => {
       b.addEventListener('click', async (e) => {
         e.stopPropagation();
         const id = b.dataset.id;
         const c = courses.find(x => x.id === id);
-        if(!c) return;
-        await openManageForCourse(c);
-        showSection('manage');
+        if(c) {
+          await openManageForCourse(c);
+          showSection('manage');
+        }
       });
     });
 
@@ -726,10 +878,11 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
         const id = b.dataset.id;
         const c = courses.find(x => x.id === id);
         if(!c) return;
-        if(confirm(`Apakah Anda yakin ingin menghapus mata kuliah "${c.name}"? Ini akan menghapus semua soal di dalamnya.`)){
+        
+        if(confirm(`Hapus mata kuliah "${c.name}"? Ini akan menghapus semua soal di dalamnya.`)){
           const { error } = await sb.from('courses').delete().eq('id', id);
           if(error) {
-            alert('Gagal menghapus mata kuliah: ' + error.message);
+            alert('Gagal menghapus: ' + error.message);
           } else {
             alert('Mata kuliah berhasil dihapus.');
             await loadCourses();
@@ -739,29 +892,30 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
       });
     });
   }
-
+  
+  // Fungsi untuk mengisi dropdown mata kuliah
   function populateSelects(){
     const manageSelectVal = manageSelect.value;
     const examSelectVal = selectExam.value;
-
+    
     manageSelect.innerHTML = '<option value="">— Pilih Mata Kuliah —</option>';
     selectExam.innerHTML = '<option value="">— Pilih Mata Kuliah —</option>';
+    
     courses.forEach(c => {
       manageSelect.innerHTML += `<option value="${c.id}">${escapeHtml(c.name)}</option>`;
       selectExam.innerHTML += `<option value="${c.id}">${escapeHtml(c.name)}</option>`;
     });
-
-    // Restore selected values
+    
+    // Kembalikan nilai yang dipilih sebelumnya
     manageSelect.value = manageSelectVal;
     selectExam.value = examSelectVal;
-
-    // Check if a course is currently selected for managing
-    const isCourseSelected = manageSelect.value !== '';
-    btnAddQ.disabled = !isCourseSelected;
-    // Check if a course is currently selected for exam
-    startExamBtn.disabled = selectExam.value === '';
+    
+    // Update status tombol
+    btnAddQ.disabled = !manageSelect.value;
+    startExamBtn.disabled = !selectExam.value;
   }
-
+  
+  // Fungsi untuk mengunggah gambar
   async function uploadImage(file, path){
     const { data, error } = await bucket.upload(path, file, { upsert: true });
     if(error){
@@ -772,8 +926,25 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
     const { data: { publicUrl } } = bucket.getPublicUrl(path);
     return publicUrl;
   }
-
-  // Handle image inputs (drag & drop & file selection)
+  
+  // Event listeners untuk navigasi
+  nav.dashboard.addEventListener('click', () => showSection('dashboard'));
+  nav.create.addEventListener('click', () => showSection('create'));
+  nav.manage.addEventListener('click', () => showSection('manage'));
+  nav.exam.addEventListener('click', () => showSection('exam'));
+  document.getElementById('open-create').addEventListener('click', () => showSection('create'));
+  
+  // Inisialisasi
+  loadCourses();
+  showSection('dashboard');
+  
+  // --- CRUD Courses ---
+  // Handle image inputs untuk pembuatan mata kuliah
+  const fileNew = document.getElementById('file-new'), 
+        pickNew = document.getElementById('pick-new'), 
+        clearNew = document.getElementById('clear-new'), 
+        previewNew = document.getElementById('preview-new');
+  
   function handleImageInput(e, type) {
     const file = e.target.files?.[0] || e.dataTransfer?.files?.[0];
     if (!file) return;
@@ -784,7 +955,7 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
         previewNew.src = e.target.result;
         previewNew.classList.remove('hidden');
       } else if (type === 'q') {
-        editing = editing || {}; // Ensure editing is an object
+        editing = editing || {};
         editing.imageFile = file;
         qeImagePreview.src = e.target.result;
         qeImagePreview.classList.remove('hidden');
@@ -802,7 +973,7 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
     } else if (type === 'q') {
       if (editing) {
         editing.imageFile = null;
-        editing.gambar = null; // Clear existing image URL
+        editing.gambar = null;
       }
       qeImageFile.value = '';
       qeImagePreview.src = '';
@@ -810,44 +981,42 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
     }
   }
 
-  // Course creation section
-  const fileNew = document.getElementById('file-new'), pickNew = document.getElementById('pick-new'), clearNew = document.getElementById('clear-new'), previewNew = document.getElementById('preview-new');
   pickNew.addEventListener('click', () => fileNew.click());
   fileNew.addEventListener('change', e => handleImageInput(e, 'new'));
   clearNew.addEventListener('click', () => clearImageInput('new'));
-  document.getElementById('drop-new').addEventListener('drop', e => { e.preventDefault(); handleImageInput(e, 'new'); });
+  document.getElementById('drop-new').addEventListener('drop', e => {
+    e.preventDefault();
+    handleImageInput(e, 'new');
+  });
   document.getElementById('drop-new').addEventListener('dragover', e => e.preventDefault());
+
+  // Pembuatan mata kuliah
   document.getElementById('create-course').addEventListener('click', async () => {
     const name = document.getElementById('course-name').value.trim();
     if (!name) return alert('Nama mata kuliah wajib.');
-
+    
     const { data: course, error } = await sb.from('courses').insert({ name }).select().single();
     if (error) {
       alert('Gagal membuat matkul: ' + error.message);
       return;
     }
-
+    
     const teks = document.getElementById('initial-question').value.trim();
     const opts = Array.from(document.querySelectorAll('.opt.init')).map(i => i.value.trim()).filter(Boolean);
     const key = document.getElementById('initial-key').value;
     let gambarUrl = null;
-
+    
     if (newCourseImage) {
       gambarUrl = await uploadImage(newCourseImage, `${course.id}/${Date.now()}-${newCourseImage.name}`);
     }
     
     if (teks && opts.length >= 2 && key !== '') {
-      const questionData = {
-        course_id: course.id,
-        teks,
-        opsi: opts,
-        kunci: parseInt(key, 10),
-        gambar: gambarUrl
-      };
+      const questionData = { course_id: course.id, teks, opsi: opts, kunci: parseInt(key, 10), gambar: gambarUrl };
       const { error: qErr } = await sb.from('questions').insert(questionData);
       if (qErr) console.warn('Initial question error', qErr);
     }
     
+    // Reset form
     document.getElementById('course-name').value = '';
     document.getElementById('initial-question').value = '';
     document.querySelectorAll('.opt.init').forEach(i => i.value = '');
@@ -858,6 +1027,7 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
     alert('Mata kuliah berhasil dibuat!');
     showSection('dashboard');
   });
+  
   document.getElementById('cancel-create').addEventListener('click', () => showSection('dashboard'));
   
   // --- CRUD Questions ---
@@ -865,8 +1035,7 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
     currentCourse = course;
     manageSelect.value = course.id;
     btnAddQ.disabled = false;
-    pageSub.textContent = `Kelola soal untuk mata kuliah: ${escapeHtml(course.name)}`;
-    questionsList.innerHTML = '';
+    
     const { data, error } = await sb.from('questions').select('*').eq('course_id', course.id).order('created_at', { ascending: false });
     if (error) {
       alert('Gagal memuat soal: ' + error.message);
@@ -874,12 +1043,12 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
     }
     questions = data || [];
     renderQuestions();
-
-    // Attach listener for file upload to ensure courseId is available
+    
+    // Setup file upload
     const fileUpload = document.getElementById('file-upload');
     const uploadStatus = document.getElementById('upload-status');
-    fileUpload.value = ''; // Reset file input
-    fileUpload.removeEventListener('change', handleFileUpload); // Remove previous listener to avoid duplicates
+    fileUpload.value = '';
+    fileUpload.removeEventListener('change', handleFileUpload);
     fileUpload.addEventListener('change', handleFileUpload);
     uploadStatus.textContent = '';
   }
@@ -891,15 +1060,14 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
     
     const fileContent = await file.text();
     const lines = fileContent.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-    let questionsToInsert = [];
-    let currentQuestion = {};
-
+    const questionsToInsert = [];
+    let currentQuestion = { course_id: currentCourse.id, opsi: [] };
+    
     for (const line of lines) {
       if (line.startsWith('Q:')) {
-        if (Object.keys(currentQuestion).length > 0) {
-          questionsToInsert.push(currentQuestion);
-        }
-        currentQuestion = { teks: line.substring(2).trim(), opsi: [], kunci: null };
+        if (currentQuestion.teks) questionsToInsert.push(currentQuestion);
+        currentQuestion = { course_id: currentCourse.id, opsi: [] };
+        currentQuestion.teks = line.substring(2).trim();
       } else if (line.startsWith('A:')) {
         currentQuestion.opsi[0] = line.substring(2).trim();
       } else if (line.startsWith('B:')) {
@@ -909,390 +1077,524 @@ class="main-header flex items-center justify-between flex-wrap gap-4 mb-8">
       } else if (line.startsWith('D:')) {
         currentQuestion.opsi[3] = line.substring(2).trim();
       } else if (line.startsWith('K:')) {
-        const keyChar = line.substring(2).trim().toUpperCase();
-        currentQuestion.kunci = keyChar === 'A' ? 0 : keyChar === 'B' ? 1 : keyChar === 'C' ? 2 : keyChar === 'D' ? 3 : null;
+        const keyMap = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
+        currentQuestion.kunci = keyMap[line.substring(2).trim().toUpperCase()];
       }
     }
-    if (Object.keys(currentQuestion).length > 0) {
-      questionsToInsert.push(currentQuestion);
-    }
+    if (currentQuestion.teks) questionsToInsert.push(currentQuestion);
 
-    const formattedQuestions = questionsToInsert.filter(q => q.teks && q.opsi.length >= 2 && q.kunci !== null).map(q => ({
-      course_id: currentCourse.id, // FIX: Use currentCourse.id
-      teks: q.teks,
-      opsi: q.opsi,
-      kunci: q.kunci,
-      gambar: null
-    }));
-
-    if (formattedQuestions.length === 0) {
-      displayMessage(uploadStatus, 'Tidak ada soal valid yang ditemukan dalam file. Pastikan formatnya benar.', 'error');
+    if (questionsToInsert.length === 0) {
+      uploadStatus.textContent = 'File tidak berisi soal yang valid.';
+      uploadStatus.className = 'text-sm mt-2 font-semibold text-danger-clr';
       return;
     }
     
-    displayMessage(uploadStatus, `Mengunggah ${formattedQuestions.length} soal...`, 'info');
-    
-    const { error } = await sb.from('questions').insert(formattedQuestions);
-    
-    if (error) {
-      displayMessage(uploadStatus, 'Gagal mengunggah soal: ' + error.message, 'error');
+    uploadStatus.textContent = `Mengunggah ${questionsToInsert.length} soal...`;
+    const { error } = await sb.from('questions').insert(questionsToInsert);
+    if(error){
+      uploadStatus.textContent = 'Gagal mengunggah soal: ' + error.message;
+      uploadStatus.className = 'text-sm mt-2 font-semibold text-danger-clr';
     } else {
-      displayMessage(uploadStatus, `${formattedQuestions.length} soal berhasil diunggah!`, 'success');
+      uploadStatus.textContent = `${questionsToInsert.length} soal berhasil diunggah!`;
+      uploadStatus.className = 'text-sm mt-2 font-semibold text-success-clr';
       await openManageForCourse(currentCourse);
     }
   }
 
-  function renderQuestions(){
-    questionsList.innerHTML = '';
-    if(questions.length === 0){
-      questionsList.innerHTML = '<div class="no-questions">Belum ada soal untuk mata kuliah ini.</div>';
-      return;
-    }
-    questions.forEach(q => {
-      const el = document.createElement('div');
-      el.className = 'question-item relative';
-      const keyText = String.fromCharCode(65 + q.kunci);
-      el.innerHTML = `
-        <div class="question-text text-lg">${formatText(q.teks)}</div>
-        ${q.gambar ? `<img src="${q.gambar}" class="question-image" alt="Soal ${q.id}" />` : ''}
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-          ${q.opsi.map((o, i) => `<div class="question-option ${i === q.kunci ? 'correct-option' : ''}">${String.fromCharCode(65 + i)}. ${escapeHtml(o)}</div>`).join('')}
-        </div>
-        <div class="absolute top-4 right-4 flex gap-2">
-          <button data-id="${q.id}" class="edit-q-btn btn-ghost px-4 py-2">Edit</button>
-          <button data-id="${q.id}" class="delete-q-btn btn-ghost btn-cancel px-4 py-2">Hapus</button>
-        </div>
-      `;
-      questionsList.appendChild(el);
-    });
-
-    document.querySelectorAll('.edit-q-btn').forEach(b => b.addEventListener('click', (e) => openQuestionEditor(questions.find(q => q.id === b.dataset.id))));
-    document.querySelectorAll('.delete-q-btn').forEach(b => b.addEventListener('click', async (e) => {
-      const id = b.dataset.id;
-      if (confirm('Apakah Anda yakin ingin menghapus soal ini?')) {
-        const { error } = await sb.from('questions').delete().eq('id', id);
-        if (error) {
-          alert('Gagal menghapus soal: ' + error.message);
-        } else {
-          await openManageForCourse(currentCourse);
-        }
-      }
-    }));
-  }
-
-  function openQuestionEditor(q = null) {
-    editing = q;
-    editorTitle.textContent = q ? 'Edit Soal' : 'Tambah Soal';
-    qeText.value = q ? q.teks : '';
-    qeOpts.forEach((input, i) => input.value = q?.opsi[i] || '');
-    qeKey.value = q ? String(q.kunci) : '';
-    
-    // Clear image input & display
-    clearImageInput('q');
-    if (q?.gambar) {
-      qeImagePreview.src = q.gambar;
-      qeImagePreview.classList.remove('hidden');
-    }
-    
-    editorPopout.classList.remove('hidden');
-    setTimeout(() => editorPopoutContent.classList.add('show'), 10);
-  }
-
-  function closeQuestionEditor() {
-    editorPopoutContent.classList.remove('show');
-    setTimeout(() => editorPopout.classList.add('hidden'), 300);
-    editing = null;
-    qeText.value = '';
-    qeOpts.forEach(input => input.value = '');
-    qeKey.value = '';
-    clearImageInput('q');
-  }
-
-  // Question editor listeners
-  btnAddQ.addEventListener('click', () => openQuestionEditor(null));
-  editorCancelBtn.addEventListener('click', closeQuestionEditor);
-  qePickBtn.addEventListener('click', () => qeImageFile.click());
-  qeClearBtn.addEventListener('click', () => clearImageInput('q'));
-  qeImageFile.addEventListener('change', e => handleImageInput(e, 'q'));
-  qeDropzone.addEventListener('drop', e => { e.preventDefault(); handleImageInput(e, 'q'); });
-  qeDropzone.addEventListener('dragover', e => e.preventDefault());
-  
-  saveQBtn.addEventListener('click', async () => {
-    const teks = qeText.value.trim();
-    const opsi = qeOpts.map(i => i.value.trim()).filter(Boolean);
-    const kunci = parseInt(qeKey.value, 10);
-    
-    if (!teks || opsi.length < 2 || isNaN(kunci) || kunci < 0 || kunci >= opsi.length) {
-      alert('Teks soal, minimal 2 opsi, dan kunci jawaban wajib diisi dengan benar.');
-      return;
-    }
-    
-    let gambarUrl = editing?.gambar || null;
-    if (editing?.imageFile) {
-      const path = `${currentCourse.id}/${Date.now()}-${editing.imageFile.name}`;
-      gambarUrl = await uploadImage(editing.imageFile, path);
-      if (!gambarUrl) return; // Stop if upload failed
-    } else if (editing?.gambar && !editing.imageFile) {
-      // Keep the old image if no new one is uploaded
-      gambarUrl = editing.gambar;
-    } else if (editing === null && qeImageFile.files.length > 0) {
-      // New question with image
-      const file = qeImageFile.files[0];
-      const path = `${currentCourse.id}/${Date.now()}-${file.name}`;
-      gambarUrl = await uploadImage(file, path);
-      if (!gambarUrl) return;
-    }
-
-    const questionData = {
-      teks,
-      opsi,
-      kunci,
-      gambar: gambarUrl,
-      course_id: currentCourse.id
-    };
-    
-    let error = null;
-    if (editing) {
-      const result = await sb.from('questions').update(questionData).eq('id', editing.id);
-      error = result.error;
-    } else {
-      const result = await sb.from('questions').insert(questionData);
-      error = result.error;
-    }
-    
-    if (error) {
-      alert('Gagal menyimpan soal: ' + error.message);
-    } else {
-      closeQuestionEditor();
-      await openManageForCourse(currentCourse);
-    }
-  });
-
-  manageSelect.addEventListener('change', async () => {
-    const courseId = manageSelect.value;
+  manageSelect.addEventListener('change', async (e) => {
+    const courseId = e.target.value;
     if (courseId) {
       const course = courses.find(c => c.id === courseId);
       if (course) {
         await openManageForCourse(course);
       }
     } else {
-      currentCourse = null;
+      questionsList.innerHTML = '<div class="text-center text-muted p-6">Silakan pilih mata kuliah.</div>';
       btnAddQ.disabled = true;
-      questionsList.innerHTML = '<div class="no-questions">Pilih mata kuliah untuk mengelola soal.</div>';
-      pageSub.textContent = 'Ringkasan mata kuliah & soal';
-      const fileUpload = document.getElementById('file-upload');
-      fileUpload.removeEventListener('change', handleFileUpload);
+      currentCourse = null;
     }
   });
+
+  function renderQuestions(){
+    questionsList.innerHTML = '';
+    if(questions.length === 0){
+      questionsList.innerHTML = '<div class="p-6 card text-center text-muted">Belum ada soal untuk mata kuliah ini.</div>';
+      return;
+    }
+    
+    questions.forEach((q, index) => {
+      const el = document.createElement('div');
+      el.className = 'card p-4';
+      let optionsHtml = '';
+      
+      q.opsi.forEach((o, i) => {
+        const isCorrect = i === q.kunci;
+        optionsHtml += `<div class="p-2 my-1 rounded-lg ${isCorrect ? 'correct-option' : 'bg-gray-700'}">${String.fromCharCode(65+i)}. ${escapeHtml(o)}</div>`;
+      });
+      
+      el.innerHTML = `
+        <div class="flex items-start justify-between flex-wrap gap-3 mb-3">
+          <div class="font-semibold">Soal #${index + 1}</div>
+          <div class="flex gap-2">
+            <button data-id="${q.id}" class="edit-q btn-ghost text-sm px-2 py-1">Edit</button>
+            <button data-id="${q.id}" class="delete-q btn-ghost btn-cancel text-sm px-2 py-1">Hapus</button>
+          </div>
+        </div>
+        <div class="question-text">${formatText(q.teks)}</div>
+        ${q.gambar ? `<img src="${bucket.getPublicUrl(q.gambar.split('/').pop()).data.publicUrl}" alt="Soal Gambar" class="question-image" />` : ''}
+        <div class="mt-3">
+          ${optionsHtml}
+        </div>
+      `;
+      questionsList.appendChild(el);
+    });
+
+    document.querySelectorAll('.edit-q').forEach(b => {
+      b.addEventListener('click', e => openEditor(e.target.dataset.id));
+    });
+    
+    document.querySelectorAll('.delete-q').forEach(b => {
+      b.addEventListener('click', e => deleteQuestion(e.target.dataset.id));
+    });
+  }
+
+  async function deleteQuestion(id){
+    if(!confirm('Hapus soal ini?')) return;
+    const { error } = await sb.from('questions').delete().eq('id', id);
+    if(error){
+      alert('Gagal menghapus soal: ' + error.message);
+    } else {
+      questions = questions.filter(q => q.id !== id);
+      renderQuestions();
+    }
+  }
+
+  // --- Question Editor ---
+  function openEditor(id = null){
+    editorPopout.classList.remove('hidden');
+    setTimeout(() => editorPopoutContent.classList.add('show'), 10);
+    clearImageInput('q');
+    
+    if(id){
+      editing = questions.find(q => q.id === id);
+      editorTitle.textContent = 'Edit Soal';
+      qeText.value = editing.teks || '';
+      qeOpts.forEach((o, i) => o.value = editing.opsi[i] || '');
+      qeKey.value = editing.kunci !== undefined ? editing.kunci : '';
+      
+      if(editing.gambar){
+        qeImagePreview.src = editing.gambar;
+        qeImagePreview.classList.remove('hidden');
+      }
+    } else {
+      editing = { course_id: currentCourse.id };
+      editorTitle.textContent = 'Tambah Soal';
+      qeText.value = '';
+      qeOpts.forEach(o => o.value = '');
+      qeKey.value = '';
+    }
+  }
+
+  editorCancelBtn.addEventListener('click', () => {
+    editorPopoutContent.classList.remove('show');
+    setTimeout(() => editorPopout.classList.add('hidden'), 300);
+    editing = null;
+  });
+
+  // PERBAIKAN: Event listener untuk tombol Tambah Soal
+  btnAddQ.addEventListener('click', () => {
+    if (!currentCourse) {
+      alert('Pilih mata kuliah terlebih dahulu.');
+      return;
+    }
+    openEditor();
+  });
+
+  saveQBtn.addEventListener('click', async () => {
+    const teks = qeText.value.trim();
+    const opsi = qeOpts.map(o => o.value.trim()).filter(Boolean);
+    const kunci = parseInt(qeKey.value, 10);
+    
+    if (!teks || opsi.length < 2 || isNaN(kunci)) {
+      return alert('Isi teks soal, minimal 2 opsi, dan pilih kunci jawaban.');
+    }
+    
+    let gambarUrl = editing.gambar || null;
+    if(editing.imageFile){
+      const filePath = `${currentCourse.id}/${Date.now()}-${editing.imageFile.name}`;
+      const newUrl = await uploadImage(editing.imageFile, filePath);
+      if(!newUrl) return;
+      gambarUrl = newUrl;
+    }
+    
+    const questionData = { teks, opsi, kunci, gambar: gambarUrl };
+    
+    let error;
+    if(editing.id){
+      ({ error } = await sb.from('questions').update(questionData).eq('id', editing.id));
+    } else {
+      ({ error } = await sb.from('questions').insert({ ...questionData, course_id: currentCourse.id }));
+    }
+    
+    if(error){
+      alert('Gagal menyimpan soal: ' + error.message);
+    } else {
+      editorCancelBtn.click();
+      await openManageForCourse(currentCourse);
+    }
+  });
+
+  // Editor formatting buttons
+  function applyFormatting(tag) {
+    const start = qeText.selectionStart;
+    const end = qeText.selectionEnd;
+    const selectedText = qeText.value.substring(start, end);
+    let newText;
+    
+    if (tag === 'bold') {
+      newText = '**' + selectedText + '**';
+    } else if (tag === 'italic') {
+      newText = '*' + selectedText + '*';
+    } else if (tag === 'underline') {
+      newText = '__' + selectedText + '__';
+    }
+    
+    qeText.value = qeText.value.substring(0, start) + newText + qeText.value.substring(end);
+    qeText.focus();
+  }
+
+  document.getElementById('bold-btn').addEventListener('click', () => applyFormatting('bold'));
+  document.getElementById('italic-btn').addEventListener('click', () => applyFormatting('italic'));
+  document.getElementById('underline-btn').addEventListener('click', () => applyFormatting('underline'));
+
+  // Image handling for question editor
+  qePickBtn.addEventListener('click', () => qeImageFile.click());
+  qeImageFile.addEventListener('change', e => handleImageInput(e, 'q'));
+  qeClearBtn.addEventListener('click', () => clearImageInput('q'));
+  qeDropzone.addEventListener('drop', e => {
+    e.preventDefault();
+    handleImageInput(e, 'q');
+  });
+  qeDropzone.addEventListener('dragover', e => e.preventDefault());
 
   // --- Exam Mode ---
   selectExam.addEventListener('change', () => {
-    const courseId = selectExam.value;
-    startExamBtn.disabled = !courseId;
-    if (!courseId) {
-      examScoreDisplay.classList.add('hidden');
-      examGrid.innerHTML = '';
-      examSidebar.classList.add('hidden');
-    }
+    startExamBtn.disabled = !selectExam.value;
   });
 
-  startExamBtn.addEventListener('click', async () => {
+  async function startExam(){
     const courseId = selectExam.value;
-    if (!courseId) return alert('Pilih mata kuliah terlebih dahulu.');
+    if(!courseId) return alert('Pilih mata kuliah terlebih dahulu.');
     
-    const { data, error } = await sb.from('questions').select('*').eq('course_id', courseId);
+    const { data, error } = await sb.from('questions').select('*').eq('course_id', courseId).order('created_at');
     if (error) {
-      return alert('Gagal memuat soal: ' + error.message);
+      alert('Gagal memuat soal: ' + error.message);
+      return;
     }
     
-    if (data.length === 0) {
-      return alert('Tidak ada soal untuk mata kuliah ini.');
+    examQuestions = data || [];
+    if(examQuestions.length === 0){
+      alert('Tidak ada soal untuk mata kuliah ini.');
+      return;
     }
-
-    examQuestions = data.sort(() => Math.random() - 0.5); // Randomize questions
-    userAnswers = Array(examQuestions.length).fill(null);
-    currentExamQuestion = 0;
+    
+    userAnswers = new Array(examQuestions.length).fill(null);
+    currentExamBatch = 0;
+    currentQuestionIndex = 0;
     
     examScoreDisplay.classList.add('hidden');
     startExamBtn.classList.add('hidden');
     endExamBtn.classList.remove('hidden');
-    selectExam.disabled = true;
+    endExamMobileBtn.classList.remove('hidden');
     
     renderExam();
-    startExamTimer();
-  });
-  
-  endExamBtn.addEventListener('click', showExamResults);
+    renderExamSidebar();
+  }
 
   function renderExam(){
-    const q = examQuestions[currentExamQuestion];
-    if (!q) {
-      return showExamResults();
-    }
+    examGrid.innerHTML = '';
     
-    examGrid.innerHTML = `
-      <div class="card p-8 md:p-12 mb-6">
-        <h3 class="text-xl font-semibold mb-4">Soal ${currentExamQuestion + 1}</h3>
-        <p class="mb-4">${formatText(q.teks)}</p>
-        ${q.gambar ? `<img src="${q.gambar}" class="question-image" alt="Soal ${q.id}" />` : ''}
-      </div>
-      <div id="exam-options" class="grid gap-4">
-        ${q.opsi.map((o, i) => `
-          <button data-index="${i}" class="btn-ghost text-left px-8 py-4 w-full">
-            ${String.fromCharCode(65 + i)}. ${escapeHtml(o)}
-          </button>
-        `).join('')}
-      </div>
-    `;
+    const startIndex = currentExamBatch * EXAM_BATCH_SIZE;
+    const endIndex = Math.min(startIndex + EXAM_BATCH_SIZE, examQuestions.length);
+    const questionsToRender = examQuestions.slice(startIndex, endIndex);
 
-    document.querySelectorAll('#exam-options button').forEach(b => {
-      b.addEventListener('click', e => {
-        const selectedIndex = parseInt(e.target.dataset.index);
-        userAnswers[currentExamQuestion] = selectedIndex;
-        updateProgress();
-        nextQuestion();
+    questionsToRender.forEach((q, i) => {
+      const globalIndex = startIndex + i;
+      const el = document.createElement('div');
+      el.className = 'question-item';
+      let optionsHtml = '';
+      
+      q.opsi.forEach((o, j) => {
+        const isSelected = userAnswers[globalIndex] === j;
+        const selectedClass = isSelected ? 'selected' : '';
+        optionsHtml += `
+          <div data-index="${globalIndex}" data-option="${j}" class="question-option ${selectedClass}">
+            ${String.fromCharCode(65 + j)}. ${escapeHtml(o)}
+          </div>
+        `;
       });
+      
+      el.innerHTML = `
+        <div class="text-lg font-bold mb-3">Soal #${globalIndex + 1}</div>
+        <div class="question-text">${formatText(q.teks)}</div>
+        ${q.gambar ? `<img src="${bucket.getPublicUrl(q.gambar.split('/').pop()).data.publicUrl}" alt="Soal Gambar" class="question-image" />` : ''}
+        <div class="mt-3">
+          ${optionsHtml}
+        </div>
+      `;
+      examGrid.appendChild(el);
     });
 
-    renderSidebar();
+    // Navigasi batch untuk banyak soal
+    if (examQuestions.length > EXAM_BATCH_SIZE) {
+      const navHtml = `
+        <div class="flex items-center justify-between mt-3">
+          <button id="prev-batch" class="btn-ghost" ${currentExamBatch === 0 ? 'disabled' : ''}>
+            &laquo; Sebelumnya
+          </button>
+          <div class="text-sm text-gray-500">
+            Halaman ${currentExamBatch + 1} dari ${Math.ceil(examQuestions.length / EXAM_BATCH_SIZE)}
+          </div>
+          <button id="next-batch" class="btn-ghost" ${endIndex >= examQuestions.length ? 'disabled' : ''}>
+            Berikutnya &raquo;
+          </button>
+        </div>
+      `;
+      examGrid.insertAdjacentHTML('beforeend', navHtml);
+      
+      document.getElementById('prev-batch').addEventListener('click', () => {
+        if (currentExamBatch > 0) {
+          currentExamBatch--;
+          renderExam();
+          renderExamSidebar();
+        }
+      });
+      
+      document.getElementById('next-batch').addEventListener('click', () => {
+        if ((currentExamBatch + 1) * EXAM_BATCH_SIZE < examQuestions.length) {
+          currentExamBatch++;
+          renderExam();
+          renderExamSidebar();
+        }
+      });
+    }
+
+    // Event listeners untuk memilih jawaban
+    document.querySelectorAll('.question-option').forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        const index = parseInt(e.target.dataset.index);
+        const option = parseInt(e.target.dataset.option);
+        handleAnswer(index, option);
+      });
+    });
     
-    examGrid.scrollTop = 0; // Scroll to top for new question
+    updateProgress();
+  }
+
+  function handleAnswer(index, option){
+    userAnswers[index] = option;
+    
+    // Update tampilan soal yang dijawab
+    const qEl = examGrid.querySelector(`.question-item:nth-child(${ (index % EXAM_BATCH_SIZE) + 1 })`);
+    if(qEl){
+      qEl.querySelectorAll('.question-option').forEach(o => {
+        o.classList.remove('selected');
+        if (parseInt(o.dataset.option) === option) {
+          o.classList.add('selected');
+        }
+      });
+    }
+    
+    updateProgress();
+    renderExamSidebar();
   }
 
   function updateProgress(){
     const answeredCount = userAnswers.filter(a => a !== null).length;
-    progressText.textContent = `${answeredCount} / ${examQuestions.length} dijawab`;
-    const progress = (answeredCount / examQuestions.length) * 100;
-    examProgress.style.width = `${progress}%`;
+    const totalQuestions = examQuestions.length;
+    const percentage = totalQuestions > 0 ? (answeredCount / totalQuestions) * 100 : 0;
+    progressText.textContent = `${answeredCount} / ${totalQuestions} dijawab`;
+    examProgress.style.width = `${percentage}%`;
   }
   
-  function nextQuestion(){
-    if (currentExamQuestion < examQuestions.length - 1) {
-      currentExamQuestion++;
-      renderExam();
-    } else {
-      showExamResults();
-    }
+  function endExam(){
+    if(!confirm('Selesaikan ujian?')) return;
+    showResults();
   }
 
-  function startExamTimer(){
-    let timeRemaining = EXAM_DURATION_MINUTES * 60;
-    examTimer = setInterval(() => {
-      timeRemaining--;
-      if (timeRemaining <= 0) {
-        clearInterval(examTimer);
-        alert('Waktu ujian habis!');
-        showExamResults();
-      }
-    }, 1000);
-  }
-
-  function showExamResults(){
-    clearInterval(examTimer);
-    
-    startExamBtn.classList.remove('hidden');
-    endExamBtn.classList.add('hidden');
-    selectExam.disabled = false;
-    
+  function showResults(){
     let correctCount = 0;
-    examGrid.innerHTML = '';
-    examSidebar.classList.add('hidden');
+    let resultsHtml = `<div class="font-bold text-xl mb-3">Hasil Ujian</div>`;
     
-    let resultHtml = '';
-    
-    examQuestions.forEach((q, qIdx) => {
-      const userAnswer = userAnswers[qIdx];
+    examQuestions.forEach((q, i) => {
+      const userAnswer = userAnswers[i];
       const isCorrect = userAnswer === q.kunci;
-      if (isCorrect) correctCount++;
+      if(isCorrect) correctCount++;
       
-      const cardClass = isCorrect ? 'result-correct-bg' : '';
+      const statusClass = isCorrect ? 'result-correct' : 'result-incorrect';
+      const statusText = isCorrect ? 'Benar' : 'Salah';
       
-      resultHtml += `
-        <div class="result-card ${cardClass}">
-          <h4 class="font-bold text-lg mb-2">Soal ${qIdx + 1}: ${formatText(q.teks)}</h4>
-          ${q.gambar ? `<img src="${q.gambar}" class="question-image mb-4" alt="Soal ${q.id}" />` : ''}
-          <div class="grid gap-2">
-            ${q.opsi.map((o, oIdx) => {
-              let classNames = 'question-option !p-3 !font-semibold transition-all duration-200';
-              const isUserAnswer = userAnswer === oIdx;
-              const isCorrectAnswer = q.kunci === oIdx;
-              
-              if (isCorrectAnswer) {
-                classNames += ' !bg-success-clr !border-success-clr !text-white !font-bold opacity-100';
-              } else if (isUserAnswer) {
-                classNames += ' !bg-danger-clr !border-danger-clr !text-white !font-bold opacity-100';
-              } else {
-                classNames += ' !bg-[#262D3B] border-transparent !text-gray-300';
-              }
-              
-              return `<div class="${classNames}">
-                ${String.fromCharCode(65 + oIdx)}. ${escapeHtml(o)}
-              </div>`;
-            }).join('')}
+      let optionsHtml = '';
+      q.opsi.forEach((o, j) => {
+        let optionClass = 'bg-gray-700';
+        if (j === q.kunci) {
+          optionClass = 'correct-option';
+        } else if (j === userAnswer && !isCorrect) {
+          optionClass = 'bg-red-600 text-white';
+        }
+        optionsHtml += `<div class="p-2 my-1 rounded-lg ${optionClass}">${String.fromCharCode(65 + j)}. ${escapeHtml(o)}</div>`;
+      });
+      
+      resultsHtml += `
+        <div class="result-card">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold">Soal #${i + 1}</div>
+            <div class="${statusClass} font-semibold">${statusText}</div>
+          </div>
+          <div class="question-text">${formatText(q.teks)}</div>
+          ${q.gambar ? `<img src="${bucket.getPublicUrl(q.gambar.split('/').pop()).data.publicUrl}" alt="Soal Gambar" class="question-image" />` : ''}
+          <div class="mt-3">
+            ${optionsHtml}
           </div>
         </div>
       `;
     });
-    
-    const totalQuestionsFinal = examQuestions.length;
-    const score = (correctCount / totalQuestionsFinal) * 100;
-    
-    resultHtml = `
-      <div class="text-center mb-8">
-        <h2 class="text-4xl font-bold mb-2">Skor Anda</h2>
-        <div class="text-7xl font-extrabold ${score >= 70 ? 'result-correct' : 'result-incorrect'}">${score.toFixed(0)}%</div>
-        <p class="text-base text-gray-500 mt-2">${correctCount} dari ${totalQuestionsFinal} soal dijawab dengan benar.</p>
+
+    const score = Math.round((correctCount / examQuestions.length) * 100);
+    examScoreDisplay.innerHTML = `
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-xl font-semibold">Skor Akhir:</h3>
+        <span class="text-3xl font-bold">${score}%</span>
       </div>
-      <h3 class="text-2xl font-bold mb-6">Pembahasan Soal</h3>
-    ` + resultHtml;
+      <div class="text-gray-400">${correctCount} dari ${examQuestions.length} soal benar.</div>
+      <button id="restart-exam" class="btn mt-4">Mulai Ujian Lagi</button>
+    ` + resultsHtml;
     
-    examScoreDisplay.innerHTML = resultHtml;
     examScoreDisplay.classList.remove('hidden');
+    examGrid.innerHTML = '';
+    endExamBtn.classList.add('hidden');
+    endExamMobileBtn.classList.add('hidden');
+    examSidebarDesktop.classList.add('hidden');
+    mobileExamSidebar.classList.add('hidden');
+    
+    document.getElementById('restart-exam').addEventListener('click', refreshQuestions);
   }
 
-  function renderSidebar(){
-    examSidebar.innerHTML = `
-      <h4 class="font-bold mb-4 text-center">Soal</h4>
-      <div class="grid grid-cols-2 gap-2">
-        ${examQuestions.map((q, i) => {
-          const isAnswered = userAnswers[i] !== null;
-          const isActive = currentExamQuestion === i;
-          const btnClasses = `w-full h-10 flex items-center justify-center rounded-lg font-semibold transition-colors duration-200`;
-          let stateClasses = '';
-          if (isActive) {
-            stateClasses = 'bg-accent-soft text-white';
-          } else if (isAnswered) {
-            stateClasses = 'bg-success-clr/50 text-white';
-          } else {
-            stateClasses = 'bg-gray-700 text-gray-300';
-          }
-          return `<button data-index="${i}" class="exam-nav-btn ${btnClasses} ${stateClasses}">${i + 1}</button>`;
-        }).join('')}
+  function refreshQuestions() {
+    examQuestions = [];
+    userAnswers = [];
+    currentExamBatch = 0;
+    startExamBtn.classList.remove('hidden');
+    endExamBtn.classList.add('hidden');
+    endExamMobileBtn.classList.add('hidden');
+    examScoreDisplay.classList.add('hidden');
+    examGrid.innerHTML = '';
+    examSidebarDesktop.classList.add('hidden');
+    mobileExamSidebar.classList.add('hidden');
+    updateProgress();
+  }
+
+  function renderExamSidebar(){
+    const startNum = currentExamBatch * EXAM_BATCH_SIZE;
+    const endNum = Math.min(startNum + EXAM_BATCH_SIZE, examQuestions.length);
+    const navButtons = [];
+
+    for(let i = startNum; i < endNum; i++) {
+        const isAnswered = userAnswers[i] !== null;
+        const isCurrent = i === currentQuestionIndex;
+        const stateClasses = isAnswered ? 'answered' : '';
+        const currentClass = isCurrent ? 'current' : '';
+        
+        navButtons.push(`
+          <button data-index="${i}" class="nav-btn ${stateClasses} ${currentClass}">
+            ${i + 1}
+          </button>
+        `);
+    }
+
+    const prevBtn = `<button id="prev-batch-sidebar" class="btn-ghost text-sm px-2 py-1" ${currentExamBatch === 0 ? 'disabled' : ''}>&laquo;</button>`;
+    const nextBtn = `<button id="next-batch-sidebar" class="btn-ghost text-sm px-2 py-1" ${endNum >= examQuestions.length ? 'disabled' : ''}>&raquo;</button>`;
+    
+    // Desktop sidebar
+    const desktopGridHtml = `
+      <div class="question-nav">
+        ${navButtons.join('')}
+      </div>
+      <div class="flex justify-between mt-3">
+        ${prevBtn}
+        ${nextBtn}
       </div>
     `;
-    examSidebar.classList.remove('hidden');
 
-    document.querySelectorAll('.exam-nav-btn').forEach(b => {
-      b.addEventListener('click', () => {
-        currentExamQuestion = parseInt(b.dataset.index);
-        renderExam();
+    // Mobile sidebar
+    const mobileGridHtml = `
+      <div class="question-nav">
+        ${navButtons.join('')}
+      </div>
+      <div class="flex justify-between mt-3">
+        ${prevBtn}
+        ${nextBtn}
+      </div>
+    `;
+    
+    examSidebarDesktop.innerHTML = desktopGridHtml;
+    examSidebarDesktop.classList.remove('hidden');
+    
+    mobileSidebarGrid.innerHTML = mobileGridHtml;
+    
+    // Event listeners untuk navigasi soal
+    document.querySelectorAll('.nav-btn').forEach(b => {
+      b.addEventListener('click', (e) => {
+        const clickedIndex = parseInt(e.target.dataset.index);
+        currentQuestionIndex = clickedIndex;
+        
+        // Scroll ke soal yang dipilih
+        const questionElement = document.querySelector(`[data-index="${clickedIndex}"]`).closest('.question-item');
+        if (questionElement) {
+          questionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        renderExamSidebar();
+        
+        // Tutup sidebar mobile setelah memilih soal
+        if (window.innerWidth < 1024) {
+          mobileExamSidebar.classList.add('hidden');
+        }
       });
+    });
+
+    document.getElementById('prev-batch-sidebar')?.addEventListener('click', () => {
+      if (currentExamBatch > 0) {
+        currentExamBatch--;
+        renderExam();
+        renderExamSidebar();
+      }
+    });
+
+    document.getElementById('next-batch-sidebar')?.addEventListener('click', () => {
+      if ((currentExamBatch + 1) * EXAM_BATCH_SIZE < examQuestions.length) {
+        currentExamBatch++;
+        renderExam();
+        renderExamSidebar();
+      }
     });
   }
 
-  // --- Navigation & Initial Setup ---
-  nav.dashboard.addEventListener('click', () => showSection('dashboard'));
-  nav.create.addEventListener('click', () => showSection('create'));
-  nav.manage.addEventListener('click', () => showSection('manage'));
-  nav.exam.addEventListener('click', () => showSection('exam'));
-  document.getElementById('open-create').addEventListener('click', () => showSection('create'));
+  // Event listeners untuk ujian
+  startExamBtn.addEventListener('click', startExam);
+  endExamBtn.addEventListener('click', endExam);
+  endExamMobileBtn.addEventListener('click', endExam);
 
-  // Ensure initial state is correct
-  showSection('dashboard');
-  loadCourses();
+  // Mobile sidebar handlers
+  openMobileSidebarBtn.addEventListener('click', () => {
+    mobileExamSidebar.classList.remove('hidden');
+  });
+
+  closeMobileSidebarBtn.addEventListener('click', () => {
+    mobileExamSidebar.classList.add('hidden');
+  });
 
 })();
 </script>
-
 </body>
 </html>
