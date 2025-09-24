@@ -358,29 +358,77 @@
       font-size: 0.8rem;
     }
     
-    /* Mobile sidebar untuk ujian */
-    .mobile-exam-sidebar {
+    /* Mobile Exam Floating Bar - PERBAIKAN */
+    .mobile-exam-floating {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: var(--card);
-      border-top: 1px solid var(--muted);
-      padding: 1rem;
       z-index: 50;
-      max-height: 50vh;
-      overflow-y: auto;
+      background: var(--card);
+      padding: 1rem;
+      border-top: 1px solid var(--muted);
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+      backdrop-filter: blur(10px);
+    }
+    
+    /* Mobile Exam Sidebar - PERBAIKAN */
+    .mobile-exam-sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    
+    .mobile-exam-sidebar.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .mobile-exam-sidebar .sidebar-content {
+      background: var(--card);
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      padding: 1.5rem;
+      max-height: 80vh;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    .mobile-exam-sidebar.active .sidebar-content {
+      transform: translateY(0);
+    }
+    
+    .mobile-exam-sidebar .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--muted);
     }
     
     .mobile-exam-sidebar .question-nav {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 0.5rem;
+      max-height: 50vh;
+      overflow-y: auto;
+      padding: 0.5rem;
     }
     
     .mobile-exam-sidebar .nav-btn {
       aspect-ratio: 1;
-      border-radius: 8px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -388,6 +436,8 @@
       background-color: #262D3B;
       color: var(--text);
       transition: all 0.2s;
+      font-size: 0.9rem;
+      border: 2px solid transparent;
     }
     
     .mobile-exam-sidebar .nav-btn.answered {
@@ -396,7 +446,360 @@
     }
     
     .mobile-exam-sidebar .nav-btn.current {
+      border-color: var(--accent-soft);
+      transform: scale(1.1);
+    }
+    
+    .mobile-exam-sidebar .nav-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Progress bar mobile - PERBAIKAN */
+    .mobile-progress-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .mobile-progress-bar {
+      flex: 1;
+      height: 8px;
+      background-color: #262D3B;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    .mobile-progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    
+    .mobile-progress-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      min-width: 80px;
+      text-align: right;
+    }
+    
+    /* Mobile question layout - PERBAIKAN */
+    .mobile-question-container {
+      padding-bottom: 100px; /* Space for floating bar */
+    }
+    
+    .mobile-question-item {
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      background-color: var(--card);
+      box-shadow: var(--shadow-soft);
+    }
+    
+    .mobile-question-text {
+      font-weight: 500;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      line-height: 1.4;
+    }
+    
+    .mobile-question-option {
+      padding: 1rem;
+      border-radius: 12px;
+      background-color: #262D3B;
+      font-weight: 500;
+      transition: all .2s;
+      cursor: pointer;
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+      border: 2px solid transparent;
+    }
+    
+    .mobile-question-option.selected {
+      background-color: var(--selected-clr);
+      color: white;
+      border-color: var(--accent-soft);
+    }
+    
+    .mobile-question-option:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    /* Mobile navigation buttons - PERBAIKAN */
+    .mobile-nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+      gap: 1rem;
+    }
+    
+    .mobile-nav-buttons button {
+      flex: 1;
+      padding: 1rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .mobile-nav-buttons .btn-prev {
+      background: #262D3B;
+      color: var(--text);
+    }
+    
+    .mobile-nav-buttons .btn-next {
+      background: var(--accent);
+      color: white;
+    }
+    
+    .mobile-nav-buttons button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .mobile-nav-buttons button:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    
+    /* Desktop exam sidebar - PERBAIKAN */
+    .exam-sidebar-desktop {
+      width: 100px;
+      height: 70vh;
+      overflow-y: auto;
+      padding: 1rem;
+      background-color: var(--card);
+      border-radius: 12px;
+      box-shadow: var(--shadow-soft);
+    }
+    
+    .exam-sidebar-desktop .question-nav {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+    
+    .exam-sidebar-desktop .nav-btn {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      background-color: #262D3B;
+      color: var(--text);
+      transition: all 0.2s;
+      font-size: 0.8rem;
+      border: 2px solid transparent;
+    }
+    
+    .exam-sidebar-desktop .nav-btn.answered {
+      background-color: var(--success-clr);
+      color: white;
+    }
+    
+    .exam-sidebar-desktop .nav-btn.current {
+      border-color: var(--accent-soft);
+      transform: scale(1.1);
+    }
+    
+    .exam-sidebar-desktop .nav-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Mobile Exam Sidebar - OPTIMIZED */
+    .mobile-exam-sidebar-optimized {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    
+    .mobile-exam-sidebar-optimized.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .mobile-exam-sidebar-optimized .sidebar-content {
+      background: var(--card);
+      border-radius: 20px 20px 0 0;
+      padding: 1.5rem;
+      margin-top: auto;
+      max-height: 90vh;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    .mobile-exam-sidebar-optimized.active .sidebar-content {
+      transform: translateY(0);
+    }
+    
+    .mobile-exam-sidebar-optimized .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--muted);
+    }
+    
+    .mobile-exam-sidebar-optimized .question-nav {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+      max-height: 50vh;
+      overflow-y: auto;
+      padding: 0.5rem;
+    }
+    
+    .mobile-exam-sidebar-optimized .nav-btn {
+      aspect-ratio: 1;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      background-color: #262D3B;
+      color: var(--text);
+      transition: all 0.2s;
+      font-size: 0.9rem;
+      border: 2px solid transparent;
+      min-height: 44px;
+    }
+    
+    .mobile-exam-sidebar-optimized .nav-btn.answered {
+      background-color: var(--success-clr);
+      color: white;
+    }
+    
+    .mobile-exam-sidebar-optimized .nav-btn.current {
+      border-color: var(--accent-soft);
+      transform: scale(1.1);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+    
+    .mobile-exam-sidebar-optimized .nav-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Batch Navigation for Mobile */
+    .batch-navigation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--muted);
+    }
+    
+    .batch-info {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    
+    /* Exam Results - Mobile Optimized */
+    .exam-results-container {
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    
+    .result-question-item {
+      background-color: var(--card);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-soft);
+    }
+    
+    .result-question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .result-status {
+      font-weight: 600;
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+    
+    .result-status.correct {
+      background-color: rgba(50, 205, 50, 0.2);
+      color: var(--success-clr);
+    }
+    
+    .result-status.incorrect {
+      background-color: rgba(255, 99, 71, 0.2);
+      color: var(--danger-clr);
+    }
+    
+    .result-options {
+      margin-top: 0.5rem;
+    }
+    
+    .result-option {
+      padding: 0.75rem;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      background-color: #262D3B;
+    }
+    
+    .result-option.correct {
+      background-color: rgba(50, 205, 50, 0.2);
+      border: 1px solid rgba(50, 205, 50, 0.4);
+    }
+    
+    .result-option.incorrect {
+      background-color: rgba(255, 99, 71, 0.2);
+      border: 1px solid rgba(255, 99, 71, 0.4);
+    }
+    
+    .result-option.selected {
       border: 2px solid var(--accent-soft);
+    }
+    
+    /* Floating Action Button for Mobile */
+    .fab {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 40;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+    .fab:hover {
+      transform: scale(1.1);
+    }
+    
+    .fab-text {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
     }
     
     @media (min-width: 1024px) {
@@ -431,42 +834,54 @@
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       }
       
-      /* Desktop exam sidebar */
+      /* Hide mobile-specific elements on desktop */
+      .mobile-exam-floating,
+      .mobile-exam-sidebar,
+      .mobile-exam-sidebar-optimized,
+      .fab {
+        display: none;
+      }
+    }
+    
+    /* Mobile-specific styles */
+    @media (max-width: 1023px) {
       .exam-sidebar-desktop {
-        width: 80px;
-        height: 70vh;
-        overflow-y: auto;
+        display: none;
+      }
+      
+      /* Improve exam section for mobile */
+      #exam-section .card {
+        margin-bottom: 80px; /* Space for floating bar */
+      }
+      
+      /* Hide desktop-specific elements on mobile */
+      .exam-sidebar-desktop {
+        display: none;
+      }
+      
+      /* Improve question display for mobile */
+      .question-item {
+        padding: 1.25rem;
+      }
+      
+      .question-text {
+        font-size: 1.1rem;
+        line-height: 1.4;
+      }
+      
+      .question-option {
         padding: 1rem;
-        background-color: var(--card);
-        border-radius: 12px;
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
       }
       
-      .exam-sidebar-desktop .question-nav {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.5rem;
+      /* Optimized mobile exam sidebar */
+      .mobile-exam-sidebar {
+        display: none;
       }
       
-      .exam-sidebar-desktop .nav-btn {
-        aspect-ratio: 1;
-        border-radius: 8px;
+      .mobile-exam-sidebar-optimized {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        background-color: #262D3B;
-        color: var(--text);
-        transition: all 0.2s;
-        font-size: 0.8rem;
-      }
-      
-      .exam-sidebar-desktop .nav-btn.answered {
-        background-color: var(--success-clr);
-        color: white;
-      }
-      
-      .exam-sidebar-desktop .nav-btn.current {
-        border: 2px solid var(--accent-soft);
       }
     }
   </style>
@@ -663,19 +1078,34 @@
           </div>
         </div>
 
-        <div id="exam-score-display" class="card p-6 my-3 hidden"></div>
+        <div id="exam-score-display" class="exam-results-container hidden"></div>
+
+        <!-- Mobile Progress Bar -->
+        <div id="mobile-progress" class="mobile-progress-container md:hidden hidden">
+          <div class="mobile-progress-bar">
+            <div id="mobile-progress-fill" class="mobile-progress-fill" style="width:0%;"></div>
+          </div>
+          <div id="mobile-progress-text" class="mobile-progress-text">0 / 0</div>
+        </div>
 
         <div class="flex flex-col md:flex-row gap-6 mt-4">
           <aside id="exam-sidebar-desktop" class="hidden md:block exam-sidebar-desktop"></aside>
 
           <div class="flex-1">
-            <div class="flex items-center justify-between mb-2 text-sm text-gray-500">
+            <div class="hidden md:flex items-center justify-between mb-2 text-sm text-gray-500">
               <div>Progress</div>
               <div id="progress-text">0 / 0 dijawab</div>
             </div>
-            <div class="h-3 bg-gray-700 rounded-full overflow-hidden mb-6">
+            <div class="hidden md:block h-3 bg-gray-700 rounded-full overflow-hidden mb-6">
               <div id="exam-progress" class="h-3 rounded-full bg-gradient-to-r from-pink-500 to-green-400" style="width:0%;"></div>
             </div>
+            
+            <!-- Mobile Question Navigation -->
+            <div id="mobile-nav-buttons" class="mobile-nav-buttons md:hidden hidden">
+              <button id="mobile-prev-btn" class="btn-prev" disabled>Sebelumnya</button>
+              <button id="mobile-next-btn" class="btn-next">Berikutnya</button>
+            </div>
+            
             <div id="exam-grid" class="grid gap-4 max-h-[60vh] overflow-y-auto p-1 exam-grid"></div>
           </div>
         </div>
@@ -684,21 +1114,38 @@
   </main>
 </div>
 
-<!-- Mobile Exam Sidebar -->
-<div id="mobile-exam-sidebar" class="mobile-exam-sidebar hidden">
-  <div class="flex justify-between items-center mb-2">
-    <h3 class="text-lg font-semibold">Navigasi Soal</h3>
-    <button id="close-mobile-sidebar" class="btn-ghost btn-cancel text-sm">Tutup</button>
+<!-- Mobile Exam Sidebar - OPTIMIZED -->
+<div id="mobile-exam-sidebar-optimized" class="mobile-exam-sidebar-optimized">
+  <div class="sidebar-content">
+    <div class="sidebar-header">
+      <h3 class="text-lg font-semibold">Navigasi Soal</h3>
+      <button id="close-mobile-sidebar-optimized" class="btn-ghost btn-cancel text-sm">Tutup</button>
+    </div>
+    <div id="mobile-sidebar-grid-optimized" class="question-nav"></div>
+    <div class="batch-navigation">
+      <button id="prev-batch-mobile" class="btn-ghost text-sm" disabled>Batch Sebelumnya</button>
+      <div id="batch-info-mobile" class="batch-info">Batch 1</div>
+      <button id="next-batch-mobile" class="btn-ghost text-sm">Batch Berikutnya</button>
+    </div>
   </div>
-  <div id="mobile-sidebar-grid" class="question-nav"></div>
 </div>
   
-<!-- Mobile Exam Floating Bar -->
-<div id="mobile-exam-floating" class="md:hidden mobile-floating hidden">
-  <div class="flex items-center justify-between px-3 py-2">
-    <button id="open-mobile-sidebar" class="btn px-3 py-2">Navigasi</button>
-    <button id="end-exam-mobile" class="btn-ghost btn-cancel hidden">Selesai Ujian</button>
+<!-- Mobile Exam Floating Bar - OPTIMIZED -->
+<div id="mobile-exam-floating-optimized" class="mobile-exam-floating hidden">
+  <div class="flex items-center justify-between">
+    <div class="flex gap-2">
+      <button id="open-mobile-sidebar-optimized" class="btn px-3 py-2">Soal</button>
+      <button id="end-exam-mobile-optimized" class="btn-ghost btn-cancel hidden">Selesai</button>
+    </div>
+    <div class="text-sm font-semibold">
+      <span id="current-question-mobile-optimized">1</span> / <span id="total-questions-mobile-optimized">0</span>
+    </div>
   </div>
+</div>
+
+<!-- Floating Action Button for Mobile -->
+<div id="mobile-fab" class="fab hidden">
+  <div class="fab-text">?</div>
 </div>
 
 <script>
@@ -707,14 +1154,15 @@
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession: false } });
   const bucket = sb.storage.from(STORAGE_BUCKET);
   
-  // Konstanta
-  const EXAM_BATCH_SIZE = 20;
+  // Konstanta - Diubah menjadi 50 soal per batch
+  const EXAM_BATCH_SIZE = 50;
   
   // Variabel state
   let courses = [], currentCourse = null, questions = [], editing = null;
   let newCourseImage = null;
   let examQuestions = [], userAnswers = [], currentExamBatch = 0;
   let currentQuestionIndex = 0;
+  let totalBatches = 0;
   
   // Elemen DOM
   const app = document.getElementById('app'); 
@@ -762,14 +1210,32 @@
   const selectExam = document.getElementById('select-exam');
   const startExamBtn = document.getElementById('start-exam');
   const endExamBtn = document.getElementById('end-exam');
-  const endExamMobileBtn = document.getElementById('end-exam-mobile');
   const examScoreDisplay = document.getElementById('exam-score-display');
   const examSidebarDesktop = document.getElementById('exam-sidebar-desktop');
-  const mobileExamSidebar = document.getElementById('mobile-exam-sidebar');
-  const mobileSidebarGrid = document.getElementById('mobile-sidebar-grid');
-  const openMobileSidebarBtn = document.getElementById('open-mobile-sidebar');
-  const closeMobileSidebarBtn = document.getElementById('close-mobile-sidebar');
-  const mobileExamFloating = document.getElementById('mobile-exam-floating');
+  
+  // Mobile-specific exam elements - OPTIMIZED
+  const mobileExamSidebarOptimized = document.getElementById('mobile-exam-sidebar-optimized');
+  const mobileSidebarGridOptimized = document.getElementById('mobile-sidebar-grid-optimized');
+  const openMobileSidebarOptimizedBtn = document.getElementById('open-mobile-sidebar-optimized');
+  const closeMobileSidebarOptimizedBtn = document.getElementById('close-mobile-sidebar-optimized');
+  const mobileExamFloatingOptimized = document.getElementById('mobile-exam-floating-optimized');
+  const endExamMobileOptimizedBtn = document.getElementById('end-exam-mobile-optimized');
+  const mobileFab = document.getElementById('mobile-fab');
+  
+  // Mobile-specific exam elements
+  const mobileProgress = document.getElementById('mobile-progress');
+  const mobileProgressFill = document.getElementById('mobile-progress-fill');
+  const mobileProgressText = document.getElementById('mobile-progress-text');
+  const mobileNavButtons = document.getElementById('mobile-nav-buttons');
+  const mobilePrevBtn = document.getElementById('mobile-prev-btn');
+  const mobileNextBtn = document.getElementById('mobile-next-btn');
+  const currentQuestionMobile = document.getElementById('current-question-mobile-optimized');
+  const totalQuestionsMobile = document.getElementById('total-questions-mobile-optimized');
+  
+  // Batch navigation for mobile
+  const prevBatchMobileBtn = document.getElementById('prev-batch-mobile');
+  const nextBatchMobileBtn = document.getElementById('next-batch-mobile');
+  const batchInfoMobile = document.getElementById('batch-info-mobile');
   
   // Fungsi untuk menampilkan section
   function showSection(name){
@@ -799,9 +1265,12 @@
     
     // Toggle UI khusus ujian
     if (name === 'exam') {
-      mobileExamFloating.classList.remove('hidden');
+      mobileExamFloatingOptimized.classList.remove('hidden');
+      mobileFab.classList.remove('hidden');
     } else {
-      mobileExamFloating.classList.add('hidden');
+      mobileExamFloatingOptimized.classList.add('hidden');
+      mobileExamSidebarOptimized.classList.remove('active');
+      mobileFab.classList.add('hidden');
     }
   }
   
@@ -1201,7 +1670,7 @@
     editing = null;
   });
 
-  // PERBAIKAN: Event listener untuk tombol Tambah Soal
+  // Event listener untuk tombol Tambah Soal
   btnAddQ.addEventListener('click', () => {
     if (!currentCourse) {
       alert('Pilih mata kuliah terlebih dahulu.');
@@ -1277,7 +1746,7 @@
   });
   qeDropzone.addEventListener('dragover', e => e.preventDefault());
 
-  // --- Exam Mode ---
+  // --- Exam Mode - OPTIMIZED FOR MOBILE ---
   selectExam.addEventListener('change', () => {
     startExamBtn.disabled = !selectExam.value;
   });
@@ -1301,14 +1770,24 @@
     userAnswers = new Array(examQuestions.length).fill(null);
     currentExamBatch = 0;
     currentQuestionIndex = 0;
+    totalBatches = Math.ceil(examQuestions.length / EXAM_BATCH_SIZE);
     
     examScoreDisplay.classList.add('hidden');
     startExamBtn.classList.add('hidden');
     endExamBtn.classList.remove('hidden');
-    endExamMobileBtn.classList.remove('hidden');
+    endExamMobileOptimizedBtn.classList.remove('hidden');
+    
+    // Tampilkan elemen mobile khusus
+    mobileProgress.classList.remove('hidden');
+    mobileNavButtons.classList.remove('hidden');
+    mobileFab.classList.remove('hidden');
+    
+    // Update info soal di floating bar
+    currentQuestionMobile.textContent = '1';
+    totalQuestionsMobile.textContent = examQuestions.length;
     
     renderExam();
-    renderExamSidebar();
+    renderExamSidebarOptimized();
   }
 
   function renderExam(){
@@ -1320,15 +1799,20 @@
 
     questionsToRender.forEach((q, i) => {
       const globalIndex = startIndex + i;
+      const isMobile = window.innerWidth < 1024;
+      const questionClass = isMobile ? 'mobile-question-item' : 'question-item';
+      const textClass = isMobile ? 'mobile-question-text' : 'question-text';
+      const optionClass = isMobile ? 'mobile-question-option' : 'question-option';
+      
       const el = document.createElement('div');
-      el.className = 'question-item';
+      el.className = questionClass;
       let optionsHtml = '';
       
       q.opsi.forEach((o, j) => {
         const isSelected = userAnswers[globalIndex] === j;
         const selectedClass = isSelected ? 'selected' : '';
         optionsHtml += `
-          <div data-index="${globalIndex}" data-option="${j}" class="question-option ${selectedClass}">
+          <div data-index="${globalIndex}" data-option="${j}" class="${optionClass} ${selectedClass}">
             ${String.fromCharCode(65 + j)}. ${escapeHtml(o)}
           </div>
         `;
@@ -1336,17 +1820,25 @@
       
       el.innerHTML = `
         <div class="text-lg font-bold mb-3">Soal #${globalIndex + 1}</div>
-        <div class="question-text">${formatText(q.teks)}</div>
+        <div class="${textClass}">${formatText(q.teks)}</div>
         ${q.gambar ? `<img src="${bucket.getPublicUrl(q.gambar.split('/').pop()).data.publicUrl}" alt="Soal Gambar" class="question-image" />` : ''}
         <div class="mt-3">
           ${optionsHtml}
         </div>
       `;
+      
+      // Untuk mobile, sembunyikan soal yang tidak aktif
+      if (isMobile) {
+        if (globalIndex !== currentQuestionIndex) {
+          el.style.display = 'none';
+        }
+      }
+      
       examGrid.appendChild(el);
     });
 
-    // Navigasi batch untuk banyak soal
-    if (examQuestions.length > EXAM_BATCH_SIZE) {
+    // Navigasi batch untuk banyak soal (hanya desktop)
+    if (examQuestions.length > EXAM_BATCH_SIZE && window.innerWidth >= 1024) {
       const navHtml = `
         <div class="flex items-center justify-between mt-3">
           <button id="prev-batch" class="btn-ghost" ${currentExamBatch === 0 ? 'disabled' : ''}>
@@ -1366,7 +1858,7 @@
         if (currentExamBatch > 0) {
           currentExamBatch--;
           renderExam();
-          renderExamSidebar();
+          renderExamSidebarOptimized();
         }
       });
       
@@ -1374,13 +1866,13 @@
         if ((currentExamBatch + 1) * EXAM_BATCH_SIZE < examQuestions.length) {
           currentExamBatch++;
           renderExam();
-          renderExamSidebar();
+          renderExamSidebarOptimized();
         }
       });
     }
 
     // Event listeners untuk memilih jawaban
-    document.querySelectorAll('.question-option').forEach(opt => {
+    document.querySelectorAll('.question-option, .mobile-question-option').forEach(opt => {
       opt.addEventListener('click', (e) => {
         const index = parseInt(e.target.dataset.index);
         const option = parseInt(e.target.dataset.option);
@@ -1389,15 +1881,16 @@
     });
     
     updateProgress();
+    updateMobileNavigation();
   }
 
   function handleAnswer(index, option){
     userAnswers[index] = option;
     
     // Update tampilan soal yang dijawab
-    const qEl = examGrid.querySelector(`.question-item:nth-child(${ (index % EXAM_BATCH_SIZE) + 1 })`);
+    const qEl = examGrid.querySelector(`[data-index="${index}"]`).closest('.question-item, .mobile-question-item');
     if(qEl){
-      qEl.querySelectorAll('.question-option').forEach(o => {
+      qEl.querySelectorAll('.question-option, .mobile-question-option').forEach(o => {
         o.classList.remove('selected');
         if (parseInt(o.dataset.option) === option) {
           o.classList.add('selected');
@@ -1406,7 +1899,7 @@
     }
     
     updateProgress();
-    renderExamSidebar();
+    renderExamSidebarOptimized();
   }
 
   function updateProgress(){
@@ -1415,6 +1908,31 @@
     const percentage = totalQuestions > 0 ? (answeredCount / totalQuestions) * 100 : 0;
     progressText.textContent = `${answeredCount} / ${totalQuestions} dijawab`;
     examProgress.style.width = `${percentage}%`;
+    
+    // Update progress mobile
+    mobileProgressText.textContent = `${answeredCount} / ${totalQuestions}`;
+    mobileProgressFill.style.width = `${percentage}%`;
+  }
+  
+  function updateMobileNavigation() {
+    if (window.innerWidth < 1024) {
+      // Update tombol navigasi mobile
+      mobilePrevBtn.disabled = currentQuestionIndex === 0;
+      mobileNextBtn.disabled = currentQuestionIndex === examQuestions.length - 1;
+      
+      // Update nomor soal di floating bar
+      currentQuestionMobile.textContent = currentQuestionIndex + 1;
+      
+      // Tampilkan hanya soal yang aktif
+      document.querySelectorAll('.mobile-question-item').forEach((el, i) => {
+        const questionIndex = currentExamBatch * EXAM_BATCH_SIZE + i;
+        if (questionIndex === currentQuestionIndex) {
+          el.style.display = 'block';
+        } else {
+          el.style.display = 'none';
+        }
+      });
+    }
   }
   
   function endExam(){
@@ -1424,58 +1942,82 @@
 
   function showResults(){
     let correctCount = 0;
-    let resultsHtml = `<div class="font-bold text-xl mb-3">Hasil Ujian</div>`;
+    let resultsHtml = `
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-semibold">Hasil Ujian</h3>
+        <div class="text-right">
+          <div class="text-3xl font-bold">${Math.round((correctCount / examQuestions.length) * 100)}%</div>
+          <div class="text-sm text-gray-400">Skor Akhir</div>
+        </div>
+      </div>
+      <div class="text-gray-400 mb-4">${correctCount} dari ${examQuestions.length} soal benar.</div>
+      <button id="restart-exam" class="btn w-full mb-4">Mulai Ujian Lagi</button>
+    `;
     
     examQuestions.forEach((q, i) => {
       const userAnswer = userAnswers[i];
       const isCorrect = userAnswer === q.kunci;
       if(isCorrect) correctCount++;
       
-      const statusClass = isCorrect ? 'result-correct' : 'result-incorrect';
+      const statusClass = isCorrect ? 'correct' : 'incorrect';
       const statusText = isCorrect ? 'Benar' : 'Salah';
       
       let optionsHtml = '';
       q.opsi.forEach((o, j) => {
-        let optionClass = 'bg-gray-700';
+        let optionClass = '';
+        let optionStatus = '';
+        
         if (j === q.kunci) {
-          optionClass = 'correct-option';
+          optionClass = 'correct';
+          optionStatus = ' (Jawaban Benar)';
         } else if (j === userAnswer && !isCorrect) {
-          optionClass = 'bg-red-600 text-white';
+          optionClass = 'incorrect';
+          optionStatus = ' (Jawaban Anda)';
+        } else if (j === userAnswer) {
+          optionStatus = ' (Jawaban Anda)';
         }
-        optionsHtml += `<div class="p-2 my-1 rounded-lg ${optionClass}">${String.fromCharCode(65 + j)}. ${escapeHtml(o)}</div>`;
+        
+        const selectedClass = j === userAnswer ? 'selected' : '';
+        
+        optionsHtml += `
+          <div class="result-option ${optionClass} ${selectedClass}">
+            <div>${String.fromCharCode(65 + j)}. ${escapeHtml(o)}${optionStatus}</div>
+          </div>
+        `;
       });
       
       resultsHtml += `
-        <div class="result-card">
-          <div class="flex items-center justify-between mb-2">
+        <div class="result-question-item">
+          <div class="result-question-header">
             <div class="font-bold">Soal #${i + 1}</div>
-            <div class="${statusClass} font-semibold">${statusText}</div>
+            <div class="result-status ${statusClass}">${statusText}</div>
           </div>
           <div class="question-text">${formatText(q.teks)}</div>
           ${q.gambar ? `<img src="${bucket.getPublicUrl(q.gambar.split('/').pop()).data.publicUrl}" alt="Soal Gambar" class="question-image" />` : ''}
-          <div class="mt-3">
+          <div class="result-options">
             ${optionsHtml}
           </div>
         </div>
       `;
     });
 
+    // Update score in the header
     const score = Math.round((correctCount / examQuestions.length) * 100);
-    examScoreDisplay.innerHTML = `
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="text-xl font-semibold">Skor Akhir:</h3>
-        <span class="text-3xl font-bold">${score}%</span>
-      </div>
-      <div class="text-gray-400">${correctCount} dari ${examQuestions.length} soal benar.</div>
-      <button id="restart-exam" class="btn mt-4">Mulai Ujian Lagi</button>
-    ` + resultsHtml;
+    resultsHtml = resultsHtml.replace('${Math.round((correctCount / examQuestions.length) * 100)}', score);
+    resultsHtml = resultsHtml.replace('${correctCount}', correctCount);
     
+    examScoreDisplay.innerHTML = resultsHtml;
     examScoreDisplay.classList.remove('hidden');
     examGrid.innerHTML = '';
     endExamBtn.classList.add('hidden');
-    endExamMobileBtn.classList.add('hidden');
+    endExamMobileOptimizedBtn.classList.add('hidden');
     examSidebarDesktop.classList.add('hidden');
-    mobileExamSidebar.classList.add('hidden');
+    mobileExamSidebarOptimized.classList.remove('active');
+    
+    // Sembunyikan elemen mobile
+    mobileProgress.classList.add('hidden');
+    mobileNavButtons.classList.add('hidden');
+    mobileFab.classList.add('hidden');
     
     document.getElementById('restart-exam').addEventListener('click', refreshQuestions);
   }
@@ -1484,17 +2026,24 @@
     examQuestions = [];
     userAnswers = [];
     currentExamBatch = 0;
+    currentQuestionIndex = 0;
     startExamBtn.classList.remove('hidden');
     endExamBtn.classList.add('hidden');
-    endExamMobileBtn.classList.add('hidden');
+    endExamMobileOptimizedBtn.classList.add('hidden');
     examScoreDisplay.classList.add('hidden');
     examGrid.innerHTML = '';
     examSidebarDesktop.classList.add('hidden');
-    mobileExamSidebar.classList.add('hidden');
+    mobileExamSidebarOptimized.classList.remove('active');
+    
+    // Sembunyikan elemen mobile
+    mobileProgress.classList.add('hidden');
+    mobileNavButtons.classList.add('hidden');
+    mobileFab.classList.add('hidden');
+    
     updateProgress();
   }
 
-  function renderExamSidebar(){
+  function renderExamSidebarOptimized(){
     const startNum = currentExamBatch * EXAM_BATCH_SIZE;
     const endNum = Math.min(startNum + EXAM_BATCH_SIZE, examQuestions.length);
     const navButtons = [];
@@ -1512,8 +2061,12 @@
         `);
     }
 
-    const prevBtn = `<button id="prev-batch-sidebar" class="btn-ghost text-sm px-2 py-1" ${currentExamBatch === 0 ? 'disabled' : ''}>&laquo;</button>`;
-    const nextBtn = `<button id="next-batch-sidebar" class="btn-ghost text-sm px-2 py-1" ${endNum >= examQuestions.length ? 'disabled' : ''}>&raquo;</button>`;
+    // Update batch info
+    batchInfoMobile.textContent = `Batch ${currentExamBatch + 1} dari ${totalBatches}`;
+    
+    // Update batch navigation buttons
+    prevBatchMobileBtn.disabled = currentExamBatch === 0;
+    nextBatchMobileBtn.disabled = currentExamBatch === totalBatches - 1;
     
     // Desktop sidebar
     const desktopGridHtml = `
@@ -1521,8 +2074,8 @@
         ${navButtons.join('')}
       </div>
       <div class="flex justify-between mt-3">
-        ${prevBtn}
-        ${nextBtn}
+        <button id="prev-batch-sidebar" class="btn-ghost text-sm px-2 py-1" ${currentExamBatch === 0 ? 'disabled' : ''}>&laquo;</button>
+        <button id="next-batch-sidebar" class="btn-ghost text-sm px-2 py-1" ${endNum >= examQuestions.length ? 'disabled' : ''}>&raquo;</button>
       </div>
     `;
 
@@ -1531,16 +2084,12 @@
       <div class="question-nav">
         ${navButtons.join('')}
       </div>
-      <div class="flex justify-between mt-3">
-        ${prevBtn}
-        ${nextBtn}
-      </div>
     `;
     
     examSidebarDesktop.innerHTML = desktopGridHtml;
     examSidebarDesktop.classList.remove('hidden');
     
-    mobileSidebarGrid.innerHTML = mobileGridHtml;
+    mobileSidebarGridOptimized.innerHTML = mobileGridHtml;
     
     // Event listeners untuk navigasi soal
     document.querySelectorAll('.nav-btn').forEach(b => {
@@ -1549,16 +2098,17 @@
         currentQuestionIndex = clickedIndex;
         
         // Scroll ke soal yang dipilih
-        const questionElement = document.querySelector(`[data-index="${clickedIndex}"]`).closest('.question-item');
+        const questionElement = document.querySelector(`[data-index="${clickedIndex}"]`).closest('.question-item, .mobile-question-item');
         if (questionElement) {
           questionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         
-        renderExamSidebar();
+        renderExamSidebarOptimized();
+        updateMobileNavigation();
         
         // Tutup sidebar mobile setelah memilih soal
         if (window.innerWidth < 1024) {
-          mobileExamSidebar.classList.add('hidden');
+          mobileExamSidebarOptimized.classList.remove('active');
         }
       });
     });
@@ -1567,7 +2117,7 @@
       if (currentExamBatch > 0) {
         currentExamBatch--;
         renderExam();
-        renderExamSidebar();
+        renderExamSidebarOptimized();
       }
     });
 
@@ -1575,7 +2125,7 @@
       if ((currentExamBatch + 1) * EXAM_BATCH_SIZE < examQuestions.length) {
         currentExamBatch++;
         renderExam();
-        renderExamSidebar();
+        renderExamSidebarOptimized();
       }
     });
   }
@@ -1583,15 +2133,67 @@
   // Event listeners untuk ujian
   startExamBtn.addEventListener('click', startExam);
   endExamBtn.addEventListener('click', endExam);
-  endExamMobileBtn.addEventListener('click', endExam);
+  endExamMobileOptimizedBtn.addEventListener('click', endExam);
 
-  // Mobile sidebar handlers
-  openMobileSidebarBtn.addEventListener('click', () => {
-    mobileExamSidebar.classList.remove('hidden');
+  // Mobile sidebar handlers - OPTIMIZED
+  openMobileSidebarOptimizedBtn.addEventListener('click', () => {
+    mobileExamSidebarOptimized.classList.add('active');
   });
 
-  closeMobileSidebarBtn.addEventListener('click', () => {
-    mobileExamSidebar.classList.add('hidden');
+  closeMobileSidebarOptimizedBtn.addEventListener('click', () => {
+    mobileExamSidebarOptimized.classList.remove('active');
+  });
+  
+  // Mobile navigation handlers
+  mobilePrevBtn.addEventListener('click', () => {
+    if (currentQuestionIndex > 0) {
+      currentQuestionIndex--;
+      renderExam();
+      renderExamSidebarOptimized();
+      updateMobileNavigation();
+    }
+  });
+  
+  mobileNextBtn.addEventListener('click', () => {
+    if (currentQuestionIndex < examQuestions.length - 1) {
+      currentQuestionIndex++;
+      renderExam();
+      renderExamSidebarOptimized();
+      updateMobileNavigation();
+    }
+  });
+  
+  // Batch navigation for mobile
+  prevBatchMobileBtn.addEventListener('click', () => {
+    if (currentExamBatch > 0) {
+      currentExamBatch--;
+      currentQuestionIndex = currentExamBatch * EXAM_BATCH_SIZE;
+      renderExam();
+      renderExamSidebarOptimized();
+      updateMobileNavigation();
+    }
+  });
+  
+  nextBatchMobileBtn.addEventListener('click', () => {
+    if (currentExamBatch < totalBatches - 1) {
+      currentExamBatch++;
+      currentQuestionIndex = currentExamBatch * EXAM_BATCH_SIZE;
+      renderExam();
+      renderExamSidebarOptimized();
+      updateMobileNavigation();
+    }
+  });
+  
+  // Floating Action Button handler
+  mobileFab.addEventListener('click', () => {
+    mobileExamSidebarOptimized.classList.add('active');
+  });
+  
+  // Tutup sidebar mobile saat klik di luar
+  mobileExamSidebarOptimized.addEventListener('click', (e) => {
+    if (e.target === mobileExamSidebarOptimized) {
+      mobileExamSidebarOptimized.classList.remove('active');
+    }
   });
 
 })();
