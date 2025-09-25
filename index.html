@@ -7,86 +7,149 @@
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-
+  <!-- Ikon Lucu -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
     
     :root {
-      --bg: #1A202C;
-      --card: #2D3748;
-      --text: #E2E8F0;
-      --muted: #718096;
-      --accent: linear-gradient(135deg, #FF69B4, #87CEEB);
-      --accent-soft: #FF69B4;
-      --success-clr: #32CD32;
-      --danger-clr: #FF6347;
-      --selected-clr: #4A90E2;
-      --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --bg: #1A1A2E;
+      --card: #2D2B55;
+      --text: #F5F5F5;
+      --muted: #A5B4CB;
+      --accent: linear-gradient(135deg, #FF9ED8 0%, #A0E7E5 100%);
+      --accent-soft: #FF9ED8;
+      --success-clr: #7CEC9F;
+      --danger-clr: #FF7B9C;
+      --selected-clr: #6A8EFF;
+      --warning-clr: #FFD166;
+      --purple-clr: #C792EA;
+      --shadow-soft: 0 6px 12px -2px rgba(0, 0, 0, 0.2), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-cute: 0 8px 16px rgba(255, 158, 216, 0.2);
     }
 
     html, body { 
       height: 100%; 
       overflow-x: hidden;
       margin: 0;
-      font-family: 'Fredoka', sans-serif;
+      font-family: 'Nunito', sans-serif;
       background: var(--bg);
       color: var(--text);
-      transition: background-color .25s, color .25s;
+      transition: background-color .3s, color .3s;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
 
+    .cute-title {
+      font-family: 'Comic Neue', cursive;
+      font-weight: 700;
+      background: linear-gradient(135deg, #FF9ED8 0%, #A0E7E5 50%, #FFD166 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
     .card {
       background: var(--card);
-      border-radius: 20px;
+      border-radius: 24px;
       box-shadow: var(--shadow-soft);
-      transition: all .25s ease-in-out;
+      transition: all .3s ease-in-out;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-cute);
     }
 
     .btn {
       background: var(--accent);
       color: white;
-      padding: 12px 20px;
-      border-radius: 12px;
-      font-weight: 600;
+      padding: 14px 24px;
+      border-radius: 16px;
+      font-weight: 700;
       border: none;
       cursor: pointer;
-      transition: transform .1s, opacity .1s, box-shadow .2s;
+      transition: transform .2s, opacity .2s, box-shadow .3s;
       white-space: nowrap;
+      font-family: 'Comic Neue', cursive;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(160, 231, 229, 0.3);
     }
+    
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.7s;
+    }
+    
+    .btn:hover::after {
+      left: 100%;
+    }
+    
     .btn:hover { 
-      box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5);
-      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(160, 231, 229, 0.5);
+      transform: translateY(-3px);
     }
     .btn:active { 
-      transform: translateY(0); 
+      transform: translateY(1px); 
       opacity: 0.9;
     }
 
     .btn-ghost {
       background: transparent;
       color: var(--muted);
-      border: 1px solid var(--muted);
-      padding: 10px 16px;
-      border-radius: 12px;
+      border: 2px solid var(--muted);
+      padding: 12px 20px;
+      border-radius: 16px;
       cursor: pointer;
-      font-weight: 500;
-      transition: color .25s, border-color .25s, background-color .25s;
+      font-weight: 600;
+      transition: color .3s, border-color .3s, background-color .3s, transform .2s;
+      font-family: 'Comic Neue', cursive;
     }
     .btn-ghost:hover { 
       color: var(--text);
-      border-color: var(--text); 
-      background-color: rgba(255,255,255,0.05);
+      border-color: var(--accent-soft); 
+      background-color: rgba(255, 158, 216, 0.1);
+      transform: translateY(-2px);
     }
     .btn-ghost.active {
       background: var(--accent-soft);
       color: white;
       border-color: var(--accent-soft);
+      box-shadow: 0 4px 10px rgba(255, 158, 216, 0.3);
     }
     .btn-ghost.btn-cancel {
       color: var(--danger-clr);
       border-color: transparent;
-      font-weight: 600;
+      font-weight: 700;
       background-color: transparent;
     }
     .btn-ghost.btn-cancel:hover {
@@ -100,7 +163,38 @@
       scrollbar-color: rgba(255,255,255,0.12) transparent;
     }
     .sidebar-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
-    .sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 999px; }
+    .sidebar-scroll::-webkit-scrollbar-thumb { 
+      background: rgba(255,255,255,0.08); 
+      border-radius: 999px; 
+      background: var(--accent);
+    }
+
+    /* Animasi masuk untuk konten */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-in {
+      animation: slideInUp 0.5s ease-out forwards;
+    }
+
+    /* Efek berkedip untuk elemen penting */
+    @keyframes gentlePulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+
+    .pulse-gentle {
+      animation: gentlePulse 2s infinite ease-in-out;
+    }
 
     .mobile-floating { 
       display: block;
@@ -110,9 +204,10 @@
       right: 0;
       z-index: 50;
       background: var(--card);
-      padding: 0.5rem;
+      padding: 0.75rem;
       border-top: 1px solid var(--muted);
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
+      box-shadow: 0 -6px 15px rgba(0,0,0,0.1);
+      border-radius: 24px 24px 0 0;
     }
     
     .exam-grid { 
@@ -123,87 +218,125 @@
     select.cute-select {
       background-color: var(--card) !important;
       color: var(--text) !important;
-      border: 1px solid var(--muted) !important;
+      border: 2px solid var(--muted) !important;
       width: 100%;
       max-width: 100%;
-      border-radius: 12px;
-      padding: 12px 20px;
+      border-radius: 16px;
+      padding: 14px 20px;
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
-      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23A0AEC0'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23A0E7E5'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
       background-repeat: no-repeat;
       background-position: right 1rem center;
       background-size: 1.5em;
+      font-family: 'Comic Neue', cursive;
+      transition: border-color .3s;
+    }
+    
+    select.cute-select:focus {
+      border-color: var(--accent-soft) !important;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 158, 216, 0.2);
     }
     
     input.cute-input, textarea.cute-input {
       background-color: var(--card) !important;
       color: var(--text) !important;
-      border: 1px solid var(--muted) !important;
-      border-radius: 12px;
-      padding: 14px 16px;
+      border: 2px solid var(--muted) !important;
+      border-radius: 16px;
+      padding: 16px 20px;
       width: 100%;
       box-sizing: border-box;
-      transition: border-color .2s;
+      transition: border-color .3s, box-shadow .3s;
+      font-family: 'Nunito', sans-serif;
     }
+    
     input.cute-input:focus, textarea.cute-input:focus {
       border-color: var(--accent-soft) !important;
       outline: none;
-      box-shadow: 0 0 0 2px rgba(255, 105, 180, 0.2);
+      box-shadow: 0 0 0 3px rgba(255, 158, 216, 0.2);
     }
 
     .image-dropzone {
       background-color: var(--card);
       color: var(--text);
-      border: 2px dashed var(--muted);
-      border-radius: 12px;
-      transition: border-color .2s;
+      border: 3px dashed var(--muted);
+      border-radius: 16px;
+      transition: border-color .3s, background-color .3s;
     }
+    
     .image-dropzone:hover {
       border-color: var(--accent-soft);
+      background-color: rgba(255, 158, 216, 0.05);
     }
 
     .question-item {
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 16px;
+      border: 2px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
       padding: 1.5rem;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       background-color: var(--card);
       box-shadow: var(--shadow-soft);
+      transition: all .3s;
     }
 
     .question-text {
-      font-weight: 500;
-      margin-bottom: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      line-height: 1.5;
     }
 
     .question-option {
-      padding: 1rem;
-      border-radius: 12px;
-      background-color: #262D3B;
-      font-weight: 500;
-      transition: all .2s;
+      padding: 1.2rem;
+      border-radius: 14px;
+      background-color: rgba(255, 255, 255, 0.05);
+      font-weight: 600;
+      transition: all .3s;
       cursor: pointer;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .question-option::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.5s;
+    }
+    
+    .question-option:hover::before {
+      left: 100%;
     }
     
     .question-option.selected {
       background-color: var(--selected-clr);
       color: white;
+      border-color: var(--accent-soft);
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(106, 142, 255, 0.3);
     }
     
     .correct-option {
       background-color: var(--success-clr) !important;
       color: white;
+      border-color: var(--success-clr);
     }
 
     .question-image {
       max-width: 100%;
-      border-radius: 12px;
+      border-radius: 16px;
       margin-top: 1rem;
       max-height: 200px;
       object-fit: contain;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     
     .no-questions {
@@ -224,21 +357,22 @@
       justify-content: center;
       align-items: center;
       z-index: 100;
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(10px);
     }
 
     .popout-content {
-      background-color: var(--bg);
-      border-radius: 20px;
-      padding: 1.5rem;
-      box-shadow: 0 16px 30px rgba(0,0,0,0.5);
+      background: var(--card);
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
       width: 95%;
       max-width: 800px;
       max-height: 95vh;
       overflow-y: auto;
-      transform: scale(0.95);
+      transform: scale(0.9);
       opacity: 0;
-      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .popout-content.show {
@@ -256,24 +390,24 @@
     
     .result-card {
       background-color: var(--card);
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 1rem;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
       box-shadow: var(--shadow-soft);
     }
     
     .result-correct-bg {
-      background-color: rgba(50, 205, 50, 0.2);
-      border: 1px solid rgba(50, 205, 50, 0.4);
+      background-color: rgba(124, 236, 159, 0.2);
+      border: 2px solid rgba(124, 236, 159, 0.4);
     }
 
     .correct-answer {
-      background-color: rgba(50, 205, 50, 0.2);
-      border: 1px solid rgba(50, 205, 50, 0.4);
-      border-radius: 8px;
-      padding: 10px;
-      margin-top: 8px;
-      font-weight: 600;
+      background-color: rgba(124, 236, 159, 0.2);
+      border: 2px solid rgba(124, 236, 159, 0.4);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
+      font-weight: 700;
     }
 
     /* Layout */
@@ -285,80 +419,131 @@
 
     .nav-item {
       color: var(--muted);
-      font-weight: 500;
-      padding: 12px 20px;
-      border-radius: 12px;
-      transition: all .2s;
+      font-weight: 600;
+      padding: 14px 20px;
+      border-radius: 14px;
+      transition: all .3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 5px;
+      font-family: 'Comic Neue', cursive;
     }
+    
+    .nav-item i {
+      font-size: 1.2rem;
+      width: 24px;
+      text-align: center;
+    }
+    
     .nav-item:hover {
-      background-color: #262D3B;
+      background-color: rgba(255, 158, 216, 0.1);
       color: var(--text);
+      transform: translateX(5px);
     }
+    
     .nav-item.active {
       background: var(--accent);
       color: white;
-      box-shadow: 0 4px 8px rgba(255, 105, 180, 0.3);
+      box-shadow: 0 6px 12px rgba(255, 158, 216, 0.3);
     }
+    
     .nav-item.active:hover {
       background: var(--accent);
       color: white;
+      transform: translateX(5px);
     }
 
     /* Course Card */
     .course-card {
-      background-color: var(--card);
-      border-radius: 16px;
+      background: linear-gradient(135deg, var(--card) 0%, #343267 100%);
+      border-radius: 20px;
       box-shadow: var(--shadow-soft);
       border: 2px solid transparent;
-      transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease, background-color .3s ease;
+      transition: transform .4s ease, box-shadow .4s ease, border-color .4s ease;
       padding: 1.5rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
+      position: relative;
+      overflow: hidden;
     }
+    
+    .course-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s ease;
+    }
+    
+    .course-card:hover::before {
+      transform: scaleX(1);
+    }
+    
     .course-card:hover {
-      transform: translateY(-4px);
-      border-color: #FF69B4;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      transform: translateY(-8px);
+      border-color: var(--accent-soft);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
     }
+    
     .course-card .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
     }
+    
     .course-card .title {
-      font-weight: 700;
-      font-size: 1.25rem;
+      font-weight: 800;
+      font-size: 1.3rem;
       line-height: 1.5rem;
-      color: #FF69B4;
+      background: linear-gradient(135deg, #FF9ED8 0%, #A0E7E5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-family: 'Comic Neue', cursive;
     }
+    
     .course-card .actions {
       display: flex;
       gap: 0.5rem;
     }
+    
     .course-card .actions button {
-      padding: 0.4rem 0.8rem;
-      border-radius: 8px;
-      font-weight: 500;
-      transition: background-color .2s, color .2s;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: background-color .3s, color .3s, transform .2s;
       font-size: 0.9rem;
+      font-family: 'Comic Neue', cursive;
     }
+    
     .course-card .actions .open-manage {
-      background-color: #FF69B4;
+      background-color: var(--accent-soft);
       color: white;
     }
+    
     .course-card .actions .delete-course {
       background-color: var(--danger-clr);
       color: white;
     }
+    
     .course-card .created-at {
       color: var(--muted);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
     
-    /* Mobile Exam Floating Bar - PERBAIKAN */
+    /* Mobile Exam Floating Bar - IMPROVED */
     .mobile-exam-floating {
       position: fixed;
       bottom: 0;
@@ -367,265 +552,26 @@
       z-index: 50;
       background: var(--card);
       padding: 1rem;
-      border-top: 1px solid var(--muted);
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
-      backdrop-filter: blur(10px);
+      border-top: 2px solid var(--muted);
+      box-shadow: 0 -8px 20px rgba(0,0,0,0.2);
+      backdrop-filter: blur(15px);
+      border-radius: 24px 24px 0 0;
     }
     
-    /* Mobile Exam Sidebar - PERBAIKAN */
-    .mobile-exam-sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
-      z-index: 100;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s, visibility 0.3s;
-    }
-    
-    .mobile-exam-sidebar.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .mobile-exam-sidebar .sidebar-content {
-      background: var(--card);
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      padding: 1.5rem;
-      max-height: 80vh;
-      transform: translateY(100%);
-      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-    
-    .mobile-exam-sidebar.active .sidebar-content {
-      transform: translateY(0);
-    }
-    
-    .mobile-exam-sidebar .sidebar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--muted);
-    }
-    
-    .mobile-exam-sidebar .question-nav {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 0.5rem;
-      max-height: 50vh;
-      overflow-y: auto;
-      padding: 0.5rem;
-    }
-    
-    .mobile-exam-sidebar .nav-btn {
-      aspect-ratio: 1;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      background-color: #262D3B;
-      color: var(--text);
-      transition: all 0.2s;
-      font-size: 0.9rem;
-      border: 2px solid transparent;
-    }
-    
-    .mobile-exam-sidebar .nav-btn.answered {
-      background-color: var(--success-clr);
-      color: white;
-    }
-    
-    .mobile-exam-sidebar .nav-btn.current {
-      border-color: var(--accent-soft);
-      transform: scale(1.1);
-    }
-    
-    .mobile-exam-sidebar .nav-btn:hover {
-      transform: scale(1.05);
-    }
-    
-    /* Progress bar mobile - PERBAIKAN */
-    .mobile-progress-container {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    
-    .mobile-progress-bar {
-      flex: 1;
-      height: 8px;
-      background-color: #262D3B;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    
-    .mobile-progress-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 4px;
-      transition: width 0.3s ease;
-    }
-    
-    .mobile-progress-text {
-      font-size: 0.9rem;
-      font-weight: 600;
-      min-width: 80px;
-      text-align: right;
-    }
-    
-    /* Mobile question layout - PERBAIKAN */
-    .mobile-question-container {
-      padding-bottom: 100px; /* Space for floating bar */
-    }
-    
-    .mobile-question-item {
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 16px;
-      padding: 1.25rem;
-      margin-bottom: 1rem;
-      background-color: var(--card);
-      box-shadow: var(--shadow-soft);
-    }
-    
-    .mobile-question-text {
-      font-weight: 500;
-      margin-bottom: 1rem;
-      font-size: 1.1rem;
-      line-height: 1.4;
-    }
-    
-    .mobile-question-option {
-      padding: 1rem;
-      border-radius: 12px;
-      background-color: #262D3B;
-      font-weight: 500;
-      transition: all .2s;
-      cursor: pointer;
-      margin-bottom: 0.75rem;
-      font-size: 1rem;
-      border: 2px solid transparent;
-    }
-    
-    .mobile-question-option.selected {
-      background-color: var(--selected-clr);
-      color: white;
-      border-color: var(--accent-soft);
-    }
-    
-    .mobile-question-option:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    
-    /* Mobile navigation buttons - PERBAIKAN */
-    .mobile-nav-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 1.5rem;
-      gap: 1rem;
-    }
-    
-    .mobile-nav-buttons button {
-      flex: 1;
-      padding: 1rem;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 1rem;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    
-    .mobile-nav-buttons .btn-prev {
-      background: #262D3B;
-      color: var(--text);
-    }
-    
-    .mobile-nav-buttons .btn-next {
-      background: var(--accent);
-      color: white;
-    }
-    
-    .mobile-nav-buttons button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    
-    .mobile-nav-buttons button:not(:disabled):hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-    
-    /* Desktop exam sidebar - PERBAIKAN */
-    .exam-sidebar-desktop {
-      width: 100px;
-      height: 70vh;
-      overflow-y: auto;
-      padding: 1rem;
-      background-color: var(--card);
-      border-radius: 12px;
-      box-shadow: var(--shadow-soft);
-    }
-    
-    .exam-sidebar-desktop .question-nav {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.5rem;
-    }
-    
-    .exam-sidebar-desktop .nav-btn {
-      aspect-ratio: 1;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      background-color: #262D3B;
-      color: var(--text);
-      transition: all 0.2s;
-      font-size: 0.8rem;
-      border: 2px solid transparent;
-    }
-    
-    .exam-sidebar-desktop .nav-btn.answered {
-      background-color: var(--success-clr);
-      color: white;
-    }
-    
-    .exam-sidebar-desktop .nav-btn.current {
-      border-color: var(--accent-soft);
-      transform: scale(1.1);
-    }
-    
-    .exam-sidebar-desktop .nav-btn:hover {
-      transform: scale(1.05);
-    }
-    
-    /* Mobile Exam Sidebar - OPTIMIZED */
+    /* Mobile Exam Sidebar - IMPROVED */
     .mobile-exam-sidebar-optimized {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.85);
       z-index: 200;
       display: flex;
       flex-direction: column;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.3s, visibility 0.3s;
+      transition: opacity 0.4s, visibility 0.4s;
     }
     
     .mobile-exam-sidebar-optimized.active {
@@ -635,12 +581,12 @@
     
     .mobile-exam-sidebar-optimized .sidebar-content {
       background: var(--card);
-      border-radius: 20px 20px 0 0;
+      border-radius: 24px 24px 0 0;
       padding: 1.5rem;
       margin-top: auto;
-      max-height: 90vh;
+      max-height: 85vh;
       transform: translateY(100%);
-      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
     .mobile-exam-sidebar-optimized.active .sidebar-content {
@@ -653,13 +599,13 @@
       align-items: center;
       margin-bottom: 1.5rem;
       padding-bottom: 1rem;
-      border-bottom: 1px solid var(--muted);
+      border-bottom: 2px solid var(--muted);
     }
     
     .mobile-exam-sidebar-optimized .question-nav {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 0.5rem;
+      gap: 0.75rem;
       max-height: 50vh;
       overflow-y: auto;
       padding: 0.5rem;
@@ -667,31 +613,208 @@
     
     .mobile-exam-sidebar-optimized .nav-btn {
       aspect-ratio: 1;
-      border-radius: 12px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 600;
-      background-color: #262D3B;
+      font-weight: 700;
+      background-color: rgba(255, 255, 255, 0.08);
       color: var(--text);
-      transition: all 0.2s;
-      font-size: 0.9rem;
+      transition: all 0.3s;
+      font-size: 1rem;
       border: 2px solid transparent;
-      min-height: 44px;
+      min-height: 50px;
+      font-family: 'Comic Neue', cursive;
     }
     
     .mobile-exam-sidebar-optimized .nav-btn.answered {
-      background-color: var(--success-clr);
+      background: var(--accent);
       color: white;
+      box-shadow: 0 4px 8px rgba(160, 231, 229, 0.3);
     }
     
     .mobile-exam-sidebar-optimized .nav-btn.current {
       border-color: var(--accent-soft);
       transform: scale(1.1);
-      box-shadow: 0 0 0 2px var(--accent-soft);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+      animation: gentlePulse 2s infinite;
     }
     
     .mobile-exam-sidebar-optimized .nav-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Progress bar mobile - IMPROVED */
+    .mobile-progress-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border-radius: 16px;
+    }
+    
+    .mobile-progress-bar {
+      flex: 1;
+      height: 10px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .mobile-progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+      box-shadow: 0 0 10px rgba(160, 231, 229, 0.5);
+    }
+    
+    .mobile-progress-text {
+      font-size: 1rem;
+      font-weight: 700;
+      min-width: 80px;
+      text-align: right;
+      font-family: 'Comic Neue', cursive;
+      color: var(--accent-soft);
+    }
+    
+    /* Mobile question layout - IMPROVED */
+    .mobile-question-container {
+      padding-bottom: 120px; /* Space for floating bar */
+    }
+    
+    .mobile-question-item {
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      background-color: var(--card);
+      box-shadow: var(--shadow-soft);
+      transition: all 0.3s;
+    }
+    
+    .mobile-question-text {
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+      font-size: 1.2rem;
+      line-height: 1.5;
+    }
+    
+    .mobile-question-option {
+      padding: 1.2rem;
+      border-radius: 14px;
+      background-color: rgba(255, 255, 255, 0.05);
+      font-weight: 600;
+      transition: all .3s;
+      cursor: pointer;
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+      border: 2px solid transparent;
+    }
+    
+    .mobile-question-option.selected {
+      background-color: var(--selected-clr);
+      color: white;
+      border-color: var(--accent-soft);
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(106, 142, 255, 0.3);
+    }
+    
+    .mobile-question-option:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+    
+    /* Mobile navigation buttons - IMPROVED */
+    .mobile-nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      gap: 1rem;
+    }
+    
+    .mobile-nav-buttons button {
+      flex: 1;
+      padding: 1.2rem;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Comic Neue', cursive;
+    }
+    
+    .mobile-nav-buttons .btn-prev {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+    }
+    
+    .mobile-nav-buttons .btn-next {
+      background: var(--accent);
+      color: white;
+    }
+    
+    .mobile-nav-buttons button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    
+    .mobile-nav-buttons button:not(:disabled):hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    
+    /* Desktop exam sidebar - IMPROVED */
+    .exam-sidebar-desktop {
+      width: 120px;
+      height: 70vh;
+      overflow-y: auto;
+      padding: 1.5rem;
+      background-color: var(--card);
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+      border: 2px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .exam-sidebar-desktop .question-nav {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+    
+    .exam-sidebar-desktop .nav-btn {
+      aspect-ratio: 1;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      background-color: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      transition: all 0.3s;
+      font-size: 0.9rem;
+      border: 2px solid transparent;
+      font-family: 'Comic Neue', cursive;
+    }
+    
+    .exam-sidebar-desktop .nav-btn.answered {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 8px rgba(160, 231, 229, 0.3);
+    }
+    
+    .exam-sidebar-desktop .nav-btn.current {
+      border-color: var(--accent-soft);
+      transform: scale(1.1);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+      animation: gentlePulse 2s infinite;
+    }
+    
+    .exam-sidebar-desktop .nav-btn:hover {
       transform: scale(1.05);
     }
     
@@ -700,14 +823,15 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--muted);
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid var(--muted);
     }
     
     .batch-info {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: var(--muted);
+      font-weight: 600;
     }
     
     /* Exam Results - Mobile Optimized */
@@ -719,55 +843,58 @@
     
     .result-question-item {
       background-color: var(--card);
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 1rem;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
       box-shadow: var(--shadow-soft);
+      border: 2px solid rgba(255, 255, 255, 0.05);
     }
     
     .result-question-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
     }
     
     .result-status {
-      font-weight: 600;
-      padding: 0.25rem 0.5rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-family: 'Comic Neue', cursive;
     }
     
     .result-status.correct {
-      background-color: rgba(50, 205, 50, 0.2);
+      background-color: rgba(124, 236, 159, 0.2);
       color: var(--success-clr);
     }
     
     .result-status.incorrect {
-      background-color: rgba(255, 99, 71, 0.2);
+      background-color: rgba(255, 123, 156, 0.2);
       color: var(--danger-clr);
     }
     
     .result-options {
-      margin-top: 0.5rem;
+      margin-top: 1rem;
     }
     
     .result-option {
-      padding: 0.75rem;
-      border-radius: 8px;
-      margin-bottom: 0.5rem;
-      background-color: #262D3B;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 0.75rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 2px solid transparent;
     }
     
     .result-option.correct {
-      background-color: rgba(50, 205, 50, 0.2);
-      border: 1px solid rgba(50, 205, 50, 0.4);
+      background-color: rgba(124, 236, 159, 0.2);
+      border: 2px solid rgba(124, 236, 159, 0.4);
     }
     
     .result-option.incorrect {
-      background-color: rgba(255, 99, 71, 0.2);
-      border: 1px solid rgba(255, 99, 71, 0.4);
+      background-color: rgba(255, 123, 156, 0.2);
+      border: 2px solid rgba(255, 123, 156, 0.4);
     }
     
     .result-option.selected {
@@ -777,35 +904,300 @@
     /* Floating Action Button for Mobile */
     .fab {
       position: fixed;
-      bottom: 80px;
+      bottom: 100px;
       right: 20px;
-      width: 60px;
-      height: 60px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
       background: var(--accent);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
       z-index: 40;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: gentlePulse 3s infinite;
     }
     
     .fab:hover {
       transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
     }
     
     .fab-text {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: bold;
       color: white;
+      font-family: 'Comic Neue', cursive;
+    }
+    
+    /* Dekorasi lucu */
+    .decoration {
+      position: absolute;
+      z-index: 0;
+      opacity: 0.7;
+    }
+    
+    .decoration-1 {
+      top: 10%;
+      left: 5%;
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .decoration-2 {
+      bottom: 15%;
+      right: 5%;
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle, var(--purple-clr) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 8s ease-in-out infinite reverse;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+    
+    /* Style untuk halaman dashboard */
+    .welcome-banner {
+      background: linear-gradient(135deg, var(--card) 0%, #343267 100%);
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .welcome-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.05"><path d="M20,20 Q40,5 60,20 T100,20" stroke="%23A0E7E5" fill="none" stroke-width="2"/><path d="M0,50 Q20,35 40,50 T80,50" stroke="%23FF9ED8" fill="none" stroke-width="2"/><circle cx="30" cy="70" r="5" fill="%23FFD166"/><circle cx="70" cy="30" r="5" fill="%23C792EA"/></svg>');
+      background-size: 200px 200px;
+    }
+    
+    .welcome-banner h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .welcome-banner p {
+      font-size: 1.2rem;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Popup Konfirmasi Hapus - MODERN & IMUT */
+    .delete-confirm-popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s, visibility 0.4s;
+    }
+    
+    .delete-confirm-popup.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .delete-confirm-content {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      width: 95%;
+      max-width: 500px;
+      transform: scale(0.9) translateY(20px);
+      opacity: 0;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .delete-confirm-popup.active .delete-confirm-content {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+    
+    .delete-confirm-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      color: var(--danger-clr);
+      animation: gentlePulse 2s infinite;
+    }
+    
+    .delete-confirm-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--danger-clr) 0%, var(--accent-soft) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-family: 'Comic Neue', cursive;
+    }
+    
+    .delete-confirm-message {
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    
+    .delete-code-input {
+      background-color: var(--bg) !important;
+      color: var(--text) !important;
+      border: 2px solid var(--muted) !important;
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      width: 100%;
+      max-width: 200px;
+      margin: 0 auto 1.5rem;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.2rem;
+      transition: all 0.3s;
+      font-family: 'Comic Neue', cursive;
+    }
+    
+    .delete-code-input:focus {
+      border-color: var(--accent-soft) !important;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 158, 216, 0.2);
+      transform: scale(1.05);
+    }
+    
+    .delete-code-input.error {
+      border-color: var(--danger-clr) !important;
+      box-shadow: 0 0 0 3px rgba(255, 123, 156, 0.2);
+      animation: shake 0.5s;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    
+    .delete-code-hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+    
+    .delete-confirm-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+    
+    .delete-confirm-buttons button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Comic Neue', cursive;
+      min-width: 120px;
+    }
+    
+    .delete-confirm-cancel {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      border: 2px solid transparent;
+    }
+    
+    .delete-confirm-cancel:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .delete-confirm-proceed {
+      background: var(--danger-clr);
+      color: white;
+      border: 2px solid transparent;
+    }
+    
+    .delete-confirm-proceed:hover {
+      background: #ff5a8c;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(255, 123, 156, 0.4);
+    }
+    
+    .delete-confirm-proceed:disabled {
+      background: rgba(255, 123, 156, 0.5);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    /* Efek dekorasi untuk popup */
+    .delete-confirm-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(135deg, var(--danger-clr) 0%, var(--accent-soft) 100%);
+    }
+    
+    /* Efek partikel untuk popup */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: var(--accent-soft);
+      border-radius: 50%;
+      opacity: 0;
+    }
+    
+    @keyframes confettiFall {
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0;
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
     
     @media (min-width: 1024px) {
       .layout {
         display: grid;
-        grid-template-columns: 16rem 1fr;
+        grid-template-columns: 18rem 1fr;
         grid-template-rows: auto 1fr;
         height: 100vh;
         overflow: hidden;
@@ -814,6 +1206,9 @@
         grid-column: 1 / 2;
         grid-row: 1 / 3;
         overflow-y: auto;
+        padding: 1.5rem;
+        background: linear-gradient(180deg, var(--bg) 0%, #1E1A3E 100%);
+        border-right: 2px solid rgba(255, 255, 255, 0.05);
       }
       .main-header {
         grid-column: 2 / 3;
@@ -821,25 +1216,43 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding: 1.5rem 2rem;
+        background: var(--card);
+        border-bottom: 2px solid rgba(255, 255, 255, 0.05);
       }
       main {
         grid-column: 2 / 3;
         grid-row: 2 / 3;
         overflow-y: auto;
+        padding: 2rem;
+        background: var(--bg);
       }
       .mobile-floating {
         display: none;
       }
       .exam-grid {
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
       }
       
       /* Hide mobile-specific elements on desktop */
       .mobile-exam-floating,
-      .mobile-exam-sidebar,
       .mobile-exam-sidebar-optimized,
       .fab {
         display: none;
+      }
+      
+      /* Tambahan dekorasi untuk desktop */
+      .sidebar::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+        border-radius: 50%;
+        opacity: 0.3;
+        z-index: 0;
       }
     }
     
@@ -851,7 +1264,7 @@
       
       /* Improve exam section for mobile */
       #exam-section .card {
-        margin-bottom: 80px; /* Space for floating bar */
+        margin-bottom: 100px; /* Space for floating bar */
       }
       
       /* Hide desktop-specific elements on mobile */
@@ -861,1342 +1274,1576 @@
       
       /* Improve question display for mobile */
       .question-item {
-        padding: 1.25rem;
+        padding: 1.5rem;
       }
       
       .question-text {
-        font-size: 1.1rem;
-        line-height: 1.4;
+        font-size: 1.2rem;
+        line-height: 1.5;
       }
       
       .question-option {
-        padding: 1rem;
-        font-size: 1rem;
-        margin-bottom: 0.75rem;
+        padding: 1.2rem;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
       }
       
       /* Optimized mobile exam sidebar */
-      .mobile-exam-sidebar {
-        display: none;
-      }
-      
       .mobile-exam-sidebar-optimized {
         display: flex;
+      }
+      
+      /* Style khusus untuk mobile portrait */
+      @media (orientation: portrait) {
+        .welcome-banner {
+          padding: 1.5rem;
+          margin-bottom: 1.5rem;
+        }
+        
+        .welcome-banner h2 {
+          font-size: 2rem;
+        }
+        
+        .welcome-banner p {
+          font-size: 1rem;
+        }
+        
+        .course-card {
+          padding: 1.2rem;
+        }
+        
+        .course-card .title {
+          font-size: 1.2rem;
+        }
+        
+        .nav-item {
+          padding: 1rem;
+          font-size: 1.1rem;
+        }
+        
+        .btn, .btn-ghost {
+          padding: 1rem 1.5rem;
+          font-size: 1.1rem;
+        }
+        
+        /* Layout khusus mobile portrait */
+        .mobile-portrait-layout {
+          display: flex;
+          flex-direction: column;
+        }
+        
+        .mobile-portrait-layout .section-header {
+          background: linear-gradient(135deg, var(--card) 0%, #343267 100%);
+          padding: 1.5rem;
+          border-radius: 0 0 24px 24px;
+          margin-bottom: 1rem;
+          text-align: center;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
       }
     }
   </style>
 </head>
 <body>
+  <!-- Dekorasi background -->
+  <div class="decoration decoration-1"></div>
+  <div class="decoration decoration-2"></div>
 
-<script>
-  const SUPABASE_URL = 'https://znosqyapmdfujtqwdsdm.supabase.co';
-  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpub3NxeWFwbWRmdWp0cXdkc2RtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2NDE1MTIsImV4cCI6MjA3MzIxNzUxMn0.R-WmeGOY0LX0oJv-UhWloXfAFVyGrbTgBYF3X1cHeUk';
-  const STORAGE_BUCKET = 'question-images';
-</script>
-
-<div id="app" class="min-h-screen layout">
-  <!-- Sidebar -->
-  <aside class="sidebar card flex-shrink-0 flex flex-col gap-4 p-4">
-    <div class="logo-area flex items-center gap-3 mb-2">
-      <div class="w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-pink-500 to-green-400 text-white shadow-lg">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden class="w-6 h-6">
-          <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.074 4.996 5.313.419c1.179.092 1.638 1.547.749 2.373l-4.045 3.618 1.156 5.271c.207.942-.743 1.646-1.564 1.118l-4.72-3.146-4.721 3.147c-.821.528-.43-2.275.749-2.372l5.313-.42L10.788 3.21z" clip-rule="evenodd" />
-        </svg>
+  <!-- Popup Konfirmasi Hapus - MODERN & IMUT -->
+  <div id="delete-confirm-popup" class="delete-confirm-popup">
+    <div class="delete-confirm-content">
+      <div class="delete-confirm-icon">
+        <i class="fas fa-exclamation-triangle"></i>
       </div>
-      
-      <div>
-        <div class="font-bold text-xl">UAS App</div>
+      <h3 id="delete-confirm-title" class="delete-confirm-title">Konfirmasi Hapus</h3>
+      <p id="delete-confirm-message" class="delete-confirm-message">
+        Anda akan menghapus item ini. Tindakan ini tidak dapat dibatalkan. 
+        Masukkan kode keamanan untuk melanjutkan.
+      </p>
+      <input type="password" id="delete-code-input" class="delete-code-input" placeholder="____" maxlength="4" />
+      <p class="delete-code-hint">Kode keamanan: 4 digit angka</p>
+      <div class="delete-confirm-buttons">
+        <button id="delete-confirm-cancel" class="delete-confirm-cancel">Batal</button>
+        <button id="delete-confirm-proceed" class="delete-confirm-proceed" disabled>Hapus</button>
       </div>
     </div>
+  </div>
 
-    <nav class="flex gap-1 flex-col">
-      <button id="nav-dashboard" class="text-left nav-item active">Dashboard</button>
-      <button id="nav-create" class="text-left nav-item">Buat Mata Kuliah</button>
-      <button id="nav-manage" class="text-left nav-item">Kelola Soal</button>
-      <button id="nav-exam" class="text-left nav-item">Jalankan Ujian</button>
-    </nav>
-  </aside>
+  <!-- Kode JavaScript dan HTML lainnya -->
+  <script>
+    const SUPABASE_URL = 'https://znosqyapmdfujtqwdsdm.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpub3NxeWFwbWRmdWp0cXdkc2RtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2NDE1MTIsImV4cCI6MjA3MzIxNzUxMn0.R-WmeGOY0LX0oJv-UhWloXfAFVyGrbTgBYF3X1cHeUk';
+    const STORAGE_BUCKET = 'question-images';
+  </script>
 
-  <!-- Main Content -->
-  <main class="flex-1 p-4 overflow-y-auto">
-    <div class="main-header flex items-center justify-between flex-wrap gap-3 mb-6">
-      <div>
-        <h1 id="page-title" class="text-2xl font-bold">Dashboard</h1>
-        <p id="page-sub" class="text-sm text-gray-500 mt-1">Ringkasan mata kuliah & soal</p>
+  <div id="app" class="min-h-screen layout">
+    <!-- Sidebar -->
+    <aside class="sidebar card flex-shrink-0 flex flex-col gap-4 p-4">
+      <div class="logo-area flex items-center gap-3 mb-2">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-pink-400 to-cyan-300 text-white shadow-lg pulse-gentle">
+          <i class="fas fa-graduation-cap text-xl"></i>
+        </div>
+        
+        <div>
+          <div class="cute-title text-2xl">UAS App</div>
+        </div>
       </div>
 
-      <div class="flex items-center gap-2 flex-wrap">
-        <button id="open-create" class="btn">
-          <span class="md:hidden">Buat</span>
-          <span class="hidden md:inline">Buat Mata Kuliah</span>
+      <nav class="flex gap-1 flex-col">
+        <button id="nav-dashboard" class="text-left nav-item active">
+          <i class="fas fa-home"></i> Dashboard
         </button>
+        <button id="nav-create" class="text-left nav-item">
+          <i class="fas fa-plus-circle"></i> Buat Mata Kuliah
+        </button>
+        <button id="nav-manage" class="text-left nav-item">
+          <i class="fas fa-tasks"></i> Kelola Soal
+        </button>
+        <button id="nav-exam" class="text-left nav-item">
+          <i class="fas fa-pencil-alt"></i> Jalankan Ujian
+        </button>
+      </nav>
+      
+      <div class="mt-auto pt-4 border-t border-muted">
+        <div class="text-center text-sm text-muted">
+          <i class="fas fa-heart text-danger-clr mr-1"></i> 
+         By Jiong1506
+        </div>
       </div>
-    </div>
+    </aside>
 
-    <!-- Dashboard Section -->
-    <section id="dashboard-section">
-      <div id="courses-grid" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
-    </section>
+    <!-- Main Content -->
+    <main class="flex-1 p-4 overflow-y-auto">
+      <div class="main-header flex items-center justify-between flex-wrap gap-3 mb-6">
+        <div>
+          <h1 id="page-title" class="cute-title text-3xl">Dashboard</h1>
+          <p id="page-sub" class="text-sm text-muted mt-1">Ringkasan mata kuliah & soal</p>
+        </div>
 
-    <!-- Create Course Section -->
-    <section id="create-section" class="hidden">
-      <div class="card p-6">
-        <h2 class="text-2xl font-semibold mb-6">Buat Mata Kuliah Baru</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label class="text-sm text-gray-500 block mb-2">Nama Mata Kuliah</label>
-            <input id="course-name" class="cute-input" placeholder="Contoh: Basis Data" />
-            
-            <div class="mt-6">
-              <label class="text-sm text-gray-500 mt-3 block mb-2">Soal pertama (opsional)</label>
-              <textarea id="initial-question" class="cute-input h-24" placeholder="Teks soal (opsional)"></textarea>
+        <div class="flex items-center gap-2 flex-wrap">
+          <button id="open-create" class="btn">
+            <i class="fas fa-plus mr-2"></i>
+            <span class="md:hidden">Buat</span>
+            <span class="hidden md:inline">Buat Mata Kuliah</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dashboard Section -->
+      <section id="dashboard-section" class="animate-in">
+        <div class="welcome-banner">
+          <h2 class="cute-title">Selamat Datang!</h2>
+        </div>
+        
+        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <i class="fas fa-book text-accent-soft"></i> Mata Kuliah Anda
+        </h3>
+        <div id="courses-grid" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+      </section>
+      
+      <!-- Create Course Section -->
+      <section id="create-section" class="hidden">
+        <div class="card p-6">
+          <h2 class="text-2xl font-semibold mb-6">Buat Mata Kuliah Baru</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="text-sm text-gray-500 block mb-2">Nama Mata Kuliah</label>
+              <input id="course-name" class="cute-input" placeholder="Contoh: Basis Data" />
+              
+              <div class="mt-6">
+                <label class="text-sm text-gray-500 mt-3 block mb-2">Soal pertama (opsional)</label>
+                <textarea id="initial-question" class="cute-input h-24" placeholder="Teks soal (opsional)"></textarea>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+                  <input class="opt init cute-input" placeholder="Opsi A" />
+                  <input class="opt init cute-input" placeholder="Opsi B" />
+                  <input class="opt init cute-input" placeholder="Opsi C" />
+                  <input class="opt init cute-input" placeholder="Opsi D" />
+                </div>
+                <div class="flex items-center gap-2 mt-3">
+                  <select id="initial-key" class="cute-select">
+                    <option value="">Kunci (opsional)</option>
+                    <option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label class="text-sm text-gray-500 block mb-2">Gambar (opsional)</label>
+              <div id="drop-new" class="p-6 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center image-dropzone h-48 cursor-pointer">
+                <div class="text-sm text-gray-400">Tarik & lepas atau pilih file</div>
+                <input id="file-new" type="file" accept="image/*" class="hidden" />
+                <img id="preview-new" class="mt-3 max-h-20 rounded-xl hidden" alt="preview" />
+                <div class="mt-3 flex gap-2">
+                  <button id="pick-new" class="btn text-sm">Pilih Gambar</button>
+                  <button id="clear-new" class="btn-ghost text-sm">Hapus</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-6 flex justify-end gap-2">
+            <button id="cancel-create" class="btn-ghost btn-cancel">Batal</button>
+            <button id="create-course" class="btn">Buat</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Manage Questions Section -->
+      <section id="manage-section" class="hidden">
+        <div class="card p-6">
+          <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+            <h2 class="text-2xl font-semibold">Kelola Soal</h2>
+            <div class="flex gap-2 items-center flex-wrap">
+              <select id="select-manage" class="cute-select">
+                <option value="">— Pilih Mata Kuliah —</option>
+              </select>
+              <button id="btn-add-q" class="btn px-3 py-2">Tambah Soal</button>
+            </div>
+          </div>
+          <div id="questions-list" class="mt-3 space-y-4"></div>
+        </div>
+      </section>
+
+      <!-- Question Editor Popout -->
+      <div id="editor-popout" class="popout-backdrop hidden">
+        <div class="popout-content">
+          <div class="flex items-center justify-between mb-6">
+            <h3 id="editor-title" class="text-xl font-semibold">Tambah Soal</h3>
+            <div>
+              <button id="editor-cancel" class="btn-ghost btn-cancel">Batal</button>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="text-sm text-gray-500 block mb-2">Teks Soal</label>
+              <div class="flex gap-2 my-2">
+                <button id="bold-btn" type="button" class="btn-ghost" title="Bold"><b>B</b></button>
+                <button id="italic-btn" type="button" class="btn-ghost" title="Italic"><i>I</i></button>
+                <button id="underline-btn" type="button" class="btn-ghost" title="Underline"><u>U</u></button>
+              </div>
+              <textarea id="qe-text" class="cute-input h-24"></textarea>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-                <input class="opt init cute-input" placeholder="Opsi A" />
-                <input class="opt init cute-input" placeholder="Opsi B" />
-                <input class="opt init cute-input" placeholder="Opsi C" />
-                <input class="opt init cute-input" placeholder="Opsi D" />
+                <input id="qe-opt-0" class="cute-input" placeholder="Opsi A" />
+                <input id="qe-opt-1" class="cute-input" placeholder="Opsi B" />
+                <input id="qe-opt-2" class="cute-input" placeholder="Opsi C (opsional)" />
+                <input id="qe-opt-3" class="cute-input" placeholder="Opsi D (opsional)" />
               </div>
               <div class="flex items-center gap-2 mt-3">
-                <select id="initial-key" class="cute-select">
-                  <option value="">Kunci (opsional)</option>
-                  <option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option>
+                <select id="qe-key" class="cute-select">
+                  <option value="">— Pilih Kunci —</option><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option>
                 </select>
               </div>
             </div>
-          </div>
-          <div>
-            <label class="text-sm text-gray-500 block mb-2">Gambar (opsional)</label>
-            <div id="drop-new" class="p-6 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center image-dropzone h-48 cursor-pointer">
-              <div class="text-sm text-gray-400">Tarik & lepas atau pilih file</div>
-              <input id="file-new" type="file" accept="image/*" class="hidden" />
-              <img id="preview-new" class="mt-3 max-h-20 rounded-xl hidden" alt="preview" />
-              <div class="mt-3 flex gap-2">
-                <button id="pick-new" class="btn text-sm">Pilih Gambar</button>
-                <button id="clear-new" class="btn-ghost text-sm">Hapus</button>
+            <div>
+              <label class="text-sm text-gray-500 block mb-2">Gambar (opsional)</label>
+              <div id="drop-q" class="p-6 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center image-dropzone h-48 cursor-pointer">
+                <div class="text-sm text-gray-400">Tarik & lepas atau pilih file</div>
+                <input id="file-q" type="file" accept="image/*" class="hidden" />
+                <img id="preview-q" class="mt-3 max-h-24 rounded-xl hidden" alt="preview" />
+                <div class="mt-3 flex gap-2">
+                  <button id="pick-q" class="btn text-sm">Pilih Gambar</button>
+                  <button id="clear-q" class="btn-ghost text-sm">Hapus</button>
+                </div>
+              </div>
+              <div class="card p-6 mt-6 flex flex-col items-start gap-3">
+                <h3 class="text-lg font-semibold">Unggah Soal dari File Teks</h3>
+                <p class="text-sm text-gray-500">Pilih mata kuliah lalu unggah file .txt. Format: Q: Pertanyaan, A: Opsi A, B: Opsi B, K: A</p>
+                <div class="file-upload-area w-full">
+                  <input type="file" id="file-upload" accept=".txt" class="w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:font-semibold
+                    file:bg-gray-700 file:text-white
+                    hover:file:bg-gray-600" />
+                </div>
+                <p id="upload-status" class="text-sm text-gray-400 mt-2"></p>
               </div>
             </div>
           </div>
-        </div>
-        
-        <div class="mt-6 flex justify-end gap-2">
-          <button id="cancel-create" class="btn-ghost btn-cancel">Batal</button>
-          <button id="create-course" class="btn">Buat</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Manage Questions Section -->
-    <section id="manage-section" class="hidden">
-      <div class="card p-6">
-        <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
-          <h2 class="text-2xl font-semibold">Kelola Soal</h2>
-          <div class="flex gap-2 items-center flex-wrap">
-            <select id="select-manage" class="cute-select">
-              <option value="">— Pilih Mata Kuliah —</option>
-            </select>
-            <button id="btn-add-q" class="btn px-3 py-2">Tambah Soal</button>
+          
+          <div class="mt-6 flex justify-end gap-2">
+            <button id="save-q" class="btn">Simpan Soal</button>
           </div>
         </div>
-        <div id="questions-list" class="mt-3 space-y-4"></div>
       </div>
-    </section>
-
-    <!-- Question Editor Popout -->
-    <div id="editor-popout" class="popout-backdrop hidden">
-      <div class="popout-content">
-        <div class="flex items-center justify-between mb-6">
-          <h3 id="editor-title" class="text-xl font-semibold">Tambah Soal</h3>
-          <div>
-            <button id="editor-cancel" class="btn-ghost btn-cancel">Batal</button>
-          </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label class="text-sm text-gray-500 block mb-2">Teks Soal</label>
-            <div class="flex gap-2 my-2">
-              <button id="bold-btn" type="button" class="btn-ghost" title="Bold"><b>B</b></button>
-              <button id="italic-btn" type="button" class="btn-ghost" title="Italic"><i>I</i></button>
-              <button id="underline-btn" type="button" class="btn-ghost" title="Underline"><u>U</u></button>
-            </div>
-            <textarea id="qe-text" class="cute-input h-24"></textarea>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-              <input id="qe-opt-0" class="cute-input" placeholder="Opsi A" />
-              <input id="qe-opt-1" class="cute-input" placeholder="Opsi B" />
-              <input id="qe-opt-2" class="cute-input" placeholder="Opsi C (opsional)" />
-              <input id="qe-opt-3" class="cute-input" placeholder="Opsi D (opsional)" />
-            </div>
-            <div class="flex items-center gap-2 mt-3">
-              <select id="qe-key" class="cute-select">
-                <option value="">— Pilih Kunci —</option><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option>
+      
+      <!-- Exam Section -->
+      <section id="exam-section" class="hidden">
+        <div class="card p-6">
+          <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+            <h2 class="text-2xl font-semibold">Mode Ujian</h2>
+            <div class="flex gap-2 items-center flex-wrap">
+              <select id="select-exam" class="cute-select">
+                <option value="">— Pilih Mata Kuliah —</option>
               </select>
+              <button id="start-exam" class="btn px-3 py-2" disabled>Mulai Ujian</button>
+              <button id="end-exam" class="btn px-3 py-2 hidden">Selesai Ujian</button>
             </div>
           </div>
-          <div>
-            <label class="text-sm text-gray-500 block mb-2">Gambar (opsional)</label>
-            <div id="drop-q" class="p-6 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center image-dropzone h-48 cursor-pointer">
-              <div class="text-sm text-gray-400">Tarik & lepas atau pilih file</div>
-              <input id="file-q" type="file" accept="image/*" class="hidden" />
-              <img id="preview-q" class="mt-3 max-h-24 rounded-xl hidden" alt="preview" />
-              <div class="mt-3 flex gap-2">
-                <button id="pick-q" class="btn text-sm">Pilih Gambar</button>
-                <button id="clear-q" class="btn-ghost text-sm">Hapus</button>
-              </div>
+
+          <div id="exam-score-display" class="exam-results-container hidden"></div>
+
+          <!-- Mobile Progress Bar -->
+          <div id="mobile-progress" class="mobile-progress-container md:hidden hidden">
+            <div class="mobile-progress-bar">
+              <div id="mobile-progress-fill" class="mobile-progress-fill" style="width:0%;"></div>
             </div>
-            <div class="card p-6 mt-6 flex flex-col items-start gap-3">
-              <h3 class="text-lg font-semibold">Unggah Soal dari File Teks</h3>
-              <p class="text-sm text-gray-500">Pilih mata kuliah lalu unggah file .txt. Format: Q: Pertanyaan, A: Opsi A, B: Opsi B, K: A</p>
-              <div class="file-upload-area w-full">
-                <input type="file" id="file-upload" accept=".txt" class="w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-full file:border-0
-                  file:font-semibold
-                  file:bg-gray-700 file:text-white
-                  hover:file:bg-gray-600" />
+            <div id="mobile-progress-text" class="mobile-progress-text">0 / 0</div>
+          </div>
+
+          <div class="flex flex-col md:flex-row gap-6 mt-4">
+            <aside id="exam-sidebar-desktop" class="hidden md:block exam-sidebar-desktop"></aside>
+
+            <div class="flex-1">
+              <div class="hidden md:flex items-center justify-between mb-2 text-sm text-gray-500">
+                <div>Progress</div>
+                <div id="progress-text">0 / 0 dijawab</div>
               </div>
-              <p id="upload-status" class="text-sm text-gray-400 mt-2"></p>
+              <div class="hidden md:block h-3 bg-gray-700 rounded-full overflow-hidden mb-6">
+                <div id="exam-progress" class="h-3 rounded-full bg-gradient-to-r from-pink-500 to-green-400" style="width:0%;"></div>
+              </div>
+              
+              <!-- Mobile Question Navigation -->
+              <div id="mobile-nav-buttons" class="mobile-nav-buttons md:hidden hidden">
+                <button id="mobile-prev-btn" class="btn-prev" disabled>Sebelumnya</button>
+                <button id="mobile-next-btn" class="btn-next">Berikutnya</button>
+              </div>
+              
+              <div id="exam-grid" class="grid gap-4 max-h-[60vh] overflow-y-auto p-1 exam-grid"></div>
             </div>
           </div>
         </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Mobile Exam Sidebar - OPTIMIZED -->
+  <div id="mobile-exam-sidebar-optimized" class="mobile-exam-sidebar-optimized">
+    <div class="sidebar-content">
+      <div class="sidebar-header">
+        <h3 class="text-lg font-semibold">Navigasi Soal</h3>
+        <button id="close-mobile-sidebar-optimized" class="btn-ghost btn-cancel text-sm">Tutup</button>
+      </div>
+      <div id="mobile-sidebar-grid-optimized" class="question-nav"></div>
+      <div class="batch-navigation">
+        <button id="prev-batch-mobile" class="btn-ghost text-sm" disabled>Batch Sebelumnya</button>
+        <div id="batch-info-mobile" class="batch-info">Batch 1</div>
+        <button id="next-batch-mobile" class="btn-ghost text-sm">Batch Berikutnya</button>
+      </div>
+    </div>
+  </div>
+    
+  <!-- Mobile Exam Floating Bar - OPTIMIZED -->
+  <div id="mobile-exam-floating-optimized" class="mobile-exam-floating hidden">
+    <div class="flex items-center justify-between">
+      <div class="flex gap-2">
+        <button id="open-mobile-sidebar-optimized" class="btn px-3 py-2">Soal</button>
+        <button id="end-exam-mobile-optimized" class="btn-ghost btn-cancel hidden">Selesai</button>
+      </div>
+      <div class="text-sm font-semibold">
+        <span id="current-question-mobile-optimized">1</span> / <span id="total-questions-mobile-optimized">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Action Button for Mobile -->
+  <div id="mobile-fab" class="fab hidden">
+    <div class="fab-text">?</div>
+  </div>
+
+  <script>
+    (async function(){
+      // Inisialisasi Supabase
+      const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession: false } });
+      const bucket = sb.storage.from(STORAGE_BUCKET);
+      
+      // Konstanta - Diubah menjadi 50 soal per batch
+      const EXAM_BATCH_SIZE = 50;
+      
+      // Variabel state
+      let courses = [], currentCourse = null, questions = [], editing = null;
+      let newCourseImage = null;
+      let examQuestions = [], userAnswers = [], currentExamBatch = 0;
+      let currentQuestionIndex = 0;
+      let totalBatches = 0;
+      
+      // Elemen DOM
+      const app = document.getElementById('app'); 
+      const pageTitle = document.getElementById('page-title');
+      const pageSub = document.getElementById('page-sub');
+      const sections = {
+        dashboard: document.getElementById('dashboard-section'),
+        create: document.getElementById('create-section'),
+        manage: document.getElementById('manage-section'),
+        exam: document.getElementById('exam-section')
+      };
+      
+      // Navigation
+      const nav = {
+        dashboard: document.getElementById('nav-dashboard'),
+        create: document.getElementById('nav-create'),
+        manage: document.getElementById('nav-manage'),
+        exam: document.getElementById('nav-exam')
+      };
+      
+      // Editor elements
+      const editorPopout = document.getElementById('editor-popout');
+      const editorPopoutContent = editorPopout.querySelector('.popout-content');
+      const editorTitle = document.getElementById('editor-title');
+      const editorCancelBtn = document.getElementById('editor-cancel');
+      const saveQBtn = document.getElementById('save-q');
+      const qeText = document.getElementById('qe-text');
+      const qeOpts = [0,1,2,3].map(i => document.getElementById(`qe-opt-${i}`));
+      const qeKey = document.getElementById('qe-key');
+      const qeImageFile = document.getElementById('file-q');
+      const qeImagePreview = document.getElementById('preview-q');
+      const qePickBtn = document.getElementById('pick-q');
+      const qeClearBtn = document.getElementById('clear-q');
+      const qeDropzone = document.getElementById('drop-q');
+      
+      // Manage section elements
+      const manageSelect = document.getElementById('select-manage');
+      const btnAddQ = document.getElementById('btn-add-q');
+      const questionsList = document.getElementById('questions-list');
+      
+      // Exam elements
+      const examGrid = document.getElementById('exam-grid');
+      const examProgress = document.getElementById('exam-progress');
+      const progressText = document.getElementById('progress-text');
+      const selectExam = document.getElementById('select-exam');
+      const startExamBtn = document.getElementById('start-exam');
+      const endExamBtn = document.getElementById('end-exam');
+      const examScoreDisplay = document.getElementById('exam-score-display');
+      const examSidebarDesktop = document.getElementById('exam-sidebar-desktop');
+      
+      // Mobile-specific exam elements - OPTIMIZED
+      const mobileExamSidebarOptimized = document.getElementById('mobile-exam-sidebar-optimized');
+      const mobileSidebarGridOptimized = document.getElementById('mobile-sidebar-grid-optimized');
+      const openMobileSidebarOptimizedBtn = document.getElementById('open-mobile-sidebar-optimized');
+      const closeMobileSidebarOptimizedBtn = document.getElementById('close-mobile-sidebar-optimized');
+      const mobileExamFloatingOptimized = document.getElementById('mobile-exam-floating-optimized');
+      const endExamMobileOptimizedBtn = document.getElementById('end-exam-mobile-optimized');
+      const mobileFab = document.getElementById('mobile-fab');
+      
+      // Mobile-specific exam elements
+      const mobileProgress = document.getElementById('mobile-progress');
+      const mobileProgressFill = document.getElementById('mobile-progress-fill');
+      const mobileProgressText = document.getElementById('mobile-progress-text');
+      const mobileNavButtons = document.getElementById('mobile-nav-buttons');
+      const mobilePrevBtn = document.getElementById('mobile-prev-btn');
+      const mobileNextBtn = document.getElementById('mobile-next-btn');
+      const currentQuestionMobile = document.getElementById('current-question-mobile-optimized');
+      const totalQuestionsMobile = document.getElementById('total-questions-mobile-optimized');
+      
+      // Batch navigation for mobile
+      const prevBatchMobileBtn = document.getElementById('prev-batch-mobile');
+      const nextBatchMobileBtn = document.getElementById('next-batch-mobile');
+      const batchInfoMobile = document.getElementById('batch-info-mobile');
+      
+      // Popup Konfirmasi Hapus Soal & Mata Kuliah - MODERN & IMUT
+      const deleteConfirmPopup = document.getElementById('delete-confirm-popup');
+      const deleteConfirmTitle = document.getElementById('delete-confirm-title');
+      const deleteConfirmMessage = document.getElementById('delete-confirm-message');
+      const deleteCodeInput = document.getElementById('delete-code-input');
+      const deleteConfirmCancel = document.getElementById('delete-confirm-cancel');
+      const deleteConfirmProceed = document.getElementById('delete-confirm-proceed');
+      
+      let itemToDelete = { type: null, id: null, name: null };
+      const DELETE_CODE = '1506'; // Kode keamanan untuk menghapus
+
+      // Fungsi untuk menampilkan popup konfirmasi hapus
+      function showDeleteConfirmPopup(type, id, name = null) {
+        itemToDelete = { type, id, name };
+        deleteConfirmPopup.classList.add('active');
+        deleteCodeInput.value = '';
+        deleteCodeInput.classList.remove('error');
+        deleteConfirmProceed.disabled = true;
+        deleteCodeInput.focus();
         
-        <div class="mt-6 flex justify-end gap-2">
-          <button id="save-q" class="btn">Simpan Soal</button>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Exam Section -->
-    <section id="exam-section" class="hidden">
-      <div class="card p-6">
-        <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
-          <h2 class="text-2xl font-semibold">Mode Ujian</h2>
-          <div class="flex gap-2 items-center flex-wrap">
-            <select id="select-exam" class="cute-select">
-              <option value="">— Pilih Mata Kuliah —</option>
-            </select>
-            <button id="start-exam" class="btn px-3 py-2" disabled>Mulai Ujian</button>
-            <button id="end-exam" class="btn px-3 py-2 hidden">Selesai Ujian</button>
-          </div>
-        </div>
+        // Sesuaikan pesan berdasarkan jenis yang akan dihapus
+        if (type === 'question') {
+          deleteConfirmTitle.textContent = 'Konfirmasi Hapus Soal';
+          deleteConfirmMessage.textContent = 'Anda akan menghapus soal ini. Tindakan ini tidak dapat dibatalkan. Masukkan kode keamanan untuk melanjutkan.';
+        } else if (type === 'course') {
+          deleteConfirmTitle.textContent = 'Konfirmasi Hapus Mata Kuliah';
+          deleteConfirmMessage.textContent = `Anda akan menghapus mata kuliah "${name}". Ini akan menghapus semua soal di dalamnya. Tindakan ini tidak dapat dibatalkan. Masukkan kode keamanan untuk melanjutkan.`;
+        }
+        
+        // Tambahkan efek partikel
+        createConfettiEffect();
+      }
 
-        <div id="exam-score-display" class="exam-results-container hidden"></div>
+      // Fungsi untuk menyembunyikan popup konfirmasi hapus
+      function hideDeleteConfirmPopup() {
+        deleteConfirmPopup.classList.remove('active');
+        itemToDelete = { type: null, id: null, name: null };
+      }
 
-        <!-- Mobile Progress Bar -->
-        <div id="mobile-progress" class="mobile-progress-container md:hidden hidden">
-          <div class="mobile-progress-bar">
-            <div id="mobile-progress-fill" class="mobile-progress-fill" style="width:0%;"></div>
-          </div>
-          <div id="mobile-progress-text" class="mobile-progress-text">0 / 0</div>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-6 mt-4">
-          <aside id="exam-sidebar-desktop" class="hidden md:block exam-sidebar-desktop"></aside>
-
-          <div class="flex-1">
-            <div class="hidden md:flex items-center justify-between mb-2 text-sm text-gray-500">
-              <div>Progress</div>
-              <div id="progress-text">0 / 0 dijawab</div>
-            </div>
-            <div class="hidden md:block h-3 bg-gray-700 rounded-full overflow-hidden mb-6">
-              <div id="exam-progress" class="h-3 rounded-full bg-gradient-to-r from-pink-500 to-green-400" style="width:0%;"></div>
-            </div>
+      // Fungsi untuk memvalidasi kode
+      function validateDeleteCode() {
+        const code = deleteCodeInput.value;
+        const isValid = code === DELETE_CODE;
+        
+        if (code.length === 4) {
+          if (isValid) {
+            deleteCodeInput.classList.remove('error');
+            deleteConfirmProceed.disabled = false;
+          } else {
+            deleteCodeInput.classList.add('error');
+            deleteConfirmProceed.disabled = true;
             
-            <!-- Mobile Question Navigation -->
-            <div id="mobile-nav-buttons" class="mobile-nav-buttons md:hidden hidden">
-              <button id="mobile-prev-btn" class="btn-prev" disabled>Sebelumnya</button>
-              <button id="mobile-next-btn" class="btn-next">Berikutnya</button>
-            </div>
+            // Efek shake untuk input yang salah
+            deleteCodeInput.style.animation = 'none';
+            setTimeout(() => {
+              deleteCodeInput.style.animation = 'shake 0.5s';
+            }, 10);
+          }
+        } else {
+          deleteConfirmProceed.disabled = true;
+          deleteCodeInput.classList.remove('error');
+        }
+      }
+
+      // Fungsi untuk membuat efek confetti
+      function createConfettiEffect() {
+        const content = deleteConfirmPopup.querySelector('.delete-confirm-content');
+        const colors = ['#FF9ED8', '#FF7B9C', '#7CEC9F', '#FFD166'];
+        
+        for (let i = 0; i < 20; i++) {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * 100 + '%';
+          confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.animation = `confettiFall ${2 + Math.random() * 3}s linear forwards`;
+          confetti.style.animationDelay = Math.random() * 2 + 's';
+          content.appendChild(confetti);
+          
+          // Hapus confetti setelah animasi selesai
+          setTimeout(() => {
+            if (confetti.parentNode) {
+              confetti.parentNode.removeChild(confetti);
+            }
+          }, 5000);
+        }
+      }
+
+      // Event listeners untuk popup hapus
+      deleteCodeInput.addEventListener('input', validateDeleteCode);
+      
+      deleteConfirmCancel.addEventListener('click', hideDeleteConfirmPopup);
+      
+      deleteConfirmProceed.addEventListener('click', async () => {
+        if (deleteCodeInput.value === DELETE_CODE && itemToDelete.id) {
+          let successMessage = '';
+          
+          if (itemToDelete.type === 'question') {
+            // Hapus soal
+            const { error } = await sb.from('questions').delete().eq('id', itemToDelete.id);
+            if (error) {
+              alert('Gagal menghapus soal: ' + error.message);
+            } else {
+              // Perbarui daftar soal
+              questions = questions.filter(q => q.id !== itemToDelete.id);
+              renderQuestions();
+              successMessage = 'Soal berhasil dihapus!';
+            }
+          } else if (itemToDelete.type === 'course') {
+            // Hapus mata kuliah
+            const { error } = await sb.from('courses').delete().eq('id', itemToDelete.id);
+            if (error) {
+              alert('Gagal menghapus mata kuliah: ' + error.message);
+            } else {
+              // Refresh daftar mata kuliah
+              await loadCourses();
+              successMessage = 'Mata kuliah berhasil dihapus!';
+            }
+          }
+          
+          // Tampilkan pesan sukses jika penghapusan berhasil
+          if (successMessage) {
+            const successElement = document.createElement('div');
+            successElement.innerHTML = `
+              <div style="position: fixed; top: 20px; right: 20px; z-index: 1000; 
+                         background: var(--success-clr); color: white; padding: 1rem; 
+                         border-radius: 16px; box-shadow: var(--shadow-cute); 
+                         animation: slideInRight 0.5s ease-out;">
+                <i class="fas fa-check-circle mr-2"></i> ${successMessage}
+              </div>
+            `;
+            document.body.appendChild(successElement);
             
-            <div id="exam-grid" class="grid gap-4 max-h-[60vh] overflow-y-auto p-1 exam-grid"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-</div>
-
-<!-- Mobile Exam Sidebar - OPTIMIZED -->
-<div id="mobile-exam-sidebar-optimized" class="mobile-exam-sidebar-optimized">
-  <div class="sidebar-content">
-    <div class="sidebar-header">
-      <h3 class="text-lg font-semibold">Navigasi Soal</h3>
-      <button id="close-mobile-sidebar-optimized" class="btn-ghost btn-cancel text-sm">Tutup</button>
-    </div>
-    <div id="mobile-sidebar-grid-optimized" class="question-nav"></div>
-    <div class="batch-navigation">
-      <button id="prev-batch-mobile" class="btn-ghost text-sm" disabled>Batch Sebelumnya</button>
-      <div id="batch-info-mobile" class="batch-info">Batch 1</div>
-      <button id="next-batch-mobile" class="btn-ghost text-sm">Batch Berikutnya</button>
-    </div>
-  </div>
-</div>
-  
-<!-- Mobile Exam Floating Bar - OPTIMIZED -->
-<div id="mobile-exam-floating-optimized" class="mobile-exam-floating hidden">
-  <div class="flex items-center justify-between">
-    <div class="flex gap-2">
-      <button id="open-mobile-sidebar-optimized" class="btn px-3 py-2">Soal</button>
-      <button id="end-exam-mobile-optimized" class="btn-ghost btn-cancel hidden">Selesai</button>
-    </div>
-    <div class="text-sm font-semibold">
-      <span id="current-question-mobile-optimized">1</span> / <span id="total-questions-mobile-optimized">0</span>
-    </div>
-  </div>
-</div>
-
-<!-- Floating Action Button for Mobile -->
-<div id="mobile-fab" class="fab hidden">
-  <div class="fab-text">?</div>
-</div>
-
-<script>
-(async function(){
-  // Inisialisasi Supabase
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession: false } });
-  const bucket = sb.storage.from(STORAGE_BUCKET);
-  
-  // Konstanta - Diubah menjadi 50 soal per batch
-  const EXAM_BATCH_SIZE = 50;
-  
-  // Variabel state
-  let courses = [], currentCourse = null, questions = [], editing = null;
-  let newCourseImage = null;
-  let examQuestions = [], userAnswers = [], currentExamBatch = 0;
-  let currentQuestionIndex = 0;
-  let totalBatches = 0;
-  
-  // Elemen DOM
-  const app = document.getElementById('app'); 
-  const pageTitle = document.getElementById('page-title');
-  const pageSub = document.getElementById('page-sub');
-  const sections = {
-    dashboard: document.getElementById('dashboard-section'),
-    create: document.getElementById('create-section'),
-    manage: document.getElementById('manage-section'),
-    exam: document.getElementById('exam-section')
-  };
-  
-  // Navigation
-  const nav = {
-    dashboard: document.getElementById('nav-dashboard'),
-    create: document.getElementById('nav-create'),
-    manage: document.getElementById('nav-manage'),
-    exam: document.getElementById('nav-exam')
-  };
-  
-  // Editor elements
-  const editorPopout = document.getElementById('editor-popout');
-  const editorPopoutContent = editorPopout.querySelector('.popout-content');
-  const editorTitle = document.getElementById('editor-title');
-  const editorCancelBtn = document.getElementById('editor-cancel');
-  const saveQBtn = document.getElementById('save-q');
-  const qeText = document.getElementById('qe-text');
-  const qeOpts = [0,1,2,3].map(i => document.getElementById(`qe-opt-${i}`));
-  const qeKey = document.getElementById('qe-key');
-  const qeImageFile = document.getElementById('file-q');
-  const qeImagePreview = document.getElementById('preview-q');
-  const qePickBtn = document.getElementById('pick-q');
-  const qeClearBtn = document.getElementById('clear-q');
-  const qeDropzone = document.getElementById('drop-q');
-  
-  // Manage section elements
-  const manageSelect = document.getElementById('select-manage');
-  const btnAddQ = document.getElementById('btn-add-q');
-  const questionsList = document.getElementById('questions-list');
-  
-  // Exam elements
-  const examGrid = document.getElementById('exam-grid');
-  const examProgress = document.getElementById('exam-progress');
-  const progressText = document.getElementById('progress-text');
-  const selectExam = document.getElementById('select-exam');
-  const startExamBtn = document.getElementById('start-exam');
-  const endExamBtn = document.getElementById('end-exam');
-  const examScoreDisplay = document.getElementById('exam-score-display');
-  const examSidebarDesktop = document.getElementById('exam-sidebar-desktop');
-  
-  // Mobile-specific exam elements - OPTIMIZED
-  const mobileExamSidebarOptimized = document.getElementById('mobile-exam-sidebar-optimized');
-  const mobileSidebarGridOptimized = document.getElementById('mobile-sidebar-grid-optimized');
-  const openMobileSidebarOptimizedBtn = document.getElementById('open-mobile-sidebar-optimized');
-  const closeMobileSidebarOptimizedBtn = document.getElementById('close-mobile-sidebar-optimized');
-  const mobileExamFloatingOptimized = document.getElementById('mobile-exam-floating-optimized');
-  const endExamMobileOptimizedBtn = document.getElementById('end-exam-mobile-optimized');
-  const mobileFab = document.getElementById('mobile-fab');
-  
-  // Mobile-specific exam elements
-  const mobileProgress = document.getElementById('mobile-progress');
-  const mobileProgressFill = document.getElementById('mobile-progress-fill');
-  const mobileProgressText = document.getElementById('mobile-progress-text');
-  const mobileNavButtons = document.getElementById('mobile-nav-buttons');
-  const mobilePrevBtn = document.getElementById('mobile-prev-btn');
-  const mobileNextBtn = document.getElementById('mobile-next-btn');
-  const currentQuestionMobile = document.getElementById('current-question-mobile-optimized');
-  const totalQuestionsMobile = document.getElementById('total-questions-mobile-optimized');
-  
-  // Batch navigation for mobile
-  const prevBatchMobileBtn = document.getElementById('prev-batch-mobile');
-  const nextBatchMobileBtn = document.getElementById('next-batch-mobile');
-  const batchInfoMobile = document.getElementById('batch-info-mobile');
-  
-  // Fungsi untuk menampilkan section
-  function showSection(name){
-    Object.values(sections).forEach(s => s.classList.add('hidden'));
-    sections[name].classList.remove('hidden');
-    
-    // Update judul halaman
-    const titles = {
-      'dashboard': 'Dashboard',
-      'create': 'Buat Mata Kuliah',
-      'manage': 'Kelola Soal',
-      'exam': 'Mode Ujian'
-    };
-    const subtitles = {
-      'dashboard': 'Ringkasan mata kuliah & soal',
-      'create': 'Buat mata kuliah baru',
-      'manage': currentCourse ? `Kelola soal untuk: ${escapeHtml(currentCourse.name)}` : 'Pilih mata kuliah untuk mengelola soal',
-      'exam': 'Jalankan ujian untuk mata kuliah'
-    };
-    
-    pageTitle.textContent = titles[name];
-    pageSub.textContent = subtitles[name];
-    
-    // Update navigasi aktif
-    Object.values(nav).forEach(b => b.classList.remove('active'));
-    nav[name].classList.add('active');
-    
-    // Toggle UI khusus ujian
-    if (name === 'exam') {
-      mobileExamFloatingOptimized.classList.remove('hidden');
-      mobileFab.classList.remove('hidden');
-    } else {
-      mobileExamFloatingOptimized.classList.add('hidden');
-      mobileExamSidebarOptimized.classList.remove('active');
-      mobileFab.classList.add('hidden');
-    }
-  }
-  
-  // Fungsi utilitas
-  function escapeHtml(s){
-    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-    return String(s || '').replace(/[&<>"']/g, m => map[m]);
-  }
-  
-  function formatText(text) {
-    if (!text) return '';
-    let formattedText = escapeHtml(text);
-    formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-    formattedText = formattedText.replace(/\*(.*?)\*/g, '<i>$1</i>');
-    formattedText = formattedText.replace(/__(.*?)__/g, '<u>$1</u>');
-    return formattedText;
-  }
-  
-  // Fungsi untuk memuat mata kuliah
-  async function loadCourses(){
-    const { data, error } = await sb.from('courses').select('*').order('created_at', { ascending: false });
-    if(error){
-      console.error(error);
-      alert('Gagal memuat mata kuliah: '+error.message);
-      return;
-    }
-    courses = data || [];
-    renderCourses();
-    populateSelects();
-  }
-  
-  // Fungsi untuk merender daftar mata kuliah
-  function renderCourses(){
-    const courseGrid = document.getElementById('courses-grid');
-    courseGrid.innerHTML = '';
-    
-    if(courses.length === 0){
-      courseGrid.innerHTML = '<div class="p-6 card col-span-full text-center text-muted">Belum ada mata kuliah. Buat mata kuliah baru.</div>';
-      return;
-    }
-    
-    courses.forEach(c => {
-      const el = document.createElement('div');
-      el.className = 'course-card';
-      el.innerHTML = `
-        <div class="header">
-          <div class="title">${escapeHtml(c.name)}</div>
-          <div class="actions">
-            <button data-id="${c.id}" class="open-manage open-btn text-sm">Kelola</button>
-            <button data-id="${c.id}" class="delete-course delete-btn text-sm">Hapus</button>
-          </div>
-        </div>
-        <div class="created-at">Dibuat: ${new Date(c.created_at).toLocaleDateString('id-ID')}</div>
-      `;
-      courseGrid.appendChild(el);
-    });
-    
-    // Event listeners untuk tombol
-    document.querySelectorAll('.open-manage').forEach(b => {
-      b.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        const id = b.dataset.id;
-        const c = courses.find(x => x.id === id);
-        if(c) {
-          await openManageForCourse(c);
-          showSection('manage');
+            setTimeout(() => {
+              if (successElement.parentNode) {
+                successElement.parentNode.removeChild(successElement);
+              }
+            }, 3000);
+          }
+          
+          hideDeleteConfirmPopup();
         }
       });
-    });
 
-    document.querySelectorAll('.delete-course').forEach(b => {
-      b.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        const id = b.dataset.id;
-        const c = courses.find(x => x.id === id);
-        if(!c) return;
+      // Tutup popup saat klik di luar konten
+      deleteConfirmPopup.addEventListener('click', (e) => {
+        if (e.target === deleteConfirmPopup) {
+          hideDeleteConfirmPopup();
+        }
+      });
+
+      // Event listener untuk tombol Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && deleteConfirmPopup.classList.contains('active')) {
+          hideDeleteConfirmPopup();
+        }
+      });
+
+      // Fungsi untuk menampilkan section
+      function showSection(name){
+        Object.values(sections).forEach(s => s.classList.add('hidden'));
+        sections[name].classList.remove('hidden');
         
-        if(confirm(`Hapus mata kuliah "${c.name}"? Ini akan menghapus semua soal di dalamnya.`)){
-          const { error } = await sb.from('courses').delete().eq('id', id);
-          if(error) {
-            alert('Gagal menghapus: ' + error.message);
-          } else {
-            alert('Mata kuliah berhasil dihapus.');
-            await loadCourses();
-            showSection('dashboard');
+        // Update judul halaman
+        const titles = {
+          'dashboard': 'Dashboard',
+          'create': 'Buat Mata Kuliah',
+          'manage': 'Kelola Soal',
+          'exam': 'Mode Ujian'
+        };
+        const subtitles = {
+          'dashboard': 'Ringkasan mata kuliah & soal',
+          'create': 'Buat mata kuliah baru',
+          'manage': currentCourse ? `Kelola soal untuk: ${escapeHtml(currentCourse.name)}` : 'Pilih mata kuliah untuk mengelola soal',
+          'exam': 'Jalankan ujian untuk mata kuliah'
+        };
+        
+        pageTitle.textContent = titles[name];
+        pageSub.textContent = subtitles[name];
+        
+        // Update navigasi aktif
+        Object.values(nav).forEach(b => b.classList.remove('active'));
+        nav[name].classList.add('active');
+        
+        // Toggle UI khusus ujian
+        if (name === 'exam') {
+          mobileExamFloatingOptimized.classList.remove('hidden');
+          mobileFab.classList.remove('hidden');
+        } else {
+          mobileExamFloatingOptimized.classList.add('hidden');
+          mobileExamSidebarOptimized.classList.remove('active');
+          mobileFab.classList.add('hidden');
+        }
+      }
+      
+      // Fungsi utilitas
+      function escapeHtml(s){
+        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+        return String(s || '').replace(/[&<>"']/g, m => map[m]);
+      }
+      
+      function formatText(text) {
+        if (!text) return '';
+        let formattedText = escapeHtml(text);
+        formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+        formattedText = formattedText.replace(/\*(.*?)\*/g, '<i>$1</i>');
+        formattedText = formattedText.replace(/__(.*?)__/g, '<u>$1</u>');
+        return formattedText;
+      }
+      
+      // Fungsi untuk memuat mata kuliah
+      async function loadCourses(){
+        const { data, error } = await sb.from('courses').select('*').order('created_at', { ascending: false });
+        if(error){
+          console.error(error);
+          alert('Gagal memuat mata kuliah: '+error.message);
+          return;
+        }
+        courses = data || [];
+        renderCourses();
+        populateSelects();
+      }
+      
+      // Fungsi untuk merender daftar mata kuliah
+      function renderCourses(){
+        const courseGrid = document.getElementById('courses-grid');
+        courseGrid.innerHTML = '';
+        
+        if(courses.length === 0){
+          courseGrid.innerHTML = '<div class="p-6 card col-span-full text-center text-muted">Belum ada mata kuliah. Buat mata kuliah baru.</div>';
+          return;
+        }
+        
+        courses.forEach(c => {
+          const el = document.createElement('div');
+          el.className = 'course-card';
+          el.innerHTML = `
+            <div class="header">
+              <div class="title">${escapeHtml(c.name)}</div>
+              <div class="actions">
+                <button data-id="${c.id}" class="open-manage open-btn text-sm">Kelola</button>
+                <button data-id="${c.id}" data-name="${escapeHtml(c.name)}" class="delete-course delete-btn text-sm">Hapus</button>
+              </div>
+            </div>
+            <div class="created-at">Dibuat: ${new Date(c.created_at).toLocaleDateString('id-ID')}</div>
+          `;
+          courseGrid.appendChild(el);
+        });
+        
+        // Event listeners untuk tombol
+        document.querySelectorAll('.open-manage').forEach(b => {
+          b.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const id = b.dataset.id;
+            const c = courses.find(x => x.id === id);
+            if(c) {
+              await openManageForCourse(c);
+              showSection('manage');
+            }
+          });
+        });
+
+        document.querySelectorAll('.delete-course').forEach(b => {
+          b.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = b.dataset.id;
+            const name = b.dataset.name;
+            const c = courses.find(x => x.id === id);
+            if(!c) return;
+            
+            // Gunakan popup konfirmasi dengan kode keamanan
+            showDeleteConfirmPopup('course', id, name);
+          });
+        });
+      }
+      
+      // Fungsi untuk mengisi dropdown mata kuliah
+      function populateSelects(){
+        const manageSelectVal = manageSelect.value;
+        const examSelectVal = selectExam.value;
+        
+        manageSelect.innerHTML = '<option value="">— Pilih Mata Kuliah —</option>';
+        selectExam.innerHTML = '<option value="">— Pilih Mata Kuliah —</option>';
+        
+        courses.forEach(c => {
+          manageSelect.innerHTML += `<option value="${c.id}">${escapeHtml(c.name)}</option>`;
+          selectExam.innerHTML += `<option value="${c.id}">${escapeHtml(c.name)}</option>`;
+        });
+        
+        // Kembalikan nilai yang dipilih sebelumnya
+        manageSelect.value = manageSelectVal;
+        selectExam.value = examSelectVal;
+        
+        // Update status tombol
+        btnAddQ.disabled = !manageSelect.value;
+        startExamBtn.disabled = !selectExam.value;
+      }
+      
+      // Fungsi untuk mengunggah gambar
+      async function uploadImage(file, path){
+        const { data, error } = await bucket.upload(path, file, { upsert: true });
+        if(error){
+          console.error(error);
+          alert('Gagal mengunggah gambar: ' + error.message);
+          return null;
+        }
+        const { data: { publicUrl } } = bucket.getPublicUrl(path);
+        return publicUrl;
+      }
+      
+      // Event listeners untuk navigasi
+      nav.dashboard.addEventListener('click', () => showSection('dashboard'));
+      nav.create.addEventListener('click', () => showSection('create'));
+      nav.manage.addEventListener('click', () => showSection('manage'));
+      nav.exam.addEventListener('click', () => showSection('exam'));
+      document.getElementById('open-create').addEventListener('click', () => showSection('create'));
+      
+      // Inisialisasi
+      loadCourses();
+      showSection('dashboard');
+      
+      // --- CRUD Courses ---
+      // Handle image inputs untuk pembuatan mata kuliah
+      const fileNew = document.getElementById('file-new'), 
+            pickNew = document.getElementById('pick-new'), 
+            clearNew = document.getElementById('clear-new'), 
+            previewNew = document.getElementById('preview-new');
+      
+      function handleImageInput(e, type) {
+        const file = e.target.files?.[0] || e.dataTransfer?.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+          if (type === 'new') {
+            newCourseImage = file;
+            previewNew.src = e.target.result;
+            previewNew.classList.remove('hidden');
+          } else if (type === 'q') {
+            editing = editing || {};
+            editing.imageFile = file;
+            qeImagePreview.src = e.target.result;
+            qeImagePreview.classList.remove('hidden');
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function clearImageInput(type) {
+        if (type === 'new') {
+          newCourseImage = null;
+          fileNew.value = '';
+          previewNew.src = '';
+          previewNew.classList.add('hidden');
+        } else if (type === 'q') {
+          if (editing) {
+            editing.imageFile = null;
+            editing.gambar = null;
+          }
+          qeImageFile.value = '';
+          qeImagePreview.src = '';
+          qeImagePreview.classList.add('hidden');
+        }
+      }
+
+      pickNew.addEventListener('click', () => fileNew.click());
+      fileNew.addEventListener('change', e => handleImageInput(e, 'new'));
+      clearNew.addEventListener('click', () => clearImageInput('new'));
+      document.getElementById('drop-new').addEventListener('drop', e => {
+        e.preventDefault();
+        handleImageInput(e, 'new');
+      });
+      document.getElementById('drop-new').addEventListener('dragover', e => e.preventDefault());
+
+      // Pembuatan mata kuliah
+      document.getElementById('create-course').addEventListener('click', async () => {
+        const name = document.getElementById('course-name').value.trim();
+        if (!name) return alert('Nama mata kuliah wajib.');
+        
+        const { data: course, error } = await sb.from('courses').insert({ name }).select().single();
+        if (error) {
+          alert('Gagal membuat matkul: ' + error.message);
+          return;
+        }
+        
+        const teks = document.getElementById('initial-question').value.trim();
+        const opts = Array.from(document.querySelectorAll('.opt.init')).map(i => i.value.trim()).filter(Boolean);
+        const key = document.getElementById('initial-key').value;
+        let gambarUrl = null;
+        
+        if (newCourseImage) {
+          gambarUrl = await uploadImage(newCourseImage, `${course.id}/${Date.now()}-${newCourseImage.name}`);
+        }
+        
+        if (teks && opts.length >= 2 && key !== '') {
+          const questionData = { course_id: course.id, teks, opsi: opts, kunci: parseInt(key, 10), gambar: gambarUrl };
+          const { error: qErr } = await sb.from('questions').insert(questionData);
+          if (qErr) console.warn('Initial question error', qErr);
+        }
+        
+        // Reset form
+        document.getElementById('course-name').value = '';
+        document.getElementById('initial-question').value = '';
+        document.querySelectorAll('.opt.init').forEach(i => i.value = '');
+        document.getElementById('initial-key').value = '';
+        clearImageInput('new');
+        
+        await loadCourses();
+        alert('Mata kuliah berhasil dibuat!');
+        showSection('dashboard');
+      });
+      
+      document.getElementById('cancel-create').addEventListener('click', () => showSection('dashboard'));
+      
+      // --- CRUD Questions ---
+      async function openManageForCourse(course) {
+        currentCourse = course;
+        manageSelect.value = course.id;
+        btnAddQ.disabled = false;
+        
+        const { data, error } = await sb.from('questions').select('*').eq('course_id', course.id).order('created_at', { ascending: false });
+        if (error) {
+          alert('Gagal memuat soal: ' + error.message);
+          return;
+        }
+        questions = data || [];
+        renderQuestions();
+        
+        // Setup file upload
+        const fileUpload = document.getElementById('file-upload');
+        const uploadStatus = document.getElementById('upload-status');
+        fileUpload.value = '';
+        fileUpload.removeEventListener('change', handleFileUpload);
+        fileUpload.addEventListener('change', handleFileUpload);
+        uploadStatus.textContent = '';
+      }
+
+      async function handleFileUpload(e) {
+        const uploadStatus = document.getElementById('upload-status');
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const fileContent = await file.text();
+        const lines = fileContent.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+        const questionsToInsert = [];
+        let currentQuestion = { course_id: currentCourse.id, opsi: [] };
+        
+        for (const line of lines) {
+          if (line.startsWith('Q:')) {
+            if (currentQuestion.teks) questionsToInsert.push(currentQuestion);
+            currentQuestion = { course_id: currentCourse.id, opsi: [] };
+            currentQuestion.teks = line.substring(2).trim();
+          } else if (line.startsWith('A:')) {
+            currentQuestion.opsi[0] = line.substring(2).trim();
+          } else if (line.startsWith('B:')) {
+            currentQuestion.opsi[1] = line.substring(2).trim();
+          } else if (line.startsWith('C:')) {
+            currentQuestion.opsi[2] = line.substring(2).trim();
+          } else if (line.startsWith('D:')) {
+            currentQuestion.opsi[3] = line.substring(2).trim();
+          } else if (line.startsWith('K:')) {
+            const keyMap = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
+            currentQuestion.kunci = keyMap[line.substring(2).trim().toUpperCase()];
           }
         }
-      });
-    });
-  }
-  
-  // Fungsi untuk mengisi dropdown mata kuliah
-  function populateSelects(){
-    const manageSelectVal = manageSelect.value;
-    const examSelectVal = selectExam.value;
-    
-    manageSelect.innerHTML = '<option value="">— Pilih Mata Kuliah —</option>';
-    selectExam.innerHTML = '<option value="">— Pilih Mata Kuliah —</option>';
-    
-    courses.forEach(c => {
-      manageSelect.innerHTML += `<option value="${c.id}">${escapeHtml(c.name)}</option>`;
-      selectExam.innerHTML += `<option value="${c.id}">${escapeHtml(c.name)}</option>`;
-    });
-    
-    // Kembalikan nilai yang dipilih sebelumnya
-    manageSelect.value = manageSelectVal;
-    selectExam.value = examSelectVal;
-    
-    // Update status tombol
-    btnAddQ.disabled = !manageSelect.value;
-    startExamBtn.disabled = !selectExam.value;
-  }
-  
-  // Fungsi untuk mengunggah gambar
-  async function uploadImage(file, path){
-    const { data, error } = await bucket.upload(path, file, { upsert: true });
-    if(error){
-      console.error(error);
-      alert('Gagal mengunggah gambar: ' + error.message);
-      return null;
-    }
-    const { data: { publicUrl } } = bucket.getPublicUrl(path);
-    return publicUrl;
-  }
-  
-  // Event listeners untuk navigasi
-  nav.dashboard.addEventListener('click', () => showSection('dashboard'));
-  nav.create.addEventListener('click', () => showSection('create'));
-  nav.manage.addEventListener('click', () => showSection('manage'));
-  nav.exam.addEventListener('click', () => showSection('exam'));
-  document.getElementById('open-create').addEventListener('click', () => showSection('create'));
-  
-  // Inisialisasi
-  loadCourses();
-  showSection('dashboard');
-  
-  // --- CRUD Courses ---
-  // Handle image inputs untuk pembuatan mata kuliah
-  const fileNew = document.getElementById('file-new'), 
-        pickNew = document.getElementById('pick-new'), 
-        clearNew = document.getElementById('clear-new'), 
-        previewNew = document.getElementById('preview-new');
-  
-  function handleImageInput(e, type) {
-    const file = e.target.files?.[0] || e.dataTransfer?.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      if (type === 'new') {
-        newCourseImage = file;
-        previewNew.src = e.target.result;
-        previewNew.classList.remove('hidden');
-      } else if (type === 'q') {
-        editing = editing || {};
-        editing.imageFile = file;
-        qeImagePreview.src = e.target.result;
-        qeImagePreview.classList.remove('hidden');
-      }
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function clearImageInput(type) {
-    if (type === 'new') {
-      newCourseImage = null;
-      fileNew.value = '';
-      previewNew.src = '';
-      previewNew.classList.add('hidden');
-    } else if (type === 'q') {
-      if (editing) {
-        editing.imageFile = null;
-        editing.gambar = null;
-      }
-      qeImageFile.value = '';
-      qeImagePreview.src = '';
-      qeImagePreview.classList.add('hidden');
-    }
-  }
-
-  pickNew.addEventListener('click', () => fileNew.click());
-  fileNew.addEventListener('change', e => handleImageInput(e, 'new'));
-  clearNew.addEventListener('click', () => clearImageInput('new'));
-  document.getElementById('drop-new').addEventListener('drop', e => {
-    e.preventDefault();
-    handleImageInput(e, 'new');
-  });
-  document.getElementById('drop-new').addEventListener('dragover', e => e.preventDefault());
-
-  // Pembuatan mata kuliah
-  document.getElementById('create-course').addEventListener('click', async () => {
-    const name = document.getElementById('course-name').value.trim();
-    if (!name) return alert('Nama mata kuliah wajib.');
-    
-    const { data: course, error } = await sb.from('courses').insert({ name }).select().single();
-    if (error) {
-      alert('Gagal membuat matkul: ' + error.message);
-      return;
-    }
-    
-    const teks = document.getElementById('initial-question').value.trim();
-    const opts = Array.from(document.querySelectorAll('.opt.init')).map(i => i.value.trim()).filter(Boolean);
-    const key = document.getElementById('initial-key').value;
-    let gambarUrl = null;
-    
-    if (newCourseImage) {
-      gambarUrl = await uploadImage(newCourseImage, `${course.id}/${Date.now()}-${newCourseImage.name}`);
-    }
-    
-    if (teks && opts.length >= 2 && key !== '') {
-      const questionData = { course_id: course.id, teks, opsi: opts, kunci: parseInt(key, 10), gambar: gambarUrl };
-      const { error: qErr } = await sb.from('questions').insert(questionData);
-      if (qErr) console.warn('Initial question error', qErr);
-    }
-    
-    // Reset form
-    document.getElementById('course-name').value = '';
-    document.getElementById('initial-question').value = '';
-    document.querySelectorAll('.opt.init').forEach(i => i.value = '');
-    document.getElementById('initial-key').value = '';
-    clearImageInput('new');
-    
-    await loadCourses();
-    alert('Mata kuliah berhasil dibuat!');
-    showSection('dashboard');
-  });
-  
-  document.getElementById('cancel-create').addEventListener('click', () => showSection('dashboard'));
-  
-  // --- CRUD Questions ---
-  async function openManageForCourse(course) {
-    currentCourse = course;
-    manageSelect.value = course.id;
-    btnAddQ.disabled = false;
-    
-    const { data, error } = await sb.from('questions').select('*').eq('course_id', course.id).order('created_at', { ascending: false });
-    if (error) {
-      alert('Gagal memuat soal: ' + error.message);
-      return;
-    }
-    questions = data || [];
-    renderQuestions();
-    
-    // Setup file upload
-    const fileUpload = document.getElementById('file-upload');
-    const uploadStatus = document.getElementById('upload-status');
-    fileUpload.value = '';
-    fileUpload.removeEventListener('change', handleFileUpload);
-    fileUpload.addEventListener('change', handleFileUpload);
-    uploadStatus.textContent = '';
-  }
-
-  async function handleFileUpload(e) {
-    const uploadStatus = document.getElementById('upload-status');
-    const file = e.target.files[0];
-    if (!file) return;
-    
-    const fileContent = await file.text();
-    const lines = fileContent.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-    const questionsToInsert = [];
-    let currentQuestion = { course_id: currentCourse.id, opsi: [] };
-    
-    for (const line of lines) {
-      if (line.startsWith('Q:')) {
         if (currentQuestion.teks) questionsToInsert.push(currentQuestion);
-        currentQuestion = { course_id: currentCourse.id, opsi: [] };
-        currentQuestion.teks = line.substring(2).trim();
-      } else if (line.startsWith('A:')) {
-        currentQuestion.opsi[0] = line.substring(2).trim();
-      } else if (line.startsWith('B:')) {
-        currentQuestion.opsi[1] = line.substring(2).trim();
-      } else if (line.startsWith('C:')) {
-        currentQuestion.opsi[2] = line.substring(2).trim();
-      } else if (line.startsWith('D:')) {
-        currentQuestion.opsi[3] = line.substring(2).trim();
-      } else if (line.startsWith('K:')) {
-        const keyMap = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
-        currentQuestion.kunci = keyMap[line.substring(2).trim().toUpperCase()];
+
+        if (questionsToInsert.length === 0) {
+          uploadStatus.textContent = 'File tidak berisi soal yang valid.';
+          uploadStatus.className = 'text-sm mt-2 font-semibold text-danger-clr';
+          return;
+        }
+        
+        uploadStatus.textContent = `Mengunggah ${questionsToInsert.length} soal...`;
+        const { error } = await sb.from('questions').insert(questionsToInsert);
+        if(error){
+          uploadStatus.textContent = 'Gagal mengunggah soal: ' + error.message;
+          uploadStatus.className = 'text-sm mt-2 font-semibold text-danger-clr';
+        } else {
+          uploadStatus.textContent = `${questionsToInsert.length} soal berhasil diunggah!`;
+          uploadStatus.className = 'text-sm mt-2 font-semibold text-success-clr';
+          await openManageForCourse(currentCourse);
+        }
       }
-    }
-    if (currentQuestion.teks) questionsToInsert.push(currentQuestion);
 
-    if (questionsToInsert.length === 0) {
-      uploadStatus.textContent = 'File tidak berisi soal yang valid.';
-      uploadStatus.className = 'text-sm mt-2 font-semibold text-danger-clr';
-      return;
-    }
-    
-    uploadStatus.textContent = `Mengunggah ${questionsToInsert.length} soal...`;
-    const { error } = await sb.from('questions').insert(questionsToInsert);
-    if(error){
-      uploadStatus.textContent = 'Gagal mengunggah soal: ' + error.message;
-      uploadStatus.className = 'text-sm mt-2 font-semibold text-danger-clr';
-    } else {
-      uploadStatus.textContent = `${questionsToInsert.length} soal berhasil diunggah!`;
-      uploadStatus.className = 'text-sm mt-2 font-semibold text-success-clr';
-      await openManageForCourse(currentCourse);
-    }
-  }
-
-  manageSelect.addEventListener('change', async (e) => {
-    const courseId = e.target.value;
-    if (courseId) {
-      const course = courses.find(c => c.id === courseId);
-      if (course) {
-        await openManageForCourse(course);
-      }
-    } else {
-      questionsList.innerHTML = '<div class="text-center text-muted p-6">Silakan pilih mata kuliah.</div>';
-      btnAddQ.disabled = true;
-      currentCourse = null;
-    }
-  });
-
-  function renderQuestions(){
-    questionsList.innerHTML = '';
-    if(questions.length === 0){
-      questionsList.innerHTML = '<div class="p-6 card text-center text-muted">Belum ada soal untuk mata kuliah ini.</div>';
-      return;
-    }
-    
-    questions.forEach((q, index) => {
-      const el = document.createElement('div');
-      el.className = 'card p-4';
-      let optionsHtml = '';
-      
-      q.opsi.forEach((o, i) => {
-        const isCorrect = i === q.kunci;
-        optionsHtml += `<div class="p-2 my-1 rounded-lg ${isCorrect ? 'correct-option' : 'bg-gray-700'}">${String.fromCharCode(65+i)}. ${escapeHtml(o)}</div>`;
+      manageSelect.addEventListener('change', async (e) => {
+        const courseId = e.target.value;
+        if (courseId) {
+          const course = courses.find(c => c.id === courseId);
+          if (course) {
+            await openManageForCourse(course);
+          }
+        } else {
+          questionsList.innerHTML = '<div class="text-center text-muted p-6">Silakan pilih mata kuliah.</div>';
+          btnAddQ.disabled = true;
+          currentCourse = null;
+        }
       });
-      
-      el.innerHTML = `
-        <div class="flex items-start justify-between flex-wrap gap-3 mb-3">
-          <div class="font-semibold">Soal #${index + 1}</div>
-          <div class="flex gap-2">
-            <button data-id="${q.id}" class="edit-q btn-ghost text-sm px-2 py-1">Edit</button>
-            <button data-id="${q.id}" class="delete-q btn-ghost btn-cancel text-sm px-2 py-1">Hapus</button>
-          </div>
-        </div>
-        <div class="question-text">${formatText(q.teks)}</div>
-        ${q.gambar ? `<img src="${bucket.getPublicUrl(q.gambar.split('/').pop()).data.publicUrl}" alt="Soal Gambar" class="question-image" />` : ''}
-        <div class="mt-3">
-          ${optionsHtml}
-        </div>
-      `;
-      questionsList.appendChild(el);
-    });
 
-    document.querySelectorAll('.edit-q').forEach(b => {
-      b.addEventListener('click', e => openEditor(e.target.dataset.id));
-    });
-    
-    document.querySelectorAll('.delete-q').forEach(b => {
-      b.addEventListener('click', e => deleteQuestion(e.target.dataset.id));
-    });
-  }
+      function renderQuestions(){
+        questionsList.innerHTML = '';
+        if(questions.length === 0){
+          questionsList.innerHTML = '<div class="p-6 card text-center text-muted">Belum ada soal untuk mata kuliah ini.</div>';
+          return;
+        }
+        
+        questions.forEach((q, index) => {
+          const el = document.createElement('div');
+          el.className = 'card p-4';
+          let optionsHtml = '';
+          
+          q.opsi.forEach((o, i) => {
+            const isCorrect = i === q.kunci;
+            optionsHtml += `<div class="p-2 my-1 rounded-lg ${isCorrect ? 'correct-option' : 'bg-gray-700'}">${String.fromCharCode(65+i)}. ${escapeHtml(o)}</div>`;
+          });
+          
+          el.innerHTML = `
+            <div class="flex items-start justify-between flex-wrap gap-3 mb-3">
+              <div class="font-semibold">Soal #${index + 1}</div>
+              <div class="flex gap-2">
+                <button data-id="${q.id}" class="edit-q btn-ghost text-sm px-2 py-1">Edit</button>
+                <button data-id="${q.id}" class="delete-q btn-ghost btn-cancel text-sm px-2 py-1">Hapus</button>
+              </div>
+            </div>
+            <div class="question-text">${formatText(q.teks)}</div>
+            ${q.gambar ? `<img src="${bucket.getPublicUrl(q.gambar.split('/').pop()).data.publicUrl}" alt="Soal Gambar" class="question-image" />` : ''}
+            <div class="mt-3">
+              ${optionsHtml}
+            </div>
+          `;
+          questionsList.appendChild(el);
+        });
 
-  async function deleteQuestion(id){
-    if(!confirm('Hapus soal ini?')) return;
-    const { error } = await sb.from('questions').delete().eq('id', id);
-    if(error){
-      alert('Gagal menghapus soal: ' + error.message);
-    } else {
-      questions = questions.filter(q => q.id !== id);
-      renderQuestions();
-    }
-  }
-
-  // --- Question Editor ---
-  function openEditor(id = null){
-    editorPopout.classList.remove('hidden');
-    setTimeout(() => editorPopoutContent.classList.add('show'), 10);
-    clearImageInput('q');
-    
-    if(id){
-      editing = questions.find(q => q.id === id);
-      editorTitle.textContent = 'Edit Soal';
-      qeText.value = editing.teks || '';
-      qeOpts.forEach((o, i) => o.value = editing.opsi[i] || '');
-      qeKey.value = editing.kunci !== undefined ? editing.kunci : '';
-      
-      if(editing.gambar){
-        qeImagePreview.src = editing.gambar;
-        qeImagePreview.classList.remove('hidden');
+        document.querySelectorAll('.edit-q').forEach(b => {
+          b.addEventListener('click', e => openEditor(e.target.dataset.id));
+        });
+        
+        document.querySelectorAll('.delete-q').forEach(b => {
+          b.addEventListener('click', e => deleteQuestion(e.target.dataset.id));
+        });
       }
-    } else {
-      editing = { course_id: currentCourse.id };
-      editorTitle.textContent = 'Tambah Soal';
-      qeText.value = '';
-      qeOpts.forEach(o => o.value = '');
-      qeKey.value = '';
-    }
-  }
 
-  editorCancelBtn.addEventListener('click', () => {
-    editorPopoutContent.classList.remove('show');
-    setTimeout(() => editorPopout.classList.add('hidden'), 300);
-    editing = null;
-  });
+      // Modifikasi fungsi deleteQuestion untuk menggunakan popup konfirmasi
+      async function deleteQuestion(id) {
+        showDeleteConfirmPopup('question', id);
+      }
 
-  // Event listener untuk tombol Tambah Soal
-  btnAddQ.addEventListener('click', () => {
-    if (!currentCourse) {
-      alert('Pilih mata kuliah terlebih dahulu.');
-      return;
-    }
-    openEditor();
-  });
+      // --- Question Editor ---
+      function openEditor(id = null){
+        editorPopout.classList.remove('hidden');
+        setTimeout(() => editorPopoutContent.classList.add('show'), 10);
+        clearImageInput('q');
+        
+        if(id){
+          editing = questions.find(q => q.id === id);
+          editorTitle.textContent = 'Edit Soal';
+          qeText.value = editing.teks || '';
+          qeOpts.forEach((o, i) => o.value = editing.opsi[i] || '');
+          qeKey.value = editing.kunci !== undefined ? editing.kunci : '';
+          
+          if(editing.gambar){
+            qeImagePreview.src = editing.gambar;
+            qeImagePreview.classList.remove('hidden');
+          }
+        } else {
+          editing = { course_id: currentCourse.id };
+          editorTitle.textContent = 'Tambah Soal';
+          qeText.value = '';
+          qeOpts.forEach(o => o.value = '');
+          qeKey.value = '';
+        }
+      }
 
-  saveQBtn.addEventListener('click', async () => {
-    const teks = qeText.value.trim();
-    const opsi = qeOpts.map(o => o.value.trim()).filter(Boolean);
-    const kunci = parseInt(qeKey.value, 10);
-    
-    if (!teks || opsi.length < 2 || isNaN(kunci)) {
-      return alert('Isi teks soal, minimal 2 opsi, dan pilih kunci jawaban.');
-    }
-    
-    let gambarUrl = editing.gambar || null;
-    if(editing.imageFile){
-      const filePath = `${currentCourse.id}/${Date.now()}-${editing.imageFile.name}`;
-      const newUrl = await uploadImage(editing.imageFile, filePath);
-      if(!newUrl) return;
-      gambarUrl = newUrl;
-    }
-    
-    const questionData = { teks, opsi, kunci, gambar: gambarUrl };
-    
-    let error;
-    if(editing.id){
-      ({ error } = await sb.from('questions').update(questionData).eq('id', editing.id));
-    } else {
-      ({ error } = await sb.from('questions').insert({ ...questionData, course_id: currentCourse.id }));
-    }
-    
-    if(error){
-      alert('Gagal menyimpan soal: ' + error.message);
-    } else {
-      editorCancelBtn.click();
-      await openManageForCourse(currentCourse);
-    }
-  });
-
-  // Editor formatting buttons
-  function applyFormatting(tag) {
-    const start = qeText.selectionStart;
-    const end = qeText.selectionEnd;
-    const selectedText = qeText.value.substring(start, end);
-    let newText;
-    
-    if (tag === 'bold') {
-      newText = '**' + selectedText + '**';
-    } else if (tag === 'italic') {
-      newText = '*' + selectedText + '*';
-    } else if (tag === 'underline') {
-      newText = '__' + selectedText + '__';
-    }
-    
-    qeText.value = qeText.value.substring(0, start) + newText + qeText.value.substring(end);
-    qeText.focus();
-  }
-
-  document.getElementById('bold-btn').addEventListener('click', () => applyFormatting('bold'));
-  document.getElementById('italic-btn').addEventListener('click', () => applyFormatting('italic'));
-  document.getElementById('underline-btn').addEventListener('click', () => applyFormatting('underline'));
-
-  // Image handling for question editor
-  qePickBtn.addEventListener('click', () => qeImageFile.click());
-  qeImageFile.addEventListener('change', e => handleImageInput(e, 'q'));
-  qeClearBtn.addEventListener('click', () => clearImageInput('q'));
-  qeDropzone.addEventListener('drop', e => {
-    e.preventDefault();
-    handleImageInput(e, 'q');
-  });
-  qeDropzone.addEventListener('dragover', e => e.preventDefault());
-
-  // --- Exam Mode - OPTIMIZED FOR MOBILE ---
-  selectExam.addEventListener('change', () => {
-    startExamBtn.disabled = !selectExam.value;
-  });
-
-  async function startExam(){
-    const courseId = selectExam.value;
-    if(!courseId) return alert('Pilih mata kuliah terlebih dahulu.');
-    
-    const { data, error } = await sb.from('questions').select('*').eq('course_id', courseId).order('created_at');
-    if (error) {
-      alert('Gagal memuat soal: ' + error.message);
-      return;
-    }
-    
-    examQuestions = data || [];
-    if(examQuestions.length === 0){
-      alert('Tidak ada soal untuk mata kuliah ini.');
-      return;
-    }
-    
-    userAnswers = new Array(examQuestions.length).fill(null);
-    currentExamBatch = 0;
-    currentQuestionIndex = 0;
-    totalBatches = Math.ceil(examQuestions.length / EXAM_BATCH_SIZE);
-    
-    examScoreDisplay.classList.add('hidden');
-    startExamBtn.classList.add('hidden');
-    endExamBtn.classList.remove('hidden');
-    endExamMobileOptimizedBtn.classList.remove('hidden');
-    
-    // Tampilkan elemen mobile khusus
-    mobileProgress.classList.remove('hidden');
-    mobileNavButtons.classList.remove('hidden');
-    mobileFab.classList.remove('hidden');
-    
-    // Update info soal di floating bar
-    currentQuestionMobile.textContent = '1';
-    totalQuestionsMobile.textContent = examQuestions.length;
-    
-    renderExam();
-    renderExamSidebarOptimized();
-  }
-
-  function renderExam(){
-    examGrid.innerHTML = '';
-    
-    const startIndex = currentExamBatch * EXAM_BATCH_SIZE;
-    const endIndex = Math.min(startIndex + EXAM_BATCH_SIZE, examQuestions.length);
-    const questionsToRender = examQuestions.slice(startIndex, endIndex);
-
-    questionsToRender.forEach((q, i) => {
-      const globalIndex = startIndex + i;
-      const isMobile = window.innerWidth < 1024;
-      const questionClass = isMobile ? 'mobile-question-item' : 'question-item';
-      const textClass = isMobile ? 'mobile-question-text' : 'question-text';
-      const optionClass = isMobile ? 'mobile-question-option' : 'question-option';
-      
-      const el = document.createElement('div');
-      el.className = questionClass;
-      let optionsHtml = '';
-      
-      q.opsi.forEach((o, j) => {
-        const isSelected = userAnswers[globalIndex] === j;
-        const selectedClass = isSelected ? 'selected' : '';
-        optionsHtml += `
-          <div data-index="${globalIndex}" data-option="${j}" class="${optionClass} ${selectedClass}">
-            ${String.fromCharCode(65 + j)}. ${escapeHtml(o)}
-          </div>
-        `;
+      editorCancelBtn.addEventListener('click', () => {
+        editorPopoutContent.classList.remove('show');
+        setTimeout(() => editorPopout.classList.add('hidden'), 300);
+        editing = null;
       });
+
+      // Event listener untuk tombol Tambah Soal
+      btnAddQ.addEventListener('click', () => {
+        if (!currentCourse) {
+          alert('Pilih mata kuliah terlebih dahulu.');
+          return;
+        }
+        openEditor();
+      });
+
+      saveQBtn.addEventListener('click', async () => {
+        const teks = qeText.value.trim();
+        const opsi = qeOpts.map(o => o.value.trim()).filter(Boolean);
+        const kunci = parseInt(qeKey.value, 10);
+        
+        if (!teks || opsi.length < 2 || isNaN(kunci)) {
+          return alert('Isi teks soal, minimal 2 opsi, dan pilih kunci jawaban.');
+        }
+        
+        let gambarUrl = editing.gambar || null;
+        if(editing.imageFile){
+          const filePath = `${currentCourse.id}/${Date.now()}-${editing.imageFile.name}`;
+          const newUrl = await uploadImage(editing.imageFile, filePath);
+          if(!newUrl) return;
+          gambarUrl = newUrl;
+        }
+        
+        const questionData = { teks, opsi, kunci, gambar: gambarUrl };
+        
+        let error;
+        if(editing.id){
+          ({ error } = await sb.from('questions').update(questionData).eq('id', editing.id));
+        } else {
+          ({ error } = await sb.from('questions').insert({ ...questionData, course_id: currentCourse.id }));
+        }
+        
+        if(error){
+          alert('Gagal menyimpan soal: ' + error.message);
+        } else {
+          editorCancelBtn.click();
+          await openManageForCourse(currentCourse);
+        }
+      });
+
+      // Editor formatting buttons
+      function applyFormatting(tag) {
+        const start = qeText.selectionStart;
+        const end = qeText.selectionEnd;
+        const selectedText = qeText.value.substring(start, end);
+        let newText;
+        
+        if (tag === 'bold') {
+          newText = '**' + selectedText + '**';
+        } else if (tag === 'italic') {
+          newText = '*' + selectedText + '*';
+        } else if (tag === 'underline') {
+          newText = '__' + selectedText + '__';
+        }
+        
+        qeText.value = qeText.value.substring(0, start) + newText + qeText.value.substring(end);
+        qeText.focus();
+      }
+
+      document.getElementById('bold-btn').addEventListener('click', () => applyFormatting('bold'));
+      document.getElementById('italic-btn').addEventListener('click', () => applyFormatting('italic'));
+      document.getElementById('underline-btn').addEventListener('click', () => applyFormatting('underline'));
+
+      // Image handling for question editor
+      qePickBtn.addEventListener('click', () => qeImageFile.click());
+      qeImageFile.addEventListener('change', e => handleImageInput(e, 'q'));
+      qeClearBtn.addEventListener('click', () => clearImageInput('q'));
+      qeDropzone.addEventListener('drop', e => {
+        e.preventDefault();
+        handleImageInput(e, 'q');
+      });
+      qeDropzone.addEventListener('dragover', e => e.preventDefault());
+
+      // --- Exam Mode - OPTIMIZED FOR MOBILE ---
+      selectExam.addEventListener('change', () => {
+        startExamBtn.disabled = !selectExam.value;
+      });
+
+      async function startExam(){
+        const courseId = selectExam.value;
+        if(!courseId) return alert('Pilih mata kuliah terlebih dahulu.');
+        
+        const { data, error } = await sb.from('questions').select('*').eq('course_id', courseId).order('created_at');
+        if (error) {
+          alert('Gagal memuat soal: ' + error.message);
+          return;
+        }
+        
+        examQuestions = data || [];
+        if(examQuestions.length === 0){
+          alert('Tidak ada soal untuk mata kuliah ini.');
+          return;
+        }
+        
+        userAnswers = new Array(examQuestions.length).fill(null);
+        currentExamBatch = 0;
+        currentQuestionIndex = 0;
+        totalBatches = Math.ceil(examQuestions.length / EXAM_BATCH_SIZE);
+        
+        examScoreDisplay.classList.add('hidden');
+        startExamBtn.classList.add('hidden');
+        endExamBtn.classList.remove('hidden');
+        endExamMobileOptimizedBtn.classList.remove('hidden');
+        
+        // Tampilkan elemen mobile khusus
+        mobileProgress.classList.remove('hidden');
+        mobileNavButtons.classList.remove('hidden');
+        mobileFab.classList.remove('hidden');
+        
+        // Update info soal di floating bar
+        currentQuestionMobile.textContent = '1';
+        totalQuestionsMobile.textContent = examQuestions.length;
+        
+        renderExam();
+        renderExamSidebarOptimized();
+      }
+
+      function renderExam(){
+        examGrid.innerHTML = '';
+        
+        const startIndex = currentExamBatch * EXAM_BATCH_SIZE;
+        const endIndex = Math.min(startIndex + EXAM_BATCH_SIZE, examQuestions.length);
+        const questionsToRender = examQuestions.slice(startIndex, endIndex);
+
+        questionsToRender.forEach((q, i) => {
+          const globalIndex = startIndex + i;
+          const isMobile = window.innerWidth < 1024;
+          const questionClass = isMobile ? 'mobile-question-item' : 'question-item';
+          const textClass = isMobile ? 'mobile-question-text' : 'question-text';
+          const optionClass = isMobile ? 'mobile-question-option' : 'question-option';
+          
+          const el = document.createElement('div');
+          el.className = questionClass;
+          let optionsHtml = '';
+          
+          q.opsi.forEach((o, j) => {
+            const isSelected = userAnswers[globalIndex] === j;
+            const selectedClass = isSelected ? 'selected' : '';
+            optionsHtml += `
+              <div data-index="${globalIndex}" data-option="${j}" class="${optionClass} ${selectedClass}">
+                ${String.fromCharCode(65 + j)}. ${escapeHtml(o)}
+              </div>
+            `;
+          });
+          
+          el.innerHTML = `
+            <div class="text-lg font-bold mb-3">Soal #${globalIndex + 1}</div>
+            <div class="${textClass}">${formatText(q.teks)}</div>
+            ${q.gambar ? `<img src="${bucket.getPublicUrl(q.gambar.split('/').pop()).data.publicUrl}" alt="Soal Gambar" class="question-image" />` : ''}
+            <div class="mt-3">
+              ${optionsHtml}
+            </div>
+          `;
+          
+          // Untuk mobile, sembunyikan soal yang tidak aktif
+          if (isMobile) {
+            if (globalIndex !== currentQuestionIndex) {
+              el.style.display = 'none';
+            }
+          }
+          
+          examGrid.appendChild(el);
+        });
+
+        // Navigasi batch untuk banyak soal (hanya desktop)
+        if (examQuestions.length > EXAM_BATCH_SIZE && window.innerWidth >= 1024) {
+          const navHtml = `
+            <div class="flex items-center justify-between mt-3">
+              <button id="prev-batch" class="btn-ghost" ${currentExamBatch === 0 ? 'disabled' : ''}>
+                &laquo; Sebelumnya
+              </button>
+              <div class="text-sm text-gray-500">
+                Halaman ${currentExamBatch + 1} dari ${Math.ceil(examQuestions.length / EXAM_BATCH_SIZE)}
+              </div>
+              <button id="next-batch" class="btn-ghost" ${endIndex >= examQuestions.length ? 'disabled' : ''}>
+                Berikutnya &raquo;
+              </button>
+            </div>
+          `;
+          examGrid.insertAdjacentHTML('beforeend', navHtml);
+          
+          document.getElementById('prev-batch').addEventListener('click', () => {
+            if (currentExamBatch > 0) {
+              currentExamBatch--;
+              renderExam();
+              renderExamSidebarOptimized();
+            }
+          });
+          
+          document.getElementById('next-batch').addEventListener('click', () => {
+            if ((currentExamBatch + 1) * EXAM_BATCH_SIZE < examQuestions.length) {
+              currentExamBatch++;
+              renderExam();
+              renderExamSidebarOptimized();
+            }
+          });
+        }
+
+        // Event listeners untuk memilih jawaban
+        document.querySelectorAll('.question-option, .mobile-question-option').forEach(opt => {
+          opt.addEventListener('click', (e) => {
+            const index = parseInt(e.target.dataset.index);
+            const option = parseInt(e.target.dataset.option);
+            handleAnswer(index, option);
+          });
+        });
+        
+        updateProgress();
+        updateMobileNavigation();
+      }
+
+      function handleAnswer(index, option){
+        userAnswers[index] = option;
+        
+        // Update tampilan soal yang dijawab
+        const qEl = examGrid.querySelector(`[data-index="${index}"]`).closest('.question-item, .mobile-question-item');
+        if(qEl){
+          qEl.querySelectorAll('.question-option, .mobile-question-option').forEach(o => {
+            o.classList.remove('selected');
+            if (parseInt(o.dataset.option) === option) {
+              o.classList.add('selected');
+            }
+          });
+        }
+        
+        updateProgress();
+        renderExamSidebarOptimized();
+      }
+
+      function updateProgress(){
+        const answeredCount = userAnswers.filter(a => a !== null).length;
+        const totalQuestions = examQuestions.length;
+        const percentage = totalQuestions > 0 ? (answeredCount / totalQuestions) * 100 : 0;
+        progressText.textContent = `${answeredCount} / ${totalQuestions} dijawab`;
+        examProgress.style.width = `${percentage}%`;
+        
+        // Update progress mobile
+        mobileProgressText.textContent = `${answeredCount} / ${totalQuestions}`;
+        mobileProgressFill.style.width = `${percentage}%`;
+      }
       
-      el.innerHTML = `
-        <div class="text-lg font-bold mb-3">Soal #${globalIndex + 1}</div>
-        <div class="${textClass}">${formatText(q.teks)}</div>
-        ${q.gambar ? `<img src="${bucket.getPublicUrl(q.gambar.split('/').pop()).data.publicUrl}" alt="Soal Gambar" class="question-image" />` : ''}
-        <div class="mt-3">
-          ${optionsHtml}
-        </div>
-      `;
-      
-      // Untuk mobile, sembunyikan soal yang tidak aktif
-      if (isMobile) {
-        if (globalIndex !== currentQuestionIndex) {
-          el.style.display = 'none';
+      function updateMobileNavigation() {
+        if (window.innerWidth < 1024) {
+          // Update tombol navigasi mobile
+          mobilePrevBtn.disabled = currentQuestionIndex === 0;
+          mobileNextBtn.disabled = currentQuestionIndex === examQuestions.length - 1;
+          
+          // Update nomor soal di floating bar
+          currentQuestionMobile.textContent = currentQuestionIndex + 1;
+          
+          // Tampilkan hanya soal yang aktif
+          document.querySelectorAll('.mobile-question-item').forEach((el, i) => {
+            const questionIndex = currentExamBatch * EXAM_BATCH_SIZE + i;
+            if (questionIndex === currentQuestionIndex) {
+              el.style.display = 'block';
+            } else {
+              el.style.display = 'none';
+            }
+          });
         }
       }
       
-      examGrid.appendChild(el);
-    });
+      function endExam(){
+        if(!confirm('Selesaikan ujian?')) return;
+        showResults();
+      }
 
-    // Navigasi batch untuk banyak soal (hanya desktop)
-    if (examQuestions.length > EXAM_BATCH_SIZE && window.innerWidth >= 1024) {
-      const navHtml = `
-        <div class="flex items-center justify-between mt-3">
-          <button id="prev-batch" class="btn-ghost" ${currentExamBatch === 0 ? 'disabled' : ''}>
-            &laquo; Sebelumnya
-          </button>
-          <div class="text-sm text-gray-500">
-            Halaman ${currentExamBatch + 1} dari ${Math.ceil(examQuestions.length / EXAM_BATCH_SIZE)}
+      function showResults(){
+        let correctCount = 0;
+        let resultsHtml = `
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-semibold">Hasil Ujian</h3>
+            <div class="text-right">
+              <div class="text-3xl font-bold">${Math.round((correctCount / examQuestions.length) * 100)}%</div>
+              <div class="text-sm text-gray-400">Skor Akhir</div>
+            </div>
           </div>
-          <button id="next-batch" class="btn-ghost" ${endIndex >= examQuestions.length ? 'disabled' : ''}>
-            Berikutnya &raquo;
-          </button>
-        </div>
-      `;
-      examGrid.insertAdjacentHTML('beforeend', navHtml);
+          <div class="text-gray-400 mb-4">${correctCount} dari ${examQuestions.length} soal benar.</div>
+          <button id="restart-exam" class="btn w-full mb-4">Mulai Ujian Lagi</button>
+        `;
+        
+        examQuestions.forEach((q, i) => {
+          const userAnswer = userAnswers[i];
+          const isCorrect = userAnswer === q.kunci;
+          if(isCorrect) correctCount++;
+          
+          const statusClass = isCorrect ? 'correct' : 'incorrect';
+          const statusText = isCorrect ? 'Benar' : 'Salah';
+          
+          let optionsHtml = '';
+          q.opsi.forEach((o, j) => {
+            let optionClass = '';
+            let optionStatus = '';
+            
+            if (j === q.kunci) {
+              optionClass = 'correct';
+              optionStatus = ' (Jawaban Benar)';
+            } else if (j === userAnswer && !isCorrect) {
+              optionClass = 'incorrect';
+              optionStatus = ' (Jawaban Anda)';
+            } else if (j === userAnswer) {
+              optionStatus = ' (Jawaban Anda)';
+            }
+            
+            const selectedClass = j === userAnswer ? 'selected' : '';
+            
+            optionsHtml += `
+              <div class="result-option ${optionClass} ${selectedClass}">
+                <div>${String.fromCharCode(65 + j)}. ${escapeHtml(o)}${optionStatus}</div>
+              </div>
+            `;
+          });
+          
+          resultsHtml += `
+            <div class="result-question-item">
+              <div class="result-question-header">
+                <div class="font-bold">Soal #${i + 1}</div>
+                <div class="result-status ${statusClass}">${statusText}</div>
+              </div>
+              <div class="question-text">${formatText(q.teks)}</div>
+              ${q.gambar ? `<img src="${bucket.getPublicUrl(q.gambar.split('/').pop()).data.publicUrl}" alt="Soal Gambar" class="question-image" />` : ''}
+              <div class="result-options">
+                ${optionsHtml}
+              </div>
+            </div>
+          `;
+        });
+
+        // Update score in the header
+        const score = Math.round((correctCount / examQuestions.length) * 100);
+        resultsHtml = resultsHtml.replace('${Math.round((correctCount / examQuestions.length) * 100)}', score);
+        resultsHtml = resultsHtml.replace('${correctCount}', correctCount);
+        
+        examScoreDisplay.innerHTML = resultsHtml;
+        examScoreDisplay.classList.remove('hidden');
+        examGrid.innerHTML = '';
+        endExamBtn.classList.add('hidden');
+        endExamMobileOptimizedBtn.classList.add('hidden');
+        examSidebarDesktop.classList.add('hidden');
+        mobileExamSidebarOptimized.classList.remove('active');
+        
+        // Sembunyikan elemen mobile
+        mobileProgress.classList.add('hidden');
+        mobileNavButtons.classList.add('hidden');
+        mobileFab.classList.add('hidden');
+        
+        document.getElementById('restart-exam').addEventListener('click', refreshQuestions);
+      }
+
+      function refreshQuestions() {
+        examQuestions = [];
+        userAnswers = [];
+        currentExamBatch = 0;
+        currentQuestionIndex = 0;
+        startExamBtn.classList.remove('hidden');
+        endExamBtn.classList.add('hidden');
+        endExamMobileOptimizedBtn.classList.add('hidden');
+        examScoreDisplay.classList.add('hidden');
+        examGrid.innerHTML = '';
+        examSidebarDesktop.classList.add('hidden');
+        mobileExamSidebarOptimized.classList.remove('active');
+        
+        // Sembunyikan elemen mobile
+        mobileProgress.classList.add('hidden');
+        mobileNavButtons.classList.add('hidden');
+        mobileFab.classList.add('hidden');
+        
+        updateProgress();
+      }
+
+      function renderExamSidebarOptimized(){
+        const startNum = currentExamBatch * EXAM_BATCH_SIZE;
+        const endNum = Math.min(startNum + EXAM_BATCH_SIZE, examQuestions.length);
+        const navButtons = [];
+
+        for(let i = startNum; i < endNum; i++) {
+            const isAnswered = userAnswers[i] !== null;
+            const isCurrent = i === currentQuestionIndex;
+            const stateClasses = isAnswered ? 'answered' : '';
+            const currentClass = isCurrent ? 'current' : '';
+            
+            navButtons.push(`
+              <button data-index="${i}" class="nav-btn ${stateClasses} ${currentClass}">
+                ${i + 1}
+              </button>
+            `);
+        }
+
+        // Update batch info
+        batchInfoMobile.textContent = `Batch ${currentExamBatch + 1} dari ${totalBatches}`;
+        
+        // Update batch navigation buttons
+        prevBatchMobileBtn.disabled = currentExamBatch === 0;
+        nextBatchMobileBtn.disabled = currentExamBatch === totalBatches - 1;
+        
+        // Desktop sidebar
+        const desktopGridHtml = `
+          <div class="question-nav">
+            ${navButtons.join('')}
+          </div>
+          <div class="flex justify-between mt-3">
+            <button id="prev-batch-sidebar" class="btn-ghost text-sm px-2 py-1" ${currentExamBatch === 0 ? 'disabled' : ''}>&laquo;</button>
+            <button id="next-batch-sidebar" class="btn-ghost text-sm px-2 py-1" ${endNum >= examQuestions.length ? 'disabled' : ''}>&raquo;</button>
+          </div>
+        `;
+
+        // Mobile sidebar
+        const mobileGridHtml = `
+          <div class="question-nav">
+            ${navButtons.join('')}
+          </div>
+        `;
+        
+        examSidebarDesktop.innerHTML = desktopGridHtml;
+        examSidebarDesktop.classList.remove('hidden');
+        
+        mobileSidebarGridOptimized.innerHTML = mobileGridHtml;
+        
+        // Event listeners untuk navigasi soal
+        document.querySelectorAll('.nav-btn').forEach(b => {
+          b.addEventListener('click', (e) => {
+            const clickedIndex = parseInt(e.target.dataset.index);
+            currentQuestionIndex = clickedIndex;
+            
+            // Scroll ke soal yang dipilih
+            const questionElement = document.querySelector(`[data-index="${clickedIndex}"]`).closest('.question-item, .mobile-question-item');
+            if (questionElement) {
+              questionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            
+            renderExamSidebarOptimized();
+            updateMobileNavigation();
+            
+            // Tutup sidebar mobile setelah memilih soal
+            if (window.innerWidth < 1024) {
+              mobileExamSidebarOptimized.classList.remove('active');
+            }
+          });
+        });
+
+        document.getElementById('prev-batch-sidebar')?.addEventListener('click', () => {
+          if (currentExamBatch > 0) {
+            currentExamBatch--;
+            renderExam();
+            renderExamSidebarOptimized();
+          }
+        });
+
+        document.getElementById('next-batch-sidebar')?.addEventListener('click', () => {
+          if ((currentExamBatch + 1) * EXAM_BATCH_SIZE < examQuestions.length) {
+            currentExamBatch++;
+            renderExam();
+            renderExamSidebarOptimized();
+          }
+        });
+      }
+
+      // Event listeners untuk ujian
+      startExamBtn.addEventListener('click', startExam);
+      endExamBtn.addEventListener('click', endExam);
+      endExamMobileOptimizedBtn.addEventListener('click', endExam);
+
+      // Mobile sidebar handlers - OPTIMIZED
+      openMobileSidebarOptimizedBtn.addEventListener('click', () => {
+        mobileExamSidebarOptimized.classList.add('active');
+      });
+
+      closeMobileSidebarOptimizedBtn.addEventListener('click', () => {
+        mobileExamSidebarOptimized.classList.remove('active');
+      });
       
-      document.getElementById('prev-batch').addEventListener('click', () => {
+      // Mobile navigation handlers
+      mobilePrevBtn.addEventListener('click', () => {
+        if (currentQuestionIndex > 0) {
+          currentQuestionIndex--;
+          renderExam();
+          renderExamSidebarOptimized();
+          updateMobileNavigation();
+        }
+      });
+      
+      mobileNextBtn.addEventListener('click', () => {
+        if (currentQuestionIndex < examQuestions.length - 1) {
+          currentQuestionIndex++;
+          renderExam();
+          renderExamSidebarOptimized();
+          updateMobileNavigation();
+        }
+      });
+      
+      // Batch navigation for mobile
+      prevBatchMobileBtn.addEventListener('click', () => {
         if (currentExamBatch > 0) {
           currentExamBatch--;
+          currentQuestionIndex = currentExamBatch * EXAM_BATCH_SIZE;
           renderExam();
           renderExamSidebarOptimized();
+          updateMobileNavigation();
         }
       });
       
-      document.getElementById('next-batch').addEventListener('click', () => {
-        if ((currentExamBatch + 1) * EXAM_BATCH_SIZE < examQuestions.length) {
+      nextBatchMobileBtn.addEventListener('click', () => {
+        if (currentExamBatch < totalBatches - 1) {
           currentExamBatch++;
+          currentQuestionIndex = currentExamBatch * EXAM_BATCH_SIZE;
           renderExam();
           renderExamSidebarOptimized();
+          updateMobileNavigation();
         }
       });
-    }
-
-    // Event listeners untuk memilih jawaban
-    document.querySelectorAll('.question-option, .mobile-question-option').forEach(opt => {
-      opt.addEventListener('click', (e) => {
-        const index = parseInt(e.target.dataset.index);
-        const option = parseInt(e.target.dataset.option);
-        handleAnswer(index, option);
-      });
-    });
-    
-    updateProgress();
-    updateMobileNavigation();
-  }
-
-  function handleAnswer(index, option){
-    userAnswers[index] = option;
-    
-    // Update tampilan soal yang dijawab
-    const qEl = examGrid.querySelector(`[data-index="${index}"]`).closest('.question-item, .mobile-question-item');
-    if(qEl){
-      qEl.querySelectorAll('.question-option, .mobile-question-option').forEach(o => {
-        o.classList.remove('selected');
-        if (parseInt(o.dataset.option) === option) {
-          o.classList.add('selected');
-        }
-      });
-    }
-    
-    updateProgress();
-    renderExamSidebarOptimized();
-  }
-
-  function updateProgress(){
-    const answeredCount = userAnswers.filter(a => a !== null).length;
-    const totalQuestions = examQuestions.length;
-    const percentage = totalQuestions > 0 ? (answeredCount / totalQuestions) * 100 : 0;
-    progressText.textContent = `${answeredCount} / ${totalQuestions} dijawab`;
-    examProgress.style.width = `${percentage}%`;
-    
-    // Update progress mobile
-    mobileProgressText.textContent = `${answeredCount} / ${totalQuestions}`;
-    mobileProgressFill.style.width = `${percentage}%`;
-  }
-  
-  function updateMobileNavigation() {
-    if (window.innerWidth < 1024) {
-      // Update tombol navigasi mobile
-      mobilePrevBtn.disabled = currentQuestionIndex === 0;
-      mobileNextBtn.disabled = currentQuestionIndex === examQuestions.length - 1;
       
-      // Update nomor soal di floating bar
-      currentQuestionMobile.textContent = currentQuestionIndex + 1;
-      
-      // Tampilkan hanya soal yang aktif
-      document.querySelectorAll('.mobile-question-item').forEach((el, i) => {
-        const questionIndex = currentExamBatch * EXAM_BATCH_SIZE + i;
-        if (questionIndex === currentQuestionIndex) {
-          el.style.display = 'block';
-        } else {
-          el.style.display = 'none';
-        }
-      });
-    }
-  }
-  
-  function endExam(){
-    if(!confirm('Selesaikan ujian?')) return;
-    showResults();
-  }
-
-  function showResults(){
-    let correctCount = 0;
-    let resultsHtml = `
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold">Hasil Ujian</h3>
-        <div class="text-right">
-          <div class="text-3xl font-bold">${Math.round((correctCount / examQuestions.length) * 100)}%</div>
-          <div class="text-sm text-gray-400">Skor Akhir</div>
-        </div>
-      </div>
-      <div class="text-gray-400 mb-4">${correctCount} dari ${examQuestions.length} soal benar.</div>
-      <button id="restart-exam" class="btn w-full mb-4">Mulai Ujian Lagi</button>
-    `;
-    
-    examQuestions.forEach((q, i) => {
-      const userAnswer = userAnswers[i];
-      const isCorrect = userAnswer === q.kunci;
-      if(isCorrect) correctCount++;
-      
-      const statusClass = isCorrect ? 'correct' : 'incorrect';
-      const statusText = isCorrect ? 'Benar' : 'Salah';
-      
-      let optionsHtml = '';
-      q.opsi.forEach((o, j) => {
-        let optionClass = '';
-        let optionStatus = '';
-        
-        if (j === q.kunci) {
-          optionClass = 'correct';
-          optionStatus = ' (Jawaban Benar)';
-        } else if (j === userAnswer && !isCorrect) {
-          optionClass = 'incorrect';
-          optionStatus = ' (Jawaban Anda)';
-        } else if (j === userAnswer) {
-          optionStatus = ' (Jawaban Anda)';
-        }
-        
-        const selectedClass = j === userAnswer ? 'selected' : '';
-        
-        optionsHtml += `
-          <div class="result-option ${optionClass} ${selectedClass}">
-            <div>${String.fromCharCode(65 + j)}. ${escapeHtml(o)}${optionStatus}</div>
-          </div>
-        `;
+      // Floating Action Button handler
+      mobileFab.addEventListener('click', () => {
+        mobileExamSidebarOptimized.classList.add('active');
       });
       
-      resultsHtml += `
-        <div class="result-question-item">
-          <div class="result-question-header">
-            <div class="font-bold">Soal #${i + 1}</div>
-            <div class="result-status ${statusClass}">${statusText}</div>
-          </div>
-          <div class="question-text">${formatText(q.teks)}</div>
-          ${q.gambar ? `<img src="${bucket.getPublicUrl(q.gambar.split('/').pop()).data.publicUrl}" alt="Soal Gambar" class="question-image" />` : ''}
-          <div class="result-options">
-            ${optionsHtml}
-          </div>
-        </div>
-      `;
-    });
-
-    // Update score in the header
-    const score = Math.round((correctCount / examQuestions.length) * 100);
-    resultsHtml = resultsHtml.replace('${Math.round((correctCount / examQuestions.length) * 100)}', score);
-    resultsHtml = resultsHtml.replace('${correctCount}', correctCount);
-    
-    examScoreDisplay.innerHTML = resultsHtml;
-    examScoreDisplay.classList.remove('hidden');
-    examGrid.innerHTML = '';
-    endExamBtn.classList.add('hidden');
-    endExamMobileOptimizedBtn.classList.add('hidden');
-    examSidebarDesktop.classList.add('hidden');
-    mobileExamSidebarOptimized.classList.remove('active');
-    
-    // Sembunyikan elemen mobile
-    mobileProgress.classList.add('hidden');
-    mobileNavButtons.classList.add('hidden');
-    mobileFab.classList.add('hidden');
-    
-    document.getElementById('restart-exam').addEventListener('click', refreshQuestions);
-  }
-
-  function refreshQuestions() {
-    examQuestions = [];
-    userAnswers = [];
-    currentExamBatch = 0;
-    currentQuestionIndex = 0;
-    startExamBtn.classList.remove('hidden');
-    endExamBtn.classList.add('hidden');
-    endExamMobileOptimizedBtn.classList.add('hidden');
-    examScoreDisplay.classList.add('hidden');
-    examGrid.innerHTML = '';
-    examSidebarDesktop.classList.add('hidden');
-    mobileExamSidebarOptimized.classList.remove('active');
-    
-    // Sembunyikan elemen mobile
-    mobileProgress.classList.add('hidden');
-    mobileNavButtons.classList.add('hidden');
-    mobileFab.classList.add('hidden');
-    
-    updateProgress();
-  }
-
-  function renderExamSidebarOptimized(){
-    const startNum = currentExamBatch * EXAM_BATCH_SIZE;
-    const endNum = Math.min(startNum + EXAM_BATCH_SIZE, examQuestions.length);
-    const navButtons = [];
-
-    for(let i = startNum; i < endNum; i++) {
-        const isAnswered = userAnswers[i] !== null;
-        const isCurrent = i === currentQuestionIndex;
-        const stateClasses = isAnswered ? 'answered' : '';
-        const currentClass = isCurrent ? 'current' : '';
-        
-        navButtons.push(`
-          <button data-index="${i}" class="nav-btn ${stateClasses} ${currentClass}">
-            ${i + 1}
-          </button>
-        `);
-    }
-
-    // Update batch info
-    batchInfoMobile.textContent = `Batch ${currentExamBatch + 1} dari ${totalBatches}`;
-    
-    // Update batch navigation buttons
-    prevBatchMobileBtn.disabled = currentExamBatch === 0;
-    nextBatchMobileBtn.disabled = currentExamBatch === totalBatches - 1;
-    
-    // Desktop sidebar
-    const desktopGridHtml = `
-      <div class="question-nav">
-        ${navButtons.join('')}
-      </div>
-      <div class="flex justify-between mt-3">
-        <button id="prev-batch-sidebar" class="btn-ghost text-sm px-2 py-1" ${currentExamBatch === 0 ? 'disabled' : ''}>&laquo;</button>
-        <button id="next-batch-sidebar" class="btn-ghost text-sm px-2 py-1" ${endNum >= examQuestions.length ? 'disabled' : ''}>&raquo;</button>
-      </div>
-    `;
-
-    // Mobile sidebar
-    const mobileGridHtml = `
-      <div class="question-nav">
-        ${navButtons.join('')}
-      </div>
-    `;
-    
-    examSidebarDesktop.innerHTML = desktopGridHtml;
-    examSidebarDesktop.classList.remove('hidden');
-    
-    mobileSidebarGridOptimized.innerHTML = mobileGridHtml;
-    
-    // Event listeners untuk navigasi soal
-    document.querySelectorAll('.nav-btn').forEach(b => {
-      b.addEventListener('click', (e) => {
-        const clickedIndex = parseInt(e.target.dataset.index);
-        currentQuestionIndex = clickedIndex;
-        
-        // Scroll ke soal yang dipilih
-        const questionElement = document.querySelector(`[data-index="${clickedIndex}"]`).closest('.question-item, .mobile-question-item');
-        if (questionElement) {
-          questionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        
-        renderExamSidebarOptimized();
-        updateMobileNavigation();
-        
-        // Tutup sidebar mobile setelah memilih soal
-        if (window.innerWidth < 1024) {
+      // Tutup sidebar mobile saat klik di luar
+      mobileExamSidebarOptimized.addEventListener('click', (e) => {
+        if (e.target === mobileExamSidebarOptimized) {
           mobileExamSidebarOptimized.classList.remove('active');
         }
       });
-    });
 
-    document.getElementById('prev-batch-sidebar')?.addEventListener('click', () => {
-      if (currentExamBatch > 0) {
-        currentExamBatch--;
-        renderExam();
-        renderExamSidebarOptimized();
-      }
-    });
-
-    document.getElementById('next-batch-sidebar')?.addEventListener('click', () => {
-      if ((currentExamBatch + 1) * EXAM_BATCH_SIZE < examQuestions.length) {
-        currentExamBatch++;
-        renderExam();
-        renderExamSidebarOptimized();
-      }
-    });
-  }
-
-  // Event listeners untuk ujian
-  startExamBtn.addEventListener('click', startExam);
-  endExamBtn.addEventListener('click', endExam);
-  endExamMobileOptimizedBtn.addEventListener('click', endExam);
-
-  // Mobile sidebar handlers - OPTIMIZED
-  openMobileSidebarOptimizedBtn.addEventListener('click', () => {
-    mobileExamSidebarOptimized.classList.add('active');
-  });
-
-  closeMobileSidebarOptimizedBtn.addEventListener('click', () => {
-    mobileExamSidebarOptimized.classList.remove('active');
-  });
-  
-  // Mobile navigation handlers
-  mobilePrevBtn.addEventListener('click', () => {
-    if (currentQuestionIndex > 0) {
-      currentQuestionIndex--;
-      renderExam();
-      renderExamSidebarOptimized();
-      updateMobileNavigation();
-    }
-  });
-  
-  mobileNextBtn.addEventListener('click', () => {
-    if (currentQuestionIndex < examQuestions.length - 1) {
-      currentQuestionIndex++;
-      renderExam();
-      renderExamSidebarOptimized();
-      updateMobileNavigation();
-    }
-  });
-  
-  // Batch navigation for mobile
-  prevBatchMobileBtn.addEventListener('click', () => {
-    if (currentExamBatch > 0) {
-      currentExamBatch--;
-      currentQuestionIndex = currentExamBatch * EXAM_BATCH_SIZE;
-      renderExam();
-      renderExamSidebarOptimized();
-      updateMobileNavigation();
-    }
-  });
-  
-  nextBatchMobileBtn.addEventListener('click', () => {
-    if (currentExamBatch < totalBatches - 1) {
-      currentExamBatch++;
-      currentQuestionIndex = currentExamBatch * EXAM_BATCH_SIZE;
-      renderExam();
-      renderExamSidebarOptimized();
-      updateMobileNavigation();
-    }
-  });
-  
-  // Floating Action Button handler
-  mobileFab.addEventListener('click', () => {
-    mobileExamSidebarOptimized.classList.add('active');
-  });
-  
-  // Tutup sidebar mobile saat klik di luar
-  mobileExamSidebarOptimized.addEventListener('click', (e) => {
-    if (e.target === mobileExamSidebarOptimized) {
-      mobileExamSidebarOptimized.classList.remove('active');
-    }
-  });
-
-})();
-</script>
+    })();
+  </script>
 </body>
 </html>
