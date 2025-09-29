@@ -1498,8 +1498,8 @@
 
   <!-- Kode JavaScript dan HTML lainnya -->
   <script>
-    const SUPABASE_URL = 'https://znosqyapmdfujtqwdsdm.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpub3NxeWFwbWRmdWp0cXdkc2RtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2NDE1MTIsImV4cCI6MjA3MzIxNzUxMn0.R-WmeGOY0LX0oJv-UhWloXfAFVyGrbTgBYF3X1cHeUk';
+    const SUPABASE_URL = 'https://wgpkwagmquglfqewgkrh.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndncGt3YWdtcXVnbGZxZXdna3JoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxMTEyMjYsImV4cCI6MjA3NDY4NzIyNn0.UUql_br1pRym2T_DXqHfSg6R6grnoHDwEqf_zMH5CcM';
     const STORAGE_BUCKET = 'question-images';
   </script>
 
@@ -2108,15 +2108,16 @@
       
       // Fungsi untuk memuat mata kuliah
       async function loadCourses(){
-        const { data, error } = await sb.from('courses').select('*').order('created_at', { ascending: false });
-        if(error){
-          console.error(error);
-          alert('Gagal memuat mata kuliah: '+error.message);
-          return;
+        try {
+          const { data, error } = await sb.from('courses').select('*').order('created_at', { ascending: false });
+          if(error) throw error;
+          courses = data || [];
+          renderCourses();
+          populateSelects();
+        } catch (error) {
+          console.error('Failed to load courses:', error);
+          alert('Gagal memuat mata kuliah: ' + error.message);
         }
-        courses = data || [];
-        renderCourses();
-        populateSelects();
       }
       
       // Fungsi untuk merender daftar mata kuliah
@@ -2196,14 +2197,20 @@
       
       // Fungsi untuk mengunggah gambar
       async function uploadImage(file, path){
-        const { data, error } = await bucket.upload(path, file, { upsert: true });
-        if(error){
-          console.error(error);
+        try {
+          const { data, error } = await bucket.upload(path, file, { 
+            upsert: true,
+            cacheControl: '3600'
+          });
+          if(error) throw error;
+          
+          const { data: { publicUrl } } = bucket.getPublicUrl(path);
+          return publicUrl;
+        } catch (error) {
+          console.error('Upload error:', error);
           alert('Gagal mengunggah gambar: ' + error.message);
           return null;
         }
-        const { data: { publicUrl } } = bucket.getPublicUrl(path);
-        return publicUrl;
       }
       
       // Event listeners untuk navigasi
@@ -2274,37 +2281,38 @@
         const name = document.getElementById('course-name').value.trim();
         if (!name) return alert('Nama mata kuliah wajib.');
         
-        const { data: course, error } = await sb.from('courses').insert({ name }).select().single();
-        if (error) {
+        try {
+          const { data: course, error } = await sb.from('courses').insert({ name }).select().single();
+          if (error) throw error;
+          
+          const teks = document.getElementById('initial-question').value.trim();
+          const opts = Array.from(document.querySelectorAll('.opt.init')).map(i => i.value.trim()).filter(Boolean);
+          const key = document.getElementById('initial-key').value;
+          let gambarUrl = null;
+          
+          if (newCourseImage) {
+            gambarUrl = await uploadImage(newCourseImage, `${course.id}/${Date.now()}-${newCourseImage.name}`);
+          }
+          
+          if (teks && opts.length >= 2 && key !== '') {
+            const questionData = { course_id: course.id, teks, opsi: opts, kunci: parseInt(key, 10), gambar: gambarUrl };
+            const { error: qErr } = await sb.from('questions').insert(questionData);
+            if (qErr) console.warn('Initial question error', qErr);
+          }
+          
+          // Reset form
+          document.getElementById('course-name').value = '';
+          document.getElementById('initial-question').value = '';
+          document.querySelectorAll('.opt.init').forEach(i => i.value = '');
+          document.getElementById('initial-key').value = '';
+          clearImageInput('new');
+          
+          await loadCourses();
+          alert('Mata kuliah berhasil dibuat!');
+          showSection('dashboard');
+        } catch (error) {
           alert('Gagal membuat matkul: ' + error.message);
-          return;
         }
-        
-        const teks = document.getElementById('initial-question').value.trim();
-        const opts = Array.from(document.querySelectorAll('.opt.init')).map(i => i.value.trim()).filter(Boolean);
-        const key = document.getElementById('initial-key').value;
-        let gambarUrl = null;
-        
-        if (newCourseImage) {
-          gambarUrl = await uploadImage(newCourseImage, `${course.id}/${Date.now()}-${newCourseImage.name}`);
-        }
-        
-        if (teks && opts.length >= 2 && key !== '') {
-          const questionData = { course_id: course.id, teks, opsi: opts, kunci: parseInt(key, 10), gambar: gambarUrl };
-          const { error: qErr } = await sb.from('questions').insert(questionData);
-          if (qErr) console.warn('Initial question error', qErr);
-        }
-        
-        // Reset form
-        document.getElementById('course-name').value = '';
-        document.getElementById('initial-question').value = '';
-        document.querySelectorAll('.opt.init').forEach(i => i.value = '');
-        document.getElementById('initial-key').value = '';
-        clearImageInput('new');
-        
-        await loadCourses();
-        alert('Mata kuliah berhasil dibuat!');
-        showSection('dashboard');
       });
       
       document.getElementById('cancel-create').addEventListener('click', () => showSection('dashboard'));
@@ -2315,21 +2323,22 @@
         manageSelect.value = course.id;
         btnAddQ.disabled = false;
         
-        const { data, error } = await sb.from('questions').select('*').eq('course_id', course.id).order('created_at', { ascending: false });
-        if (error) {
+        try {
+          const { data, error } = await sb.from('questions').select('*').eq('course_id', course.id).order('created_at', { ascending: false });
+          if (error) throw error;
+          questions = data || [];
+          renderQuestions();
+          
+          // Setup file upload
+          const fileUpload = document.getElementById('file-upload');
+          const uploadStatus = document.getElementById('upload-status');
+          fileUpload.value = '';
+          fileUpload.removeEventListener('change', handleFileUpload);
+          fileUpload.addEventListener('change', handleFileUpload);
+          uploadStatus.textContent = '';
+        } catch (error) {
           alert('Gagal memuat soal: ' + error.message);
-          return;
         }
-        questions = data || [];
-        renderQuestions();
-        
-        // Setup file upload
-        const fileUpload = document.getElementById('file-upload');
-        const uploadStatus = document.getElementById('upload-status');
-        fileUpload.value = '';
-        fileUpload.removeEventListener('change', handleFileUpload);
-        fileUpload.addEventListener('change', handleFileUpload);
-        uploadStatus.textContent = '';
       }
 
       async function handleFileUpload(e) {
@@ -2337,46 +2346,48 @@
         const file = e.target.files[0];
         if (!file) return;
         
-        const fileContent = await file.text();
-        const lines = fileContent.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-        const questionsToInsert = [];
-        let currentQuestion = { course_id: currentCourse.id, opsi: [] };
-        
-        for (const line of lines) {
-          if (line.startsWith('Q:')) {
-            if (currentQuestion.teks) questionsToInsert.push(currentQuestion);
-            currentQuestion = { course_id: currentCourse.id, opsi: [] };
-            currentQuestion.teks = line.substring(2).trim();
-          } else if (line.startsWith('A:')) {
-            currentQuestion.opsi[0] = line.substring(2).trim();
-          } else if (line.startsWith('B:')) {
-            currentQuestion.opsi[1] = line.substring(2).trim();
-          } else if (line.startsWith('C:')) {
-            currentQuestion.opsi[2] = line.substring(2).trim();
-          } else if (line.startsWith('D:')) {
-            currentQuestion.opsi[3] = line.substring(2).trim();
-          } else if (line.startsWith('K:')) {
-            const keyMap = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
-            currentQuestion.kunci = keyMap[line.substring(2).trim().toUpperCase()];
+        try {
+          const fileContent = await file.text();
+          const lines = fileContent.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+          const questionsToInsert = [];
+          let currentQuestion = { course_id: currentCourse.id, opsi: [] };
+          
+          for (const line of lines) {
+            if (line.startsWith('Q:')) {
+              if (currentQuestion.teks) questionsToInsert.push(currentQuestion);
+              currentQuestion = { course_id: currentCourse.id, opsi: [] };
+              currentQuestion.teks = line.substring(2).trim();
+            } else if (line.startsWith('A:')) {
+              currentQuestion.opsi[0] = line.substring(2).trim();
+            } else if (line.startsWith('B:')) {
+              currentQuestion.opsi[1] = line.substring(2).trim();
+            } else if (line.startsWith('C:')) {
+              currentQuestion.opsi[2] = line.substring(2).trim();
+            } else if (line.startsWith('D:')) {
+              currentQuestion.opsi[3] = line.substring(2).trim();
+            } else if (line.startsWith('K:')) {
+              const keyMap = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
+              currentQuestion.kunci = keyMap[line.substring(2).trim().toUpperCase()];
+            }
           }
-        }
-        if (currentQuestion.teks) questionsToInsert.push(currentQuestion);
+          if (currentQuestion.teks) questionsToInsert.push(currentQuestion);
 
-        if (questionsToInsert.length === 0) {
-          uploadStatus.textContent = 'File tidak berisi soal yang valid.';
-          uploadStatus.className = 'text-sm mt-2 font-semibold text-danger-clr';
-          return;
-        }
-        
-        uploadStatus.textContent = `Mengunggah ${questionsToInsert.length} soal...`;
-        const { error } = await sb.from('questions').insert(questionsToInsert);
-        if(error){
-          uploadStatus.textContent = 'Gagal mengunggah soal: ' + error.message;
-          uploadStatus.className = 'text-sm mt-2 font-semibold text-danger-clr';
-        } else {
+          if (questionsToInsert.length === 0) {
+            uploadStatus.textContent = 'File tidak berisi soal yang valid.';
+            uploadStatus.className = 'text-sm mt-2 font-semibold text-danger-clr';
+            return;
+          }
+          
+          uploadStatus.textContent = `Mengunggah ${questionsToInsert.length} soal...`;
+          const { error } = await sb.from('questions').insert(questionsToInsert);
+          if(error) throw error;
+          
           uploadStatus.textContent = `${questionsToInsert.length} soal berhasil diunggah!`;
           uploadStatus.className = 'text-sm mt-2 font-semibold text-success-clr';
           await openManageForCourse(currentCourse);
+        } catch (error) {
+          uploadStatus.textContent = 'Gagal mengunggah soal: ' + error.message;
+          uploadStatus.className = 'text-sm mt-2 font-semibold text-danger-clr';
         }
       }
 
@@ -2433,13 +2444,8 @@
         });
         
         document.querySelectorAll('.delete-q').forEach(b => {
-          b.addEventListener('click', e => deleteQuestion(e.target.dataset.id));
+          b.addEventListener('click', e => showDeleteConfirmPopup('question', e.target.dataset.id));
         });
-      }
-
-      // Modifikasi fungsi deleteQuestion untuk menggunakan popup konfirmasi
-      async function deleteQuestion(id) {
-        showDeleteConfirmPopup('question', id);
       }
 
       // --- Question Editor ---
@@ -2492,28 +2498,30 @@
           return alert('Isi teks soal, minimal 2 opsi, dan pilih kunci jawaban.');
         }
         
-        let gambarUrl = editing.gambar || null;
-        if(editing.imageFile){
-          const filePath = `${currentCourse.id}/${Date.now()}-${editing.imageFile.name}`;
-          const newUrl = await uploadImage(editing.imageFile, filePath);
-          if(!newUrl) return;
-          gambarUrl = newUrl;
-        }
-        
-        const questionData = { teks, opsi, kunci, gambar: gambarUrl };
-        
-        let error;
-        if(editing.id){
-          ({ error } = await sb.from('questions').update(questionData).eq('id', editing.id));
-        } else {
-          ({ error } = await sb.from('questions').insert({ ...questionData, course_id: currentCourse.id }));
-        }
-        
-        if(error){
-          alert('Gagal menyimpan soal: ' + error.message);
-        } else {
+        try {
+          let gambarUrl = editing.gambar || null;
+          if(editing.imageFile){
+            const filePath = `${currentCourse.id}/${Date.now()}-${editing.imageFile.name}`;
+            const newUrl = await uploadImage(editing.imageFile, filePath);
+            if(!newUrl) return;
+            gambarUrl = newUrl;
+          }
+          
+          const questionData = { teks, opsi, kunci, gambar: gambarUrl };
+          
+          let error;
+          if(editing.id){
+            ({ error } = await sb.from('questions').update(questionData).eq('id', editing.id));
+          } else {
+            ({ error } = await sb.from('questions').insert({ ...questionData, course_id: currentCourse.id }));
+          }
+          
+          if(error) throw error;
+          
           editorCancelBtn.click();
           await openManageForCourse(currentCourse);
+        } catch (error) {
+          alert('Gagal menyimpan soal: ' + error.message);
         }
       });
 
@@ -2559,41 +2567,42 @@
         const courseId = selectExam.value;
         if(!courseId) return alert('Pilih mata kuliah terlebih dahulu.');
         
-        const { data, error } = await sb.from('questions').select('*').eq('course_id', courseId).order('created_at');
-        if (error) {
+        try {
+          const { data, error } = await sb.from('questions').select('*').eq('course_id', courseId).order('created_at');
+          if (error) throw error;
+          
+          examQuestions = data || [];
+          if(examQuestions.length === 0){
+            alert('Tidak ada soal untuk mata kuliah ini.');
+            return;
+          }
+          
+          userAnswers = new Array(examQuestions.length).fill(null);
+          currentExamBatch = 0;
+          currentQuestionIndex = 0;
+          totalBatches = Math.ceil(examQuestions.length / EXAM_BATCH_SIZE);
+          markedQuestions.clear();
+          
+          examScoreDisplay.classList.add('hidden');
+          startExamBtn.classList.add('hidden');
+          endExamBtn.classList.remove('hidden');
+          endExamMobileOptimizedBtn.classList.remove('hidden');
+          
+          // Tampilkan elemen mobile khusus
+          mobileProgress.classList.remove('hidden');
+          mobileNavButtons.classList.remove('hidden');
+          mobileFab.classList.remove('hidden');
+          
+          // Update info soal di floating bar
+          currentQuestionMobile.textContent = '1';
+          totalQuestionsMobile.textContent = examQuestions.length;
+          
+          renderExam();
+          renderExamSidebarOptimized();
+          renderAdvancedSidebar();
+        } catch (error) {
           alert('Gagal memuat soal: ' + error.message);
-          return;
         }
-        
-        examQuestions = data || [];
-        if(examQuestions.length === 0){
-          alert('Tidak ada soal untuk mata kuliah ini.');
-          return;
-        }
-        
-        userAnswers = new Array(examQuestions.length).fill(null);
-        currentExamBatch = 0;
-        currentQuestionIndex = 0;
-        totalBatches = Math.ceil(examQuestions.length / EXAM_BATCH_SIZE);
-        markedQuestions.clear();
-        
-        examScoreDisplay.classList.add('hidden');
-        startExamBtn.classList.add('hidden');
-        endExamBtn.classList.remove('hidden');
-        endExamMobileOptimizedBtn.classList.remove('hidden');
-        
-        // Tampilkan elemen mobile khusus
-        mobileProgress.classList.remove('hidden');
-        mobileNavButtons.classList.remove('hidden');
-        mobileFab.classList.remove('hidden');
-        
-        // Update info soal di floating bar
-        currentQuestionMobile.textContent = '1';
-        totalQuestionsMobile.textContent = examQuestions.length;
-        
-        renderExam();
-        renderExamSidebarOptimized();
-        renderAdvancedSidebar();
       }
 
       function renderExam(){
@@ -2751,12 +2760,18 @@
       }
 
       function showResults(){
+        // Hitung jawaban benar terlebih dahulu
         let correctCount = 0;
+        examQuestions.forEach((q, i) => {
+          if(userAnswers[i] === q.kunci) correctCount++;
+        });
+
+        const score = Math.round((correctCount / examQuestions.length) * 100);
         let resultsHtml = `
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-xl font-semibold">Hasil Ujian</h3>
             <div class="text-right">
-              <div class="text-3xl font-bold">${Math.round((correctCount / examQuestions.length) * 100)}%</div>
+              <div class="text-3xl font-bold">${score}%</div>
               <div class="text-sm text-gray-400">Skor Akhir</div>
             </div>
           </div>
@@ -2767,7 +2782,6 @@
         examQuestions.forEach((q, i) => {
           const userAnswer = userAnswers[i];
           const isCorrect = userAnswer === q.kunci;
-          if(isCorrect) correctCount++;
           
           const statusClass = isCorrect ? 'correct' : 'incorrect';
           const statusText = isCorrect ? 'Benar' : 'Salah';
@@ -2811,11 +2825,6 @@
           `;
         });
 
-        // Update score in the header
-        const score = Math.round((correctCount / examQuestions.length) * 100);
-        resultsHtml = resultsHtml.replace('${Math.round((correctCount / examQuestions.length) * 100)}', score);
-        resultsHtml = resultsHtml.replace('${correctCount}', correctCount);
-        
         examScoreDisplay.innerHTML = resultsHtml;
         examScoreDisplay.classList.remove('hidden');
         examGrid.innerHTML = '';
