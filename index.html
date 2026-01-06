@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🐾 Web UAS 🐾</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Tambahkan Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+        :root {
+            --bg-deep: #0f172a;
+            --bg-card: #1e293b;
+            --accent-pink: #fda4af;
+            --accent-yellow: #fef08a;
+            --accent-blue: #7dd3fc;
+        }
+
+        body { 
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg-deep);
+            color: #f1f5f9;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+
+        .page { display: none; height: 100%; overflow-y: auto; }
+        .page.active { display: block; animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+        
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .glass-card {
+            background: var(--bg-card);
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center; gap: 12px;
+            padding: 14px 20px; margin: 8px 16px; border-radius: 20px;
+            color: #94a3b8; font-weight: 700; transition: 0.3s; cursor: pointer;
+        }
+        
+        .nav-item:hover { transform: translateX(5px); color: var(--accent-pink); }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #fda4af, #f0abfc);
+            color: #4c0519;
+            box-shadow: 0 8px 15px rgba(253, 164, 175, 0.3);
+        }
+
+        .q-nav-bubble {
+            width: 42px;
+            height: 42px; display: flex; align-items: center; justify-content: center;
+            border-radius: 15px; font-size: 13px; font-weight: 800; cursor: pointer;
+            transition: 0.3s;
+        }
+        .q-nav-bubble.answered { background: var(--accent-blue); color: #082f49; transform: rotate(5deg); }
+        .q-nav-bubble.current { background: var(--accent-pink); color: #4c0519; transform: scale(1.1) rotate(-5deg); }
+        .q-nav-bubble.empty { background: rgba(255,255,255,0.05); color: #64748b; }
+
+        #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 90; }
+        #overlay.active { display: block; }
+
+        .btn-kawaii {
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .btn-kawaii:active { transform: scale(0.9); }
+        
+        /* Loading spinner */
+        .loader {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            border-top: 3px solid var(--accent-pink);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.9);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            gap: 20px;
+        }
+        
+        .status-message {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            max-width: 300px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .status-success {
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .status-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .status-warning {
+            background: rgba(234, 179, 8, 0.2);
+            color: #fde047;
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="flex">
+    
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loader"></div>
+        <p id="loadingText" class="text-pink-300 font-bold">Menyambungkan ke database...</p>
+    </div>
+
+    <!-- Status Message -->
+    <div id="statusMessage" class="status-message hidden"></div>
+
+    <div id="overlay" onclick="toggleSidebar()"></div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-[#0f172a] border-r border-dashed border-white/10 lg:static lg:translate-x-0 -translate-x-full flex flex-col z-[100]">
+        <div class="p-8 text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-pink-200 rounded-3xl mb-4 shadow-lg shadow-pink-500/20 rotate-3">
+                <i class="fas fa-cat text-3xl text-pink-600"></i>
+            </div>
+            <h1 class="text-2xl font-black text-white tracking-tight">Exam<span class="text-pink-300">Paws</span></h1>
+            <p id="db-status" class="text-xs text-slate-500 mt-2">Memuat...</p>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto custom-scroll">
+            <div onclick="showPage('dashboard')" id="nav-dashboard" class="nav-item active">
+                <i class="fas fa-cookie-bite"></i> <span>Beranda</span>
+            </div>
+            <div onclick="showPage('tambah-soal')" id="nav-tambah-soal" class="nav-item">
+                <i class="fas fa-magic"></i> <span>Bikin Soal</span>
+            </div>
+            <div onclick="showPage('kelola-soal')" id="nav-kelola-soal" class="nav-item">
+                <i class="fas fa-box-open"></i> <span>Gudang Ilmu</span>
+            </div>
+            <div onclick="syncData()" class="nav-item">
+                <i class="fas fa-sync-alt"></i> <span>Sync Data</span>
+                <span id="syncStatus" class="ml-auto text-xs"></span>
+            </div>
+            <div onclick="showPage('debug')" class="nav-item">
+                <i class="fas fa-bug"></i> <span>Debug Info</span>
+            </div>
+        </nav>
+
+        <div class="p-6">
+            <div class="bg-pink-500/10 p-4 rounded-3xl border border-dashed border-pink-500/30 text-center">
+                <i class="fas fa-star text-yellow-300 mb-2"></i>
+                <p id="total-stat" class="text-sm font-bold text-pink-200">0 Koleksi</p>
+                <p id="last-sync" class="text-xs text-slate-500 mt-1">Belum sync</p>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0 h-screen bg-[#0f172a]">
+        <header class="h-16 flex items-center justify-between px-6 border-b border-white/5 bg-[#0f172a]/80 backdrop-blur-xl">
+            <button onclick="toggleSidebar()" class="lg:hidden text-pink-300 text-2xl"><i class="fas fa-bars-staggered"></i></button>
+            <div class="ml-auto flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-yellow-200 flex items-center justify-center text-yellow-700 shadow-inner">
+                    <i class="fas fa-ghost"></i>
+                </div>
+                <button onclick="testConnection()" class="text-xs bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full">
+                    <i class="fas fa-bolt"></i> Test DB
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-hidden relative">
+            <section id="dashboard" class="page active p-6 lg:p-10 custom-scroll">
+                <div class="max-w-6xl mx-auto">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
+                        <div>
+                            <h2 class="text-3xl font-black text-white">Haloo! 👋</h2>
+                            <p class="text-slate-400">Selamat datang di ExamPaws</p>
+                        </div>
+                        <button onclick="addSubject()" class="btn-kawaii bg-pink-400 text-white px-8 py-4 rounded-2xl font-black shadow-lg shadow-pink-500/30 hover:bg-pink-300 transition-all flex items-center gap-2">
+                            <i class="fas fa-folder-plus"></i> Tambah MK
+                        </button>
+                    </div>
+                    <div id="subject-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="glass-card p-8 animate-pulse">
+                            <div class="h-4 bg-slate-700 rounded mb-4"></div>
+                            <div class="h-6 bg-slate-700 rounded mb-6"></div>
+                            <div class="h-10 bg-slate-700 rounded"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tambah-soal" class="page p-6 lg:p-10 custom-scroll">
+                <div class="max-w-4xl mx-auto glass-card p-8 bg-slate-800/50">
+                    <h2 class="text-2xl font-black mb-6 text-white flex items-center gap-3">
+                        <i class="fas fa-pencil-alt text-yellow-300"></i> Racik Pertanyaan
+                    </h2>
+                    <div id="mk-select-area" class="flex flex-wrap gap-2 mb-8">
+                        <p class="text-slate-400">Memuat mata kuliah...</p>
+                    </div>
+                    <textarea id="q-text" class="w-full bg-slate-900/80 border-2 border-dashed border-white/10 rounded-3xl p-6 mb-6 h-40 outline-none focus:border-pink-400 text-white transition-all" placeholder="Tuliskan teka-teki ujianmu di sini..."></textarea>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                        <input type="text" id="opt-a" placeholder="🍭 Opsi A" class="bg-slate-900 border-2 border-white/5 p-4 rounded-2xl outline-none focus:border-blue-400">
+                        <input type="text" id="opt-b" placeholder="🍬 Opsi B" class="bg-slate-900 border-2 border-white/5 p-4 rounded-2xl outline-none focus:border-blue-400">
+                        <input type="text" id="opt-c" placeholder="🍩 Opsi C" class="bg-slate-900 border-2 border-white/5 p-4 rounded-2xl outline-none focus:border-blue-400">
+                        <input type="text" id="opt-d" placeholder="🧁 Opsi D" class="bg-slate-900 border-2 border-white/5 p-4 rounded-2xl outline-none focus:border-blue-400">
+                    </div>
+                    <div class="flex flex-wrap gap-4 items-center justify-between border-t border-dashed border-white/10 pt-8">
+                        <div class="flex gap-3">
+                            <select id="correct-ans" class="bg-slate-800 text-pink-300 font-black px-6 py-3 rounded-2xl outline-none border-2 border-pink-500/20">
+                                <option value="">KUNCI</option>
+                                <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                            </select>
+                            <button onclick="document.getElementById('img-upload').click()" class="bg-blue-500/20 text-blue-300 px-6 py-3 rounded-2xl text-xs font-black hover:bg-blue-500/30">
+                                <i class="fas fa-cloud-upload-alt mr-2"></i> GAMBAR
+                            </button>
+                            <input type="file" id="img-upload" accept="image/*" class="hidden">
+                        </div>
+                        <div class="flex gap-3 w-full sm:w-auto">
+                            <label class="cursor-pointer bg-slate-800 px-8 py-4 rounded-2xl text-xs font-black text-center flex-1 sm:flex-none border border-white/5 hover:bg-slate-700">
+                                <i class="fas fa-file-import mr-2 text-yellow-300"></i> IMPORT TXT
+                                <input type="file" id="txt-input" class="hidden" onchange="handleTxtImport(this)">
+                            </label>
+                            <button onclick="saveQuestion()" class="btn-kawaii bg-gradient-to-r from-pink-400 to-purple-500 text-white px-10 py-4 rounded-2xl font-black shadow-lg flex-1 sm:flex-none">SIMPAN ✨</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="kelola-soal" class="page p-6 lg:p-10 custom-scroll">
+                <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 h-full">
+                    <div class="w-full lg:w-72 glass-card p-6 overflow-y-auto custom-scroll shrink-0 border-pink-500/10">
+                        <p class="text-[10px] font-black text-pink-400 uppercase tracking-widest mb-6 px-2"><i class="fas fa-tags mr-2"></i> Kategori</p>
+                        <div id="mk-kelola-list" class="space-y-3">
+                            <p class="text-slate-400 text-center py-4">Memuat kategori...</p>
+                        </div>
+                    </div>
+                    <div id="soal-list-container" class="flex-1 glass-card p-6 lg:p-10 overflow-y-auto custom-scroll bg-slate-900/30 border-none">
+                        <div class="h-full flex flex-col items-center justify-center text-slate-500">
+                            <i class="fas fa-paw text-6xl mb-4 opacity-10"></i>
+                            <p class="font-bold italic">Belum ada petualangan yang dipilih...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ujian" class="page p-4 lg:p-10 custom-scroll">
+                <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8">
+                    <div class="flex-1 glass-card p-8 lg:p-12 relative overflow-hidden">
+                        <div class="absolute -top-10 -right-10 w-40 h-40 bg-pink-500/5 rounded-full blur-3xl"></div>
+                        <span id="q-idx-label" class="bg-pink-500/20 text-pink-300 text-[11px] font-black px-5 py-2 rounded-full tracking-widest uppercase mb-10 inline-block">Misi #1</span>
+                        <div id="exam-q-text" class="text-2xl lg:text-3xl font-black mb-10 text-white leading-relaxed"></div>
+                        <div id="exam-q-img" class="mb-10 hidden"><img class="max-h-80 rounded-[40px] mx-auto border-8 border-white/5 shadow-2xl"></div>
+                        <div id="exam-options-area" class="grid grid-cols-1 gap-4 mb-12"></div>
+                        <div class="flex gap-4">
+                            <button onclick="prevQ()" class="flex-1 bg-slate-800 py-5 rounded-3xl font-black text-slate-400 hover:bg-slate-700 transition-all">KEMBALI</button>
+                            <button onclick="nextQ()" class="flex-1 bg-gradient-to-r from-pink-400 to-pink-500 py-5 rounded-3xl font-black text-white shadow-xl shadow-pink-500/20">LANJUTKAN 🐾</button>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-80 shrink-0">
+                        <div class="glass-card p-8 mb-6 border-dashed">
+                            <p class="text-center text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6">Peta Soal</p>
+                            <div id="q-nav-grid" class="flex flex-wrap justify-center gap-3"></div>
+                        </div>
+                        <button onclick="finishExam()" class="btn-kawaii w-full bg-yellow-400 py-5 rounded-3xl font-black text-yellow-950 shadow-lg shadow-yellow-500/20 uppercase tracking-widest">
+                            Selesai & Review ✨
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Debug Page -->
+            <section id="debug" class="page p-6 lg:p-10 custom-scroll">
+                <div class="max-w-4xl mx-auto glass-card p-8">
+                    <h2 class="text-2xl font-black mb-6 text-white flex items-center gap-3">
+                        <i class="fas fa-bug text-red-300"></i> Debug Information
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-slate-900/50 p-6 rounded-2xl">
+                            <h3 class="text-lg font-bold text-pink-300 mb-3">Database Status</h3>
+                            <div class="space-y-2">
+                                <p><span class="text-slate-400">Supabase URL:</span> <span id="debug-url" class="text-blue-300"></span></p>
+                                <p><span class="text-slate-400">Status:</span> <span id="debug-status" class="font-bold">Checking...</span></p>
+                                <p><span class="text-slate-400">Tables:</span> <span id="debug-tables" class="text-yellow-300">Checking...</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-900/50 p-6 rounded-2xl">
+                            <h3 class="text-lg font-bold text-pink-300 mb-3">Data Count</h3>
+                            <div class="space-y-2">
+                                <p><span class="text-slate-400">Local Subjects:</span> <span id="debug-local-subjects" class="text-emerald-300">0</span></p>
+                                <p><span class="text-slate-400">Local Questions:</span> <span id="debug-local-questions" class="text-emerald-300">0</span></p>
+                                <p><span class="text-slate-400">Cloud Subjects:</span> <span id="debug-cloud-subjects" class="text-blue-300">0</span></p>
+                                <p><span class="text-slate-400">Cloud Questions:</span> <span id="debug-cloud-questions" class="text-blue-300">0</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-900/50 p-6 rounded-2xl mb-6">
+                        <h3 class="text-lg font-bold text-pink-300 mb-3">Actions</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="testConnection(true)" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-xl text-sm font-bold">
+                                <i class="fas fa-bolt mr-2"></i> Test Connection
+                            </button>
+                            <button onclick="checkTables()" class="bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded-xl text-sm font-bold">
+                                <i class="fas fa-table mr-2"></i> Check Tables
+                            </button>
+                            <button onclick="clearLocalStorage()" class="bg-rose-500 hover:bg-rose-600 px-4 py-2 rounded-xl text-sm font-bold">
+                                <i class="fas fa-trash mr-2"></i> Clear Local Data
+                            </button>
+                            <button onclick="forceSync()" class="bg-emerald-500 hover:bg-emerald-600 px-4 py-2 rounded-xl text-sm font-bold">
+                                <i class="fas fa-sync mr-2"></i> Force Sync
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-900/50 p-6 rounded-2xl">
+                        <h3 class="text-lg font-bold text-pink-300 mb-3">Console Log</h3>
+                        <div id="debug-console" class="bg-black/50 p-4 rounded-xl h-40 overflow-y-auto font-mono text-xs">
+                            <p>> Ready for debug messages...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Inisialisasi Supabase dengan cara yang lebih sederhana
+        const SUPABASE_URL = 'https://gujqxdnlceuqavtbllcp.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1anF4ZG5sY2V1cWF2dGJsbGNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2NjY1NTUsImV4cCI6MjA4MzI0MjU1NX0.JkxQHbJrOeLl-NWdrwrKn6A7WvcixvSLYw8Poi3vq9g';
+        
+        let supabase;
+        let subjects = [];
+        let questions = [];
+        let examMKId = null; 
+        let currentPool = [];
+        let currentIndex = 0;
+        let userAnswers = {};
+        let qImageBase64 = null;
+        let activeMKId = null;
+        let selectedMKForNew = null;
+        let isOnline = false;
+        let lastSyncTime = null;
+
+        // Fungsi untuk menampilkan pesan status
+        function showStatus(message, type = 'success') {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message ${type === 'success' ? 'status-success' : type === 'warning' ? 'status-warning' : 'status-error'}`;
+            statusEl.classList.remove('hidden');
+            
+            setTimeout(() => {
+                statusEl.classList.add('hidden');
+            }, 4000);
+            
+            // Log ke debug console
+            debugLog(`${type.toUpperCase()}: ${message}`);
+        }
+
+        // Fungsi untuk debug logging
+        function debugLog(message) {
+            const consoleEl = document.getElementById('debug-console');
+            const timestamp = new Date().toLocaleTimeString();
+            consoleEl.innerHTML += `<p class="text-slate-400"><span class="text-emerald-400">[${timestamp}]</span> ${message}</p>`;
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+            
+            // Juga log ke browser console
+            console.log(`[Debug] ${message}`);
+        }
+
+        // Fungsi untuk menampilkan/menyembunyikan loading
+        function toggleLoading(show, text = 'Memproses...') {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const loadingText = document.getElementById('loadingText');
+            
+            if (show) {
+                loadingText.textContent = text;
+                loadingOverlay.style.display = 'flex';
+            } else {
+                loadingOverlay.style.display = 'none';
+            }
+        }
+
+        // Inisialisasi Supabase
+        function initSupabase() {
+            try {
+                debugLog('Initializing Supabase client...');
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                debugLog('Supabase client initialized');
+                return true;
+            } catch (error) {
+                debugLog(`Error initializing Supabase: ${error.message}`);
+                showStatus('❌ Gagal menginisialisasi Supabase', 'error');
+                return false;
+            }
+        }
+
+        // Test koneksi Supabase
+        async function testConnection(showResult = false) {
+            if (!supabase) {
+                if (!initSupabase()) return false;
+            }
+            
+            try {
+                toggleLoading(true, 'Menguji koneksi ke Supabase...');
+                debugLog('Testing Supabase connection...');
+                
+                // Coba akses database dengan query sederhana
+                const { data, error } = await supabase
+                    .from('subjects')
+                    .select('count')
+                    .limit(1);
+                
+                if (error) {
+                    debugLog(`Connection test failed: ${error.message}`);
+                    
+                    // Coba cara alternatif
+                    const { data: data2, error: error2 } = await supabase.rpc('get_version');
+                    
+                    if (error2) {
+                        debugLog(`Alternative test also failed: ${error2.message}`);
+                        throw error2;
+                    }
+                    
+                    debugLog('Connection test passed via RPC');
+                } else {
+                    debugLog('Connection test passed via subjects table');
+                }
+                
+                isOnline = true;
+                document.getElementById('db-status').textContent = 'Online ✓';
+                document.getElementById('db-status').className = 'text-xs text-emerald-400 mt-2';
+                
+                if (showResult) {
+                    showStatus('✅ Terhubung ke Supabase!', 'success');
+                }
+                
+                return true;
+            } catch (error) {
+                debugLog(`Connection error: ${error.message}`);
+                isOnline = false;
+                document.getElementById('db-status').textContent = 'Offline ✗';
+                document.getElementById('db-status').className = 'text-xs text-rose-400 mt-2';
+                
+                if (showResult) {
+                    showStatus(`❌ Gagal terhubung: ${error.message}`, 'error');
+                }
+                
+                return false;
+            } finally {
+                toggleLoading(false);
+            }
+        }
+
+        // Periksa apakah tabel ada
+        async function checkTables() {
+            debugLog('Checking for required tables...');
+            
+            try {
+                const tables = ['subjects', 'questions'];
+                const results = {};
+                
+                for (const table of tables) {
+                    const { data, error } = await supabase
+                        .from(table)
+                        .select('count')
+                        .limit(1);
+                    
+                    if (error) {
+                        results[table] = { exists: false, error: error.message };
+                        debugLog(`Table ${table}: MISSING - ${error.message}`);
+                    } else {
+                        results[table] = { exists: true };
+                        debugLog(`Table ${table}: OK`);
+                    }
+                }
+                
+                document.getElementById('debug-tables').innerHTML = 
+                    `subjects: ${results.subjects.exists ? '✓' : '✗'}, questions: ${results.questions.exists ? '✓' : '✗'}`;
+                
+                return results;
+            } catch (error) {
+                debugLog(`Table check error: ${error.message}`);
+                return null;
+            }
+        }
+
+        // Load data dari Supabase atau localStorage
+        async function loadData() {
+            debugLog('Loading data...');
+            
+            // Coba load dari localStorage dulu untuk UI cepat
+            const localSubjects = localStorage.getItem('examPaws_subjects');
+            const localQuestions = localStorage.getItem('examPaws_questions');
+            
+            if (localSubjects && localQuestions) {
+                try {
+                    subjects = JSON.parse(localSubjects);
+                    questions = JSON.parse(localQuestions);
+                    debugLog(`Loaded ${subjects.length} subjects and ${questions.length} questions from localStorage`);
+                    
+                    // Update UI cepat
+                    updateUI();
+                } catch (e) {
+                    debugLog(`Error parsing localStorage data: ${e.message}`);
+                }
+            }
+            
+            // Sekarang coba sync dari Supabase
+            try {
+                const connected = await testConnection();
+                if (!connected) {
+                    debugLog('Cannot connect to Supabase, using local data only');
+                    showStatus('⚠️ Mode offline - menggunakan data lokal', 'warning');
+                    return;
+                }
+                
+                toggleLoading(true, 'Memuat data dari cloud...');
+                
+                // Load subjects dari Supabase
+                const { data: subjectsData, error: subjectsError } = await supabase
+                    .from('subjects')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (subjectsError) {
+                    debugLog(`Error loading subjects: ${subjectsError.message}`);
+                    throw subjectsError;
+                }
+                
+                // Load questions dari Supabase
+                const { data: questionsData, error: questionsError } = await supabase
+                    .from('questions')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (questionsError) {
+                    debugLog(`Error loading questions: ${questionsError.message}`);
+                    throw questionsError;
+                }
+                
+                // Update data lokal
+                subjects = subjectsData || [];
+                questions = questionsData || [];
+                
+                // Simpan ke localStorage sebagai backup
+                localStorage.setItem('examPaws_subjects', JSON.stringify(subjects));
+                localStorage.setItem('examPaws_questions', JSON.stringify(questions));
+                
+                lastSyncTime = new Date();
+                document.getElementById('last-sync').textContent = `Sync: ${lastSyncTime.toLocaleTimeString()}`;
+                
+                debugLog(`Loaded ${subjects.length} subjects and ${questions.length} questions from Supabase`);
+                showStatus(`✅ Data dimuat: ${subjects.length} MK, ${questions.length} soal`, 'success');
+                
+                // Update debug info
+                updateDebugInfo();
+                
+            } catch (error) {
+                debugLog(`Error loading from Supabase: ${error.message}`);
+                
+                // Jika tidak ada data di localStorage, buat data contoh
+                if (subjects.length === 0 && questions.length === 0) {
+                    debugLog('Creating sample data...');
+                    createSampleData();
+                }
+                
+                showStatus('⚠️ Menggunakan data lokal', 'warning');
+            } finally {
+                toggleLoading(false);
+                updateUI();
+            }
+        }
+
+        // Buat data contoh jika kosong
+        function createSampleData() {
+            const sampleSubject = {
+                id: Date.now(),
+                name: 'Pemrograman Web',
+                created_at: new Date().toISOString()
+            };
+            
+            const sampleQuestions = [
+                {
+                    id: Date.now() + 1,
+                    mkId: sampleSubject.id,
+                    text: 'Apa kepanjangan dari HTML?',
+                    a: 'Hyper Text Markup Language',
+                    b: 'High Tech Modern Language',
+                    c: 'Hyper Transfer Markup Language',
+                    d: 'High Text Machine Language',
+                    correct: 'A',
+                    created_at: new Date().toISOString()
+                },
+                {
+                    id: Date.now() + 2,
+                    mkId: sampleSubject.id,
+                    text: 'Warna pink di CSS bisa ditulis sebagai?',
+                    a: '#FFC0CB',
+                    b: '#FF0000',
+                    c: '#00FF00',
+                    d: '#0000FF',
+                    correct: 'A',
+                    created_at: new Date().toISOString()
+                }
+            ];
+            
+            subjects = [sampleSubject];
+            questions = sampleQuestions;
+            
+            localStorage.setItem('examPaws_subjects', JSON.stringify(subjects));
+            localStorage.setItem('examPaws_questions', JSON.stringify(questions));
+            
+            debugLog('Created sample data');
+        }
+
+        // Update UI setelah load data
+        function updateUI() {
+            document.getElementById('total-stat').innerText = `${questions.length} Koleksi Soal`;
+            renderDashboard();
+            renderMKSelection();
+            renderMKSelectionKelola();
+            
+            // Update debug info
+            updateDebugInfo();
+        }
+
+        // Update informasi debug
+        function updateDebugInfo() {
+            document.getElementById('debug-local-subjects').textContent = subjects.length;
+            document.getElementById('debug-local-questions').textContent = questions.length;
+            document.getElementById('debug-url').textContent = SUPABASE_URL.substring(0, 30) + '...';
+            
+            if (isOnline) {
+                document.getElementById('debug-status').innerHTML = '<span class="text-emerald-400">Online ✓</span>';
+            } else {
+                document.getElementById('debug-status').innerHTML = '<span class="text-rose-400">Offline ✗</span>';
+            }
+        }
+
+        // Simpan data ke Supabase
+        async function saveToSupabase() {
+            if (!isOnline || !supabase) {
+                debugLog('Cannot save to Supabase: offline or not initialized');
+                return false;
+            }
+            
+            try {
+                // Note: Di aplikasi nyata, kita akan melakukan upsert yang lebih efisien
+                // Untuk kesederhanaan, kita sync semua data
+                debugLog('Starting sync to Supabase...');
+                
+                // Sync subjects
+                for (const subject of subjects) {
+                    const { error } = await supabase
+                        .from('subjects')
+                        .upsert({
+                            id: subject.id,
+                            name: subject.name,
+                            created_at: subject.created_at
+                        }, { onConflict: 'id' });
+                    
+                    if (error) {
+                        debugLog(`Error syncing subject ${subject.id}: ${error.message}`);
+                    }
+                }
+                
+                // Sync questions
+                for (const question of questions) {
+                    const { error } = await supabase
+                        .from('questions')
+                        .upsert({
+                            id: question.id,
+                            mkId: question.mkId,
+                            text: question.text,
+                            a: question.a,
+                            b: question.b,
+                            c: question.c,
+                            d: question.d,
+                            correct: question.correct,
+                            img: question.img,
+                            created_at: question.created_at
+                        }, { onConflict: 'id' });
+                    
+                    if (error) {
+                        debugLog(`Error syncing question ${question.id}: ${error.message}`);
+                    }
+                }
+                
+                lastSyncTime = new Date();
+                document.getElementById('last-sync').textContent = `Sync: ${lastSyncTime.toLocaleTimeString()}`;
+                
+                debugLog('Sync completed');
+                return true;
+            } catch (error) {
+                debugLog(`Sync error: ${error.message}`);
+                return false;
+            }
+        }
+
+        // Backup data ke localStorage
+        function backupToLocal() {
+            localStorage.setItem('examPaws_subjects', JSON.stringify(subjects));
+            localStorage.setItem('examPaws_questions', JSON.stringify(questions));
+            debugLog('Data backed up to localStorage');
+        }
+
+        // Fungsi sync data
+        async function syncData() {
+            try {
+                toggleLoading(true, 'Menyinkronkan data...');
+                
+                // Backup ke local dulu
+                backupToLocal();
+                
+                // Coba koneksi
+                const connected = await testConnection();
+                
+                if (!connected) {
+                    showStatus('❌ Tidak bisa sync, Supabase offline', 'error');
+                    return;
+                }
+                
+                // Sync ke Supabase
+                const success = await saveToSupabase();
+                
+                if (success) {
+                    showStatus('✅ Data berhasil disinkronkan!', 'success');
+                    document.getElementById('syncStatus').innerHTML = '<i class="fas fa-check text-emerald-400"></i>';
+                } else {
+                    showStatus('⚠️ Sync sebagian data gagal', 'warning');
+                    document.getElementById('syncStatus').innerHTML = '<i class="fas fa-exclamation-triangle text-yellow-400"></i>';
+                }
+                
+                setTimeout(() => {
+                    document.getElementById('syncStatus').innerHTML = '';
+                }, 3000);
+                
+            } catch (error) {
+                debugLog(`Sync error: ${error.message}`);
+                showStatus('❌ Error saat sync', 'error');
+                document.getElementById('syncStatus').innerHTML = '<i class="fas fa-times text-rose-400"></i>';
+            } finally {
+                toggleLoading(false);
+            }
+        }
+
+        // Fungsi force sync
+        async function forceSync() {
+            debugLog('Force sync requested');
+            await syncData();
+        }
+
+        // Fungsi clear localStorage
+        function clearLocalStorage() {
+            if (confirm('Hapus semua data lokal? Data di cloud tidak akan terpengaruh.')) {
+                localStorage.removeItem('examPaws_subjects');
+                localStorage.removeItem('examPaws_questions');
+                subjects = [];
+                questions = [];
+                updateUI();
+                showStatus('Data lokal dihapus', 'warning');
+                debugLog('Local storage cleared');
+            }
+        }
+
+        // =============== FUNGSI UTAMA APLIKASI ===============
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if(document.getElementById('nav-'+pageId)) document.getElementById('nav-'+pageId).classList.add('active');
+            if(pageId === 'dashboard') renderDashboard();
+            if(pageId === 'tambah-soal') renderMKSelection();
+            if(pageId === 'kelola-soal') renderMKSelectionKelola();
+            if(pageId === 'debug') updateDebugInfo();
+            if(window.innerWidth < 1024) { 
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+                document.getElementById('overlay').classList.remove('active');
+            }
+        }
+
+        function renderDashboard() {
+            const list = document.getElementById('subject-list');
+            list.innerHTML = subjects.map(s => `
+                <div class="glass-card p-8 group hover:scale-[1.03] hover:border-pink-500/30">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 bg-pink-100 rounded-[22px] flex items-center justify-center text-pink-500 group-hover:rotate-12 transition-all">
+                            <i class="fas fa-paw text-2xl"></i>
+                        </div>
+                        <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                            <button onclick="editSubject(${s.id})" class="w-8 h-8 rounded-full bg-slate-800 text-yellow-300 hover:bg-yellow-300 hover:text-yellow-900 transition-all"><i class="fas fa-edit text-[10px]"></i></button>
+                            <button onclick="deleteSubject(${s.id})" class="w-8 h-8 rounded-full bg-slate-800 text-rose-300 hover:bg-rose-500 hover:text-white transition-all"><i class="fas fa-trash text-[10px]"></i></button>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-2 leading-tight">${s.name}</h3>
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-8">${questions.filter(q => q.mkId == s.id).length} Pertanyaan</p>
+                    <button onclick="startExam(${s.id})" class="btn-kawaii w-full py-4 rounded-2xl bg-slate-800 text-pink-300 font-black border-2 border-pink-500/20 hover:bg-pink-500 hover:text-white transition-all">MULAI MAIN</button>
+                </div>
+            `).join('');
+        }
+
+        async function addSubject() {
+            const n = prompt("Tuliskan nama Mata Kuliah baru yang seru:");
+            if(!n) return;
+            
+            const newSubject = {
+                id: Date.now(),
+                name: n,
+                created_at: new Date().toISOString()
+            };
+            
+            subjects.push(newSubject);
+            backupToLocal();
+            
+            if (isOnline && supabase) {
+                try {
+                    const { error } = await supabase
+                        .from('subjects')
+                        .insert([newSubject]);
+                    
+                    if (error) throw error;
+                    showStatus('✅ Mata kuliah berhasil ditambahkan!', 'success');
+                } catch (error) {
+                    debugLog(`Error adding subject to Supabase: ${error.message}`);
+                    showStatus('⚠️ Disimpan lokal (akan sync nanti)', 'warning');
+                }
+            } else {
+                showStatus('⚠️ Disimpan lokal (offline)', 'warning');
+            }
+            
+            updateUI();
+        }
+
+        async function deleteSubject(id) {
+            if(!confirm("Hapus Mata Kuliah ini beserta semua isinya? 🥺")) return;
+            
+            // Delete dari arrays lokal
+            subjects = subjects.filter(x => x.id != id);
+            questions = questions.filter(x => x.mkId != id);
+            
+            backupToLocal();
+            
+            if (isOnline && supabase) {
+                try {
+                    // Delete subject dari Supabase
+                    const { error: subjectError } = await supabase
+                        .from('subjects')
+                        .delete()
+                        .eq('id', id);
+                    
+                    if (subjectError) throw subjectError;
+                    
+                    // Delete related questions
+                    const { error: questionsError } = await supabase
+                        .from('questions')
+                        .delete()
+                        .eq('mkId', id);
+                    
+                    if (questionsError) throw questionsError;
+                    
+                    showStatus('✅ Mata kuliah berhasil dihapus!', 'success');
+                } catch (error) {
+                    debugLog(`Error deleting from Supabase: ${error.message}`);
+                    showStatus('⚠️ Dihapus lokal (akan sync nanti)', 'warning');
+                }
+            } else {
+                showStatus('⚠️ Dihapus lokal (offline)', 'warning');
+            }
+            
+            updateUI();
+        }
+
+        async function editSubject(id) {
+            const s = subjects.find(x => x.id == id);
+            const n = prompt("Ubah namanya jadi apa?", s.name);
+            if(!n) return;
+            
+            s.name = n;
+            backupToLocal();
+            
+            if (isOnline && supabase) {
+                try {
+                    const { error } = await supabase
+                        .from('subjects')
+                        .update({ name: n })
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                    showStatus('✅ Mata kuliah berhasil diubah!', 'success');
+                } catch (error) {
+                    debugLog(`Error updating subject in Supabase: ${error.message}`);
+                    showStatus('⚠️ Diubah lokal (akan sync nanti)', 'warning');
+                }
+            } else {
+                showStatus('⚠️ Diubah lokal (offline)', 'warning');
+            }
+            
+            updateUI();
+        }
+
+        function renderMKSelection() {
+            const container = document.getElementById('mk-select-area');
+            container.innerHTML = subjects.map(s => `
+                <button onclick="selectedMKForNew=${s.id}; renderMKSelection()" class="px-6 py-3 rounded-2xl text-[10px] font-black border-2 transition-all ${selectedMKForNew == s.id ? 'bg-yellow-300 border-yellow-300 text-yellow-900 shadow-lg shadow-yellow-500/20' : 'border-white/5 text-slate-500 hover:border-white/20'}">
+                    ${s.name.toUpperCase()}
+                </button>
+            `).join('');
+        }
+
+        document.getElementById('img-upload').onchange = (e) => {
+            const reader = new FileReader();
+            reader.onload = () => { 
+                qImageBase64 = reader.result; 
+                showStatus('📸 Gambar berhasil dipasang!', 'success'); 
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        };
+
+        async function saveQuestion() {
+            if(!selectedMKForNew) {
+                showStatus('❌ Pilih mata kuliahnya dulu yaa! ✨', 'error');
+                return;
+            }
+            
+            const q = {
+                id: Date.now(),
+                mkId: selectedMKForNew,
+                text: document.getElementById('q-text').value,
+                a: document.getElementById('opt-a').value,
+                b: document.getElementById('opt-b').value,
+                c: document.getElementById('opt-c').value,
+                d: document.getElementById('opt-d').value,
+                correct: document.getElementById('correct-ans').value,
+                img: qImageBase64,
+                created_at: new Date().toISOString()
+            };
+            
+            if(!q.text || !q.correct) {
+                showStatus('❌ Soal dan Kunci jangan dikosongin yaa!', 'error');
+                return;
+            }
+            
+            questions.push(q);
+            backupToLocal();
+            
+            if (isOnline && supabase) {
+                try {
+                    const { error } = await supabase
+                        .from('questions')
+                        .insert([q]);
+                    
+                    if (error) throw error;
+                    showStatus('💖 Soal berhasil disimpan!', 'success');
+                } catch (error) {
+                    debugLog(`Error saving question to Supabase: ${error.message}`);
+                    showStatus('⚠️ Disimpan lokal (akan sync nanti)', 'warning');
+                }
+            } else {
+                showStatus('⚠️ Disimpan lokal (offline)', 'warning');
+            }
+            
+            updateUI();
+            
+            // Reset form
+            document.getElementById('q-text').value = "";
+            ['a','b','c','d'].forEach(i => document.getElementById('opt-'+i).value = "");
+            document.getElementById('correct-ans').value = "";
+            qImageBase64 = null;
+        }
+
+        function handleTxtImport(input) {
+            if(!selectedMKForNew) {
+                showStatus('❌ Pilih tujuannya dulu kak!', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const text = e.target.result;
+                const blocks = text.split(/Q:/).filter(b => b.trim());
+                const newQuestions = [];
+                
+                blocks.forEach(block => {
+                    const lines = block.split('\n').map(l => l.trim()).filter(l => l);
+                    const q = { 
+                        id: Date.now() + Math.random(),
+                        mkId: selectedMKForNew,
+                        created_at: new Date().toISOString()
+                    };
+                    q.text = lines[0];
+                    lines.forEach(l => {
+                        if(l.startsWith('A:')) q.a = l.replace('A:', '').trim();
+                        if(l.startsWith('B:')) q.b = l.replace('B:', '').trim();
+                        if(l.startsWith('C:')) q.c = l.replace('C:', '').trim();
+                        if(l.startsWith('D:')) q.d = l.replace('D:', '').trim();
+                        if(l.startsWith('K:')) q.correct = l.replace('K:', '').trim().toUpperCase();
+                    });
+                    if(q.text && q.correct) {
+                        questions.push(q);
+                        newQuestions.push(q);
+                    }
+                });
+                
+                backupToLocal();
+                
+                if (isOnline && supabase && newQuestions.length > 0) {
+                    try {
+                        const { error } = await supabase
+                            .from('questions')
+                            .insert(newQuestions);
+                        
+                        if (error) throw error;
+                        showStatus(`🚀 Horee! ${newQuestions.length} soal berhasil diimport!`, 'success');
+                    } catch (error) {
+                        debugLog(`Error importing questions to Supabase: ${error.message}`);
+                        showStatus(`⚠️ ${newQuestions.length} soal diimport lokal (akan sync nanti)`, 'warning');
+                    }
+                } else if (newQuestions.length > 0) {
+                    showStatus(`⚠️ ${newQuestions.length} soal diimport lokal (offline)`, 'warning');
+                }
+                
+                updateUI();
+                showPage('kelola-soal');
+            };
+            reader.readAsText(input.files[0]);
+        }
+
+        function renderMKSelectionKelola() {
+            const list = document.getElementById('mk-kelola-list');
+            list.innerHTML = subjects.map(s => `
+                <div onclick="renderSoalInKelola(${s.id})" class="p-4 rounded-2xl cursor-pointer text-xs font-black transition-all ${activeMKId == s.id ? 'bg-pink-400 text-white shadow-lg' : 'text-slate-500 hover:bg-white/5'}">
+                    <i class="fas fa-heart mr-3"></i> ${s.name}
+                </div>
+            `).join('');
+        }
+
+        function renderSoalInKelola(mkId) {
+            activeMKId = mkId;
+            renderMKSelectionKelola();
+            const filtered = questions.filter(q => q.mkId == mkId);
+            const container = document.getElementById('soal-list-container');
+            container.innerHTML = filtered.length ?
+            filtered.map((q, idx) => `
+                <div class="mb-6 p-6 glass-card bg-white/5 border-none">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-[10px] text-pink-300 font-black tracking-widest">SOAL #${idx+1}</span>
+                        <button onclick="deleteQuestion(${q.id}, ${mkId})" class="text-rose-400 hover:scale-125 transition-all"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                    <div class="font-bold text-slate-100 text-lg mb-4">${q.text}</div>
+                    ${q.img ? `<img src="${q.img}" class="max-h-40 rounded-3xl mb-4 shadow-lg border-4 border-white/5">` : ''}
+                    <div class="grid grid-cols-2 gap-3">
+                        ${['a','b','c','d'].map(o => `
+                            <div class="p-3 rounded-xl bg-black/20 text-[11px] ${q.correct == o.toUpperCase() ? 'text-green-300 font-black border border-green-500/30' : 'text-slate-500'}">
+                                <b class="mr-2 opacity-50 uppercase">${o}:</b> ${q[o]}
+                            </div>`).join('')}
+                    </div>
+                </div>
+            `).join('') : '<div class="h-full flex flex-col items-center justify-center opacity-20"><i class="fas fa-mug-hot text-7xl mb-4"></i><p class="font-bold">Masih kosong nih, isi yuk!</p></div>';
+        }
+
+        async function deleteQuestion(id, mkId) {
+            if(!confirm("Hapus soal ini ya?")) return;
+            
+            questions = questions.filter(x => x.id != id);
+            backupToLocal();
+            
+            if (isOnline && supabase) {
+                try {
+                    const { error } = await supabase
+                        .from('questions')
+                        .delete()
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                    showStatus('✅ Soal berhasil dihapus!', 'success');
+                } catch (error) {
+                    debugLog(`Error deleting question from Supabase: ${error.message}`);
+                    showStatus('⚠️ Dihapus lokal (akan sync nanti)', 'warning');
+                }
+            } else {
+                showStatus('⚠️ Dihapus lokal (offline)', 'warning');
+            }
+            
+            renderSoalInKelola(mkId);
+        }
+
+        function startExam(mkId) {
+            const pool = questions.filter(q => q.mkId == mkId);
+            if(pool.length === 0) {
+                showStatus('❌ Soalnya belum ada kak! 🥺', 'error');
+                return;
+            }
+            
+            examMKId = mkId;
+            currentPool = pool.sort(() => 0.5 - Math.random());
+            currentIndex = 0;
+            userAnswers = {};
+            showPage('ujian');
+            renderExamQuestion();
+        }
+
+        function renderExamQuestion() {
+            const q = currentPool[currentIndex];
+            document.getElementById('q-idx-label').innerText = `MISI KE-${currentIndex+1} DARI ${currentPool.length}`;
+            document.getElementById('exam-q-text').innerHTML = q.text;
+            const imgArea = document.getElementById('exam-q-img');
+            if(q.img) {
+                imgArea.classList.remove('hidden');
+                imgArea.querySelector('img').src = q.img;
+            } else {
+                imgArea.classList.add('hidden');
+            }
+            
+            document.getElementById('exam-options-area').innerHTML = ['A','B','C','D'].map(opt => `
+                <div onclick="selectAns('${opt}')" class="p-6 rounded-[30px] border-2 cursor-pointer transition-all flex items-center group ${userAnswers[currentIndex] === opt ? 'border-pink-400 bg-pink-400/10 text-pink-300 font-black' : 'border-white/5 text-slate-400 hover:bg-white/5'}">
+                    <b class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-900 border border-white/10 mr-4 text-xs group-hover:border-pink-500/50">${opt}</b> 
+                    <span class="text-lg">${q[opt.toLowerCase()]}</span>
+                </div>
+            `).join('');
+            renderExamNav();
+        }
+
+        function selectAns(o) {
+            userAnswers[currentIndex] = o;
+            renderExamQuestion();
+        }
+        
+        function nextQ() {
+            if(currentIndex < currentPool.length-1) {
+                currentIndex++;
+                renderExamQuestion();
+            }
+        }
+        
+        function prevQ() {
+            if(currentIndex > 0) {
+                currentIndex--;
+                renderExamQuestion();
+            }
+        }
+        
+        function goToQ(i) {
+            currentIndex = i;
+            renderExamQuestion();
+        }
+
+        function renderExamNav() {
+            const grid = document.getElementById('q-nav-grid');
+            grid.innerHTML = currentPool.map((_, i) => {
+                let status = userAnswers[i] ? 'answered' : 'empty';
+                if(currentIndex === i) status += ' current';
+                return `<div onclick="goToQ(${i})" class="q-nav-bubble ${status}">${i+1}</div>`;
+            }).join('');
+        }
+
+        function finishExam() {
+            if(!confirm("Sudah selesai petualangannya? Kita cek hasilnya yuk! ✨")) return;
+            
+            let s = 0;
+            currentPool.forEach((q, i) => { 
+                if(userAnswers[i] && userAnswers[i].trim().toUpperCase() === q.correct.trim().toUpperCase()) s++; 
+            });
+            
+            const mkName = subjects.find(s => s.id == examMKId)?.name || "Misi Selesai";
+            let reviewHtml = `
+                <div class="p-10 rounded-[50px] bg-gradient-to-br from-pink-400 to-purple-600 mb-10 text-center shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                        <i class="fas fa-cloud absolute top-10 left-10 text-6xl"></i>
+                        <i class="fas fa-heart absolute bottom-10 right-20 text-6xl"></i>
+                    </div>
+                    <h2 class="text-5xl font-black mb-2 text-white uppercase tracking-tighter">SKOR: ${Math.round((s/currentPool.length)*100)}</h2>
+                    <p class="text-white/80 font-black mb-6 uppercase tracking-widest">${mkName}</p>
+                    <div class="inline-flex items-center gap-2 px-6 py-2 bg-black/20 rounded-full text-[10px] text-white font-black backdrop-blur-md">
+                        <i class="fas fa-book-open"></i> MEMBACA ${currentPool.length} CATATAN RAHASIA
+                    </div>
+                </div>
+            `;
+
+            currentPool.forEach((q, i) => {
+                const userAns = userAnswers[i] || "-";
+                const isUserCorrect = userAns.toUpperCase() === q.correct.toUpperCase();
+                
+                reviewHtml += `
+                    <div class="mb-10 p-8 glass-card bg-slate-900/40 border-dashed border-white/10 ${isUserCorrect ? 'border-emerald-500/30' : 'border-rose-500/30'}">
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="text-[10px] font-black text-pink-300 bg-pink-500/10 px-4 py-2 rounded-2xl uppercase tracking-[0.2em]">MISI #${i+1}</span>
+                            <div class="flex gap-2">
+                                <span class="text-xs font-black ${isUserCorrect ? 'text-emerald-300 bg-emerald-500/10' : 'text-rose-300 bg-rose-500/10'} px-4 py-2 rounded-2xl uppercase">ANDA: ${userAns}</span>
+                                <span class="text-xs font-black text-emerald-300 bg-emerald-500/10 px-4 py-2 rounded-2xl uppercase">KUNCI: ${q.correct}</span>
+                            </div>
+                        </div>
+                        <div class="text-2xl font-black mb-8 text-slate-100 leading-relaxed">${q.text}</div>
+                        ${q.img ? `<img src="${q.img}" class="max-h-80 rounded-[40px] mb-8 shadow-2xl border-4 border-white/5">` : ''}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            ${['a','b','c','d'].map(opt => {
+                                const isCorrectOption = q.correct.toUpperCase() === opt.toUpperCase();
+                                const isUserChoice = userAns.toUpperCase() === opt.toUpperCase();
+                                
+                                let cardStyle = 'bg-black/10 border-white/5 text-slate-500';
+                                if (isCorrectOption) cardStyle = 'bg-emerald-500/10 border-emerald-500/50 text-emerald-300 font-black';
+                                if (isUserChoice && !isCorrectOption) cardStyle = 'bg-rose-500/10 border-rose-500/50 text-rose-300 font-black';
+
+                                return `
+                                    <div class="p-5 rounded-3xl text-xs border-2 transition-all ${cardStyle}">
+                                        <b class="mr-4 text-sm">${opt.toUpperCase()}</b> ${q[opt]}
+                                        ${isCorrectOption ? ' <i class="fas fa-check-circle ml-2"></i>' : ''}
+                                        ${isUserChoice && !isCorrectOption ? ' <i class="fas fa-times-circle ml-2"></i>' : ''}
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('soal-list-container').innerHTML = reviewHtml;
+            activeMKId = examMKId; 
+            showPage('kelola-soal');
+            document.getElementById('soal-list-container').scrollTop = 0;
+        }
+
+        // Initialize ketika page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            debugLog('DOM loaded, initializing app...');
+            
+            // Inisialisasi Supabase
+            initSupabase();
+            
+            // Load data
+            await loadData();
+            
+            // Test koneksi (untuk membangunkan Supabase jika sleep)
+            setTimeout(() => {
+                testConnection();
+            }, 1000);
+            
+            // Auto sync setiap 5 menit jika online
+            setInterval(async () => {
+                if (isOnline && document.visibilityState === 'visible') {
+                    debugLog('Auto-syncing data...');
+                    await saveToSupabase();
+                }
+            }, 5 * 60 * 1000);
+            
+            debugLog('App initialization complete');
+        });
+    </script>
+</body>
+</html>
